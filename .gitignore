@@ -1,0 +1,7 @@
+/bin
+/Release
+/Debug
+*.VC.db
+*.VC.opendb
+*.vcxproj
+.vs/
