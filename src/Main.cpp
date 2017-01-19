@@ -1,10 +1,11 @@
 #include <SFML/Graphics.hpp>
+#include "Game.hpp"
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
+	sf::RenderWindow window(sf::VideoMode(600, 800), "Barkanoid Woof Woof");
+	sf::Clock deltaClock;
+	Game* game = new Game(window, sf::Vector2u(600, 800));
 
 	while (window.isOpen())
 	{
@@ -15,8 +16,11 @@ int main()
 				window.close();
 		}
 
+		sf::Time deltaTime = deltaClock.restart();
+		game->Update(deltaTime.asSeconds());
+
 		window.clear();
-		window.draw(shape);
+		window.draw(*game);
 		window.display();
 	}
 
