@@ -2,7 +2,7 @@
 #include <SFML\Graphics\RenderTarget.hpp>
 
 GameArea::GameArea(sf::Vector2f pos, sf::Vector2f size)
-	: pos(pos), size(size)
+	: pos(pos), size(size), wallThickness(20.0f)
 {
 	leftWall = new sf::RectangleShape(sf::Vector2f(wallThickness, size.y));
 	leftWall->setPosition(pos);

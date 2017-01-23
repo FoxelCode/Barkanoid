@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "Math.hpp"
 #include <vector>
 #include <cfloat>
 #include <iostream>
@@ -84,11 +85,41 @@ void Game::Collide(Ball* a, sf::RectangleShape* b)
 
 		for each (sf::Vector2f corner in corners)
 		{
-			sf::Vector2f delta = aCenter - corner;
-			float deltaLength = sqrtf(delta.x * delta.x + delta.y * delta.y);
-			if (delta.x > 0)
+			sf::Vector2f delta = corner - aCenter;
+			float deltaLength = Math::magnitude(delta);
+
+			sf::FloatRect bRelative = Math::makeRelativeTo(bBounds, aCenter);
+
+			float proj[4];
+			sf::Vector2f projVector = Math::normalise(delta);
+			Math::projectRect(proj, bRelative, projVector);
+
+			float min = FLT_MAX;
+			float max = FLT_MIN;
+			for (int i = 0; i < 4; i++)
 			{
-				
+				if (proj[i] < min)
+					min = proj[i];
+				if (proj[i] > max)
+					max = proj[i];
+			}
+			
+			float projLength = fabsf(max - min);
+			sf::Vector2f projFarthest = aCenter + projVector * max;
+
+			sf::Vector2f deltaToFarthest = projFarthest - aCenter;
+			float distToFarthest = Math::magnitude(deltaToFarthest);
+
+			float intersect = a->getRadius() + projLength - distToFarthest;
+			if (intersect > 0)
+			{
+				sf::Vector2f separator = -projVector * intersect;
+				separationVectors.push_back(separator);
+			}
+			else
+			{
+				freeAxis = true;
+				break;
 			}
 		}
 	}

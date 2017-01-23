@@ -2,7 +2,7 @@
 #include <iostream>
 
 Ball::Ball(sf::Vector2f pos)
-	: sf::CircleShape(20.0f, 30), radius(20.0f), velocity(200.0f, 160.0f)
+	: sf::CircleShape(20.0f, 30), radius(20.0f), velocity(10.0f, 160.0f)
 {
 	setPosition(sf::Vector2f(pos.x - radius, pos.y - radius));
 	sf::CircleShape::setFillColor(sf::Color(0, 255, 255));
