@@ -1,9 +1,9 @@
 #pragma once
 
 #include <SFML\Graphics\CircleShape.hpp>
-#include "Updatable.hpp"
 
-class Ball : public sf::CircleShape, Updatable
+#include "IUpdatable.hpp"
+class Ball : public sf::CircleShape, IUpdatable
 {
 public:
 	Ball(sf::Vector2f pos);

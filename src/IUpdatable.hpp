@@ -1,6 +1,6 @@
 #pragma once
 
-class Updatable
+class IUpdatable
 {
 public:
 	virtual void Update(float delta) = 0;

@@ -5,11 +5,12 @@
 #include <SFML\Graphics\RenderStates.hpp>
 #include <SFML\Graphics\RenderWindow.hpp>
 
+#include "IUpdatable.hpp"
 #include "GameArea.hpp"
 #include "Ball.hpp"
 #include "Paddle.hpp"
 
-class Game : public sf::Drawable, Updatable
+class Game : public sf::Drawable, IUpdatable
 {
 public:
 	Game(sf::RenderWindow& window, sf::Vector2u size);
