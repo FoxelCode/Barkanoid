@@ -40,4 +40,9 @@ public:
 	{
 		return sf::FloatRect(a.left - point.x, a.top - point.y, a.width, a.height);
 	}
+
+	static bool contains(sf::Vector2f a, sf::FloatRect b)
+	{
+		return (a.x >= b.left && a.x <= b.left + b.width) && (a.y >= b.top && a.y <= b.top + b.height);
+	}
 };
