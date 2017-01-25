@@ -1,7 +1,6 @@
 #pragma once
 
 #include <SFML\System.hpp>
-#include <SFML\Graphics.hpp>
 
 class Math
 {
@@ -41,8 +40,20 @@ public:
 		return sf::FloatRect(a.left - point.x, a.top - point.y, a.width, a.height);
 	}
 
-	static bool contains(sf::Vector2f a, sf::FloatRect b)
+	static bool contains(sf::Vector2f a, sf::FloatRect b, bool includeEdges = true)
 	{
+		if (!includeEdges)
+			return (a.x > b.left && a.x < b.left + b.width) && (a.y > b.top && a.y < b.top + b.height);
 		return (a.x >= b.left && a.x <= b.left + b.width) && (a.y >= b.top && a.y <= b.top + b.height);
 	}
+
+	template <typename T>
+	static T sign(T a)
+	{
+		if (a > 0) return 1;
+		if (a < 0) return -1;
+		return 0;
+	}
 };
+
+const double PIELLO_DARKNESS_MY_OLD_FRIEND = 3.1415926535897;

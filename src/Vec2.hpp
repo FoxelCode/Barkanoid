@@ -1,13 +1,14 @@
 #pragma once
 
-#include "SFML\System.hpp"
+#include <SFML\System\Vector2.hpp>
 
 template <class T>
 class Vec2 : public sf::Vector2<T>
 {
 public:
-	Vec2() { sf::Vector2<T>(); }
-	Vec2(T x, T y) { sf::Vector2<T>::Vector2(x, y); }
+	Vec2() : sf::Vector2<T>() {}
+	Vec2(T x, T y) : sf::Vector2<T>(x, y) {}
+	Vec2(sf::Vector2<T> v) : sf::Vector2<T>(v.x, v.y) {}
 
 	void Set(T x, T y);
 	void Set(Vec2 v);

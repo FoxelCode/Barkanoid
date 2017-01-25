@@ -16,7 +16,7 @@ Game::Game(sf::RenderWindow& window, sf::Vector2u size)
 void Game::Update(float delta)
 {
 	sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-	paddle->setPosition((float)mousePos.x, paddle->getPosition().y);
+	paddle->setPosition((float)mousePos.x - paddle->getGlobalBounds().width / 2.0f, paddle->getPosition().y);
 
 	ball->Update(delta);
 	Collide(ball, paddle);
@@ -25,41 +25,133 @@ void Game::Update(float delta)
 	Collide(ball, gameArea->rightWall);
 }
 
-void Game::Collide(Ball* a, sf::RectangleShape* b)
+void Game::Collide(Ball* a, Paddle* b)
 {
 	float aRadius = a->getRadius();
 	sf::Vector2f aCenter = a->getPosition() + sf::Vector2f(aRadius, aRadius);
-	sf::FloatRect hBox = b->getGlobalBounds();
+	sf::FloatRect bBounds = b->getGlobalBounds();
+	sf::FloatRect hBox = bBounds;
 	sf::Vector2f bCenter = sf::Vector2f(hBox.left + hBox.width / 2.0f, hBox.top + hBox.height / 2.0f);
 	hBox.left -= aRadius;
 	hBox.width += aRadius * 2;
-	sf::FloatRect vBox = b->getGlobalBounds();
+	sf::FloatRect vBox = bBounds;
 	vBox.top -= aRadius;
 	vBox.height += aRadius * 2;
 	sf::Vector2f delta = bCenter - aCenter;
 
 	// Horizontal collision with AABB
-	if (Math::contains(aCenter, hBox))
+	if (Math::contains(aCenter, hBox, false))
 	{
-		sf::Vector2f separation = sf::Vector2f((fabsf(delta.x) - hBox.width / 2.0f), 0);
+		sf::Vector2f separation = sf::Vector2f((fabsf(delta.x) - hBox.width / 2.0f), 0.0f);
 		if (delta.x >= 0)
-			a->Separate(-separation);
-		else
 			a->Separate(separation);
+		else
+			a->Separate(-separation);
 		return;
 	}
 
 	// Vertical collision with AABB
-	if (Math::contains(aCenter, vBox))
+	if (Math::contains(aCenter, vBox, false))
 	{
+		sf::Vector2f separation = sf::Vector2f(0.0f, (fabsf(delta.y) - vBox.height / 2.0f));
 		if (delta.y >= 0)
-			a->Separate(sf::Vector2f(0, -1));
+		{
+			a->Separate(separation);
+			a->TurnTowards(b->GetReflectionScalar(aCenter) * b->GetAngleRange() + PIELLO_DARKNESS_MY_OLD_FRIEND);
+		}
 		else
-			a->Separate(sf::Vector2f(0, 1));
+		{
+			a->Separate(-separation);
+		}
 		return;
 	}
 
+	// Corner collision
+	std::vector<sf::Vector2f> corners;
+	corners.push_back(sf::Vector2f(bBounds.left, bBounds.top));
+	corners.push_back(sf::Vector2f(bBounds.left + bBounds.width, bBounds.top));
+	corners.push_back(sf::Vector2f(bBounds.left, bBounds.top + bBounds.height));
+	corners.push_back(sf::Vector2f(bBounds.left + bBounds.width, bBounds.top + bBounds.height));
 
+	for each (sf::Vector2f corner in corners)
+	{
+		sf::Vector2f cornerDelta = corner - aCenter;
+		if (Math::magnitude(cornerDelta) < aRadius)
+		{
+			// Smallest axis separation
+			if (fabsf(cornerDelta.x) < fabsf(cornerDelta.y))
+				a->Separate(sf::Vector2f(cornerDelta.x - Math::sign(cornerDelta.x) * aRadius, 0.0f));
+			else
+				a->Separate(sf::Vector2f(0.0f, cornerDelta.y - Math::sign(cornerDelta.y) * aRadius));
+
+			// Proper reflection separation
+			//a->Separate(-Math::normalise(cornerDelta) * (aRadius - Math::magnitude(cornerDelta)));
+
+			return;
+		}
+	}
+}
+
+void Game::Collide(Ball* a, sf::RectangleShape* b)
+{
+	float aRadius = a->getRadius();
+	sf::Vector2f aCenter = a->getPosition() + sf::Vector2f(aRadius, aRadius);
+	sf::FloatRect bBounds = b->getGlobalBounds();
+	sf::FloatRect hBox = bBounds;
+	sf::Vector2f bCenter = sf::Vector2f(hBox.left + hBox.width / 2.0f, hBox.top + hBox.height / 2.0f);
+	hBox.left -= aRadius;
+	hBox.width += aRadius * 2;
+	sf::FloatRect vBox = bBounds;
+	vBox.top -= aRadius;
+	vBox.height += aRadius * 2;
+	sf::Vector2f delta = bCenter - aCenter;
+
+	// Horizontal collision with AABB
+	if (Math::contains(aCenter, hBox, false))
+	{
+		sf::Vector2f separation = sf::Vector2f((fabsf(delta.x) - hBox.width / 2.0f), 0.0f);
+		if (delta.x >= 0)
+			a->Separate(separation);
+		else
+			a->Separate(-separation);
+		return;
+	}
+
+	// Vertical collision with AABB
+	if (Math::contains(aCenter, vBox, false))
+	{
+		sf::Vector2f separation = sf::Vector2f(0.0f, (fabsf(delta.y) - vBox.height / 2.0f));
+		if (delta.y >= 0)
+			a->Separate(separation);
+		else
+			a->Separate(-separation);
+		return;
+	}
+
+	// Corner collision
+	std::vector<sf::Vector2f> corners;
+	corners.push_back(sf::Vector2f(bBounds.left, bBounds.top));
+	corners.push_back(sf::Vector2f(bBounds.left + bBounds.width, bBounds.top));
+	corners.push_back(sf::Vector2f(bBounds.left, bBounds.top + bBounds.height));
+	corners.push_back(sf::Vector2f(bBounds.left + bBounds.width, bBounds.top + bBounds.height));
+
+	for each (sf::Vector2f corner in corners)
+	{
+		sf::Vector2f cornerDelta = corner - aCenter;
+		if (Math::magnitude(cornerDelta) < aRadius)
+		{
+			// Smallest axis separation
+			if (fabsf(cornerDelta.x) < fabsf(cornerDelta.y))
+				a->Separate(sf::Vector2f(cornerDelta.x - Math::sign(cornerDelta.x) * aRadius, 0.0f));
+			else
+				a->Separate(sf::Vector2f(0.0f, cornerDelta.y - Math::sign(cornerDelta.y) * aRadius));
+
+			// Proper reflection separation
+			//a->Separate(-Math::normalise(cornerDelta) * (aRadius - Math::magnitude(cornerDelta)));
+
+			return;
+		}
+	}
 }
 
 //void Game::Collide(Ball* a, sf::RectangleShape* b)

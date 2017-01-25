@@ -10,6 +10,7 @@ public:
 
 	void Update(float delta);
 	void Separate(sf::Vector2f separation);
+	void TurnTowards(float angle);
 
 private:
 	float radius;

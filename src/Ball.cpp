@@ -1,5 +1,6 @@
 #include "Ball.hpp"
 #include <iostream>
+#include "Math.hpp"
 
 Ball::Ball(sf::Vector2f pos)
 	: sf::CircleShape(20.0f, 30), radius(20.0f), velocity(200.0f, 160.0f)
@@ -26,4 +27,11 @@ void Ball::Separate(sf::Vector2f separation)
 	float VdotN = velocity.x * separationNormal.x + velocity.y * separationNormal.y;
 	velocity.x = velocity.x - 2 * VdotN * separationNormal.x;
 	velocity.y = velocity.y - 2 * VdotN * separationNormal.y;
+}
+
+void Ball::TurnTowards(float angle)
+{
+	sf::Vector2f dir = sf::Vector2f(sinf(angle), cosf(angle));
+	float vLength = Math::magnitude(velocity);
+	velocity = dir * vLength;
 }
