@@ -3,7 +3,7 @@
 #include "Math.hpp"
 
 Ball::Ball(sf::Vector2f pos)
-	: sf::CircleShape(20.0f, 30), radius(20.0f), velocity(200.0f, 160.0f)
+	: sf::CircleShape(10.0f, 30), radius(10.0f), velocity(300.0f, 300.0f)
 {
 	setPosition(sf::Vector2f(pos.x - radius, pos.y - radius));
 	sf::CircleShape::setFillColor(sf::Color(0, 255, 255));
@@ -31,7 +31,7 @@ void Ball::Separate(sf::Vector2f separation)
 
 void Ball::TurnTowards(float angle)
 {
-	sf::Vector2f dir = sf::Vector2f(sinf(angle), cosf(angle));
+	sf::Vector2f dir = sf::Vector2f(cosf(angle), sinf(angle));
 	float vLength = Math::magnitude(velocity);
 	velocity = dir * vLength;
 }

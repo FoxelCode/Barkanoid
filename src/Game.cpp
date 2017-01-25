@@ -38,6 +38,7 @@ void Game::Collide(Ball* a, Paddle* b)
 	vBox.top -= aRadius;
 	vBox.height += aRadius * 2;
 	sf::Vector2f delta = bCenter - aCenter;
+	bool collided = false;
 
 	// Horizontal collision with AABB
 	if (Math::contains(aCenter, hBox, false))
@@ -47,48 +48,63 @@ void Game::Collide(Ball* a, Paddle* b)
 			a->Separate(separation);
 		else
 			a->Separate(-separation);
-		return;
+		collided = true;
 	}
 
-	// Vertical collision with AABB
-	if (Math::contains(aCenter, vBox, false))
+	if (!collided)
 	{
-		sf::Vector2f separation = sf::Vector2f(0.0f, (fabsf(delta.y) - vBox.height / 2.0f));
-		if (delta.y >= 0)
+		// Vertical collision with AABB
+		if (Math::contains(aCenter, vBox, false))
 		{
-			a->Separate(separation);
-			a->TurnTowards(b->GetReflectionScalar(aCenter) * b->GetAngleRange() + PIELLO_DARKNESS_MY_OLD_FRIEND);
-		}
-		else
-		{
-			a->Separate(-separation);
-		}
-		return;
-	}
-
-	// Corner collision
-	std::vector<sf::Vector2f> corners;
-	corners.push_back(sf::Vector2f(bBounds.left, bBounds.top));
-	corners.push_back(sf::Vector2f(bBounds.left + bBounds.width, bBounds.top));
-	corners.push_back(sf::Vector2f(bBounds.left, bBounds.top + bBounds.height));
-	corners.push_back(sf::Vector2f(bBounds.left + bBounds.width, bBounds.top + bBounds.height));
-
-	for each (sf::Vector2f corner in corners)
-	{
-		sf::Vector2f cornerDelta = corner - aCenter;
-		if (Math::magnitude(cornerDelta) < aRadius)
-		{
-			// Smallest axis separation
-			if (fabsf(cornerDelta.x) < fabsf(cornerDelta.y))
-				a->Separate(sf::Vector2f(cornerDelta.x - Math::sign(cornerDelta.x) * aRadius, 0.0f));
+			sf::Vector2f separation = sf::Vector2f(0.0f, (fabsf(delta.y) - vBox.height / 2.0f));
+			if (delta.y >= 0)
+			{
+				a->Separate(separation);
+				float targetAngle = b->GetReflectionScalar(aCenter) * b->GetAngleRange() / 2.0f - PIELLO_DARKNESS_MY_OLD_FRIEND / 2.0f;
+				a->TurnTowards(targetAngle);
+				return;
+			}
 			else
-				a->Separate(sf::Vector2f(0.0f, cornerDelta.y - Math::sign(cornerDelta.y) * aRadius));
-
-			// Proper reflection separation
-			//a->Separate(-Math::normalise(cornerDelta) * (aRadius - Math::magnitude(cornerDelta)));
-
-			return;
+			{
+				a->Separate(-separation);
+			}
+			collided = true;
 		}
+	}
+
+	if (!collided)
+	{
+		// Corner collision
+		std::vector<sf::Vector2f> corners;
+		corners.push_back(sf::Vector2f(bBounds.left, bBounds.top));
+		corners.push_back(sf::Vector2f(bBounds.left + bBounds.width, bBounds.top));
+		corners.push_back(sf::Vector2f(bBounds.left, bBounds.top + bBounds.height));
+		corners.push_back(sf::Vector2f(bBounds.left + bBounds.width, bBounds.top + bBounds.height));
+
+		for each (sf::Vector2f corner in corners)
+		{
+			sf::Vector2f cornerDelta = corner - aCenter;
+			if (Math::magnitude(cornerDelta) < aRadius)
+			{
+				// Smallest axis separation
+				/*if (fabsf(cornerDelta.x) < fabsf(cornerDelta.y))
+					a->Separate(sf::Vector2f(cornerDelta.x - Math::sign(cornerDelta.x) * aRadius, 0.0f));
+				else
+					a->Separate(sf::Vector2f(0.0f, cornerDelta.y - Math::sign(cornerDelta.y) * aRadius));*/
+
+				// Proper reflection separation
+				a->Separate(-Math::normalise(cornerDelta) * (aRadius - Math::magnitude(cornerDelta)));
+
+				collided = true;
+				break;
+			}
+		}
+	}
+
+	if (collided)
+	{
+		float deltaAngle = atan2f(delta.y, delta.x) + PIELLO_DARKNESS_MY_OLD_FRIEND;
+		a->TurnTowards(deltaAngle);
 	}
 }
 
