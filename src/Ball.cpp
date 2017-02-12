@@ -1,23 +1,25 @@
 #include "Ball.hpp"
 #include <iostream>
 #include "Math.hpp"
+#include "CircleCollider.hpp"
 
 Ball::Ball(sf::Vector2f pos)
-	: sf::CircleShape(10.0f, 30), radius(10.0f), velocity(300.0f, 300.0f)
+	: GameObject(), radius(10.0f), velocity(200.0f, 200.0f)
 {
-	setPosition(sf::Vector2f(pos.x - radius, pos.y - radius));
-	sf::CircleShape::setFillColor(sf::Color(0, 255, 255));
+	SetPosition(pos);
+	collider = new CircleCollider(this, sf::Vector2f(-10.0f, -10.0f), 10.0f);
+	LoadTexture("ball.png");
+	sprite.setPosition(-10.0f, -10.0f);
 }
 
 void Ball::Update(float delta)
 {
-	sf::Vector2f oldPos = getPosition();
-	setPosition(oldPos.x + delta * velocity.x, oldPos.y + delta * velocity.y);
+	Move(delta * velocity.x, delta * velocity.y);
 }
 
 void Ball::Separate(sf::Vector2f separation)
 {
-	move(separation);
+	GameObject::Separate(separation);
 
 	sf::Vector2f separationNormal = separation;
 	float separationLength = sqrtf(separation.x * separation.x + separation.y * separation.y);

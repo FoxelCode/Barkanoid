@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFML\Graphics\Drawable.hpp>
-#include <SFML\Graphics\RectangleShape.hpp>
+#include "Wall.hpp"
 
 class GameArea : public sf::Drawable
 {
@@ -9,9 +9,9 @@ public:
 	GameArea(sf::Vector2f pos, sf::Vector2f size);
 	~GameArea();
 
-	sf::RectangleShape* leftWall = nullptr;
-	sf::RectangleShape* topWall = nullptr;
-	sf::RectangleShape* rightWall = nullptr;
+	Wall* leftWall = nullptr;
+	Wall* topWall = nullptr;
+	Wall* rightWall = nullptr;
 
 	sf::Vector2f pos;
 	sf::Vector2f size;

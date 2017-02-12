@@ -16,8 +16,8 @@ public:
 	Game(sf::RenderWindow& window, sf::Vector2u size);
 
 	void Update(float delta);
+	void Collide(GameObject* a, GameObject* b);
 	void Collide(Ball* a, Paddle* b);
-	void Collide(Ball* a, sf::RectangleShape* b);
 
 private:
 	void draw(sf::RenderTarget &target, sf::RenderStates states) const;

@@ -4,12 +4,9 @@
 GameArea::GameArea(sf::Vector2f pos, sf::Vector2f size)
 	: pos(pos), size(size), wallThickness(20.0f)
 {
-	leftWall = new sf::RectangleShape(sf::Vector2f(wallThickness, size.y));
-	leftWall->setPosition(pos);
-	topWall = new sf::RectangleShape(sf::Vector2f(size.x, wallThickness));
-	topWall->setPosition(pos);
-	rightWall = new sf::RectangleShape(sf::Vector2f(wallThickness, size.y));
-	rightWall->setPosition(sf::Vector2f(pos.x + size.x - wallThickness, 0.0f));
+	leftWall = new Wall(sf::Vector2f(0.0f, wallThickness), sf::Vector2f(wallThickness, size.y));
+	topWall = new Wall(sf::Vector2f(), sf::Vector2f(size.x, wallThickness));
+	rightWall = new Wall(sf::Vector2f(size.x - wallThickness, wallThickness), sf::Vector2f(wallThickness, size.y));
 }
 
 GameArea::~GameArea()
