@@ -21,9 +21,6 @@ public:
 	void SetTextureRect(sf::IntRect rect);
 
 protected:
-	void DrawCollider(sf::RenderTarget& target, sf::RenderStates states) const;
-	void DrawSprite(sf::RenderTarget& target, sf::RenderStates states) const;
-
 	Collider* collider = nullptr;
 	sf::Texture texture;
 	float textureScale;

@@ -8,11 +8,14 @@ GameObject::~GameObject()
 void GameObject::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.transform.translate(GetPosition());
-	DrawSprite(target, states);
+	target.draw(sprite, states);
+
+#ifdef DRAW_COLLIDER
 	if (collider)
 	{
-		DrawCollider(target, states);
+		collider->Draw(target, states);
 	}
+#endif
 }
 
 void GameObject::Update(float delta)
@@ -30,14 +33,4 @@ void GameObject::LoadTexture(std::string filename, float textureScale)
 void GameObject::SetTextureRect(sf::IntRect rect)
 {
 	sprite.setTextureRect(rect);
-}
-
-void GameObject::DrawCollider(sf::RenderTarget & target, sf::RenderStates states) const
-{
-	//collider->Draw(target, states);
-}
-
-void GameObject::DrawSprite(sf::RenderTarget & target, sf::RenderStates states) const
-{
-	target.draw(sprite, states);
 }

@@ -27,13 +27,16 @@ Paddle::Paddle(sf::Vector2f pos)
 void Paddle::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.transform.translate(GetPosition());
-	DrawSprite(target, states);
+	target.draw(sprite, states);
 	target.draw(leftSide, states);
 	target.draw(rightSide, states);
+
+#if DRAW_COLLIDER
 	if (collider)
 	{
-		DrawCollider(target, states);
+		collider->Draw(target, states);
 	}
+#endif
 }
 
 float Paddle::GetReflectionScalar(sf::Vector2f pos)

@@ -5,7 +5,7 @@
 #include "Paddle.hpp"
 #include "Ball.hpp"
 
-void Collision::Collide(Collider * a, Collider * b)
+void Collision::Collide(Collider* a, Collider* b)
 {
 	if (a->GetType() == ColliderType::Circle && b->GetType() == ColliderType::AABB)
 		CircleToAABB(static_cast<CircleCollider*>(a), static_cast<AABBCollider*>(b));
@@ -67,11 +67,10 @@ void Collision::PaddleCollide(CircleCollider* a, AABBCollider* b)
 	if (!collided)
 	{
 		// Corner collision
-		std::vector<sf::Vector2f> corners;
-		corners.push_back(sf::Vector2f(bBounds.left, bBounds.top));
-		corners.push_back(sf::Vector2f(bBounds.left + bBounds.width, bBounds.top));
-		corners.push_back(sf::Vector2f(bBounds.left, bBounds.top + bBounds.height));
-		corners.push_back(sf::Vector2f(bBounds.left + bBounds.width, bBounds.top + bBounds.height));
+		sf::Vector2f corners[] = { sf::Vector2f(bBounds.left, bBounds.top),
+			sf::Vector2f(bBounds.left + bBounds.width, bBounds.top),
+			sf::Vector2f(bBounds.left, bBounds.top + bBounds.height),
+			sf::Vector2f(bBounds.left + bBounds.width, bBounds.top + bBounds.height) };
 
 		for each (sf::Vector2f corner in corners)
 		{
@@ -107,10 +106,17 @@ void Collision::AABBToAABB(AABBCollider * a, AABBCollider * b)
 
 void Collision::CircleToAABB(CircleCollider* a, AABBCollider* b)
 {
-	sf::FloatRect bBounds = b->getGlobalBounds();
-	bBounds.left += b->GetGameObject()->GetPosition().x + b->GetOffset().x;
-	bBounds.top += b->GetGameObject()->GetPosition().y + b->GetOffset().y;
 	sf::Vector2f aPos = a->GetGameObject()->GetPosition() + a->GetOffset();
+	sf::Vector2f bPos = b->GetGameObject()->GetPosition() + b->GetOffset();
+	sf::FloatRect aBounds = a->getGlobalBounds();
+	aBounds.left += aPos.x;
+	aBounds.top += aPos.y;
+	sf::FloatRect bBounds = b->getGlobalBounds();
+	bBounds.left += bPos.x;
+	bBounds.top += bPos.y;
+	if (!bBounds.intersects(aBounds))
+		return;
+
 	sf::Vector2f aCenter = sf::Vector2f(aPos.x + a->getRadius(), aPos.y + a->getRadius());
 	sf::Vector2f bCenter = sf::Vector2f(bBounds.left + bBounds.width / 2.0f, bBounds.top + bBounds.height / 2.0f);
 	float aHalf = a->getRadius();
@@ -159,11 +165,10 @@ void Collision::CircleToAABB(CircleCollider* a, AABBCollider* b)
 	// Vertex intersections
 	if (!freeAxis)
 	{
-		std::vector<sf::Vector2f> corners;
-		corners.push_back(sf::Vector2f(bBounds.left, bBounds.top));
-		corners.push_back(sf::Vector2f(bBounds.left + bBounds.width, bBounds.top));
-		corners.push_back(sf::Vector2f(bBounds.left, bBounds.top + bBounds.height));
-		corners.push_back(sf::Vector2f(bBounds.left + bBounds.width, bBounds.top + bBounds.height));
+		sf::Vector2f corners[] = { sf::Vector2f(bBounds.left, bBounds.top),
+			sf::Vector2f(bBounds.left + bBounds.width, bBounds.top),
+			sf::Vector2f(bBounds.left, bBounds.top + bBounds.height),
+			sf::Vector2f(bBounds.left + bBounds.width, bBounds.top + bBounds.height) };
 
 		for each (sf::Vector2f corner in corners)
 		{
