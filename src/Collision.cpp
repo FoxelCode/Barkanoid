@@ -38,6 +38,7 @@ void Collision::PaddleCollide(CircleCollider* a, AABBCollider* b)
 			a->GetGameObject()->Separate(separation);
 		else
 			a->GetGameObject()->Separate(-separation);
+		b->GetGameObject()->Collided();
 		collided = true;
 	}
 
@@ -50,6 +51,7 @@ void Collision::PaddleCollide(CircleCollider* a, AABBCollider* b)
 			if (delta.y >= 0)
 			{
 				a->GetGameObject()->Separate(separation);
+				b->GetGameObject()->Collided();
 				Paddle* paddle = static_cast<Paddle*>(b->GetGameObject());
 				Ball* ball = static_cast<Ball*>(a->GetGameObject());
 				float targetAngle = paddle->GetReflectionScalar(aCenter) * paddle->GetAngleRange() / 2.0f - PIELLO_DARKNESS_MY_OLD_FRIEND / 2.0f;
@@ -59,6 +61,7 @@ void Collision::PaddleCollide(CircleCollider* a, AABBCollider* b)
 			else
 			{
 				a->GetGameObject()->Separate(-separation);
+				b->GetGameObject()->Collided();
 			}
 			collided = true;
 		}
@@ -85,6 +88,7 @@ void Collision::PaddleCollide(CircleCollider* a, AABBCollider* b)
 
 				// Proper reflection separation
 				a->GetGameObject()->Separate(-Math::normalise(cornerDelta) * (aRadius - Math::magnitude(cornerDelta)));
+				b->GetGameObject()->Collided();
 
 				collided = true;
 				break;
@@ -213,6 +217,7 @@ void Collision::CircleToAABB(CircleCollider* a, AABBCollider* b)
 
 	if (!freeAxis)
 	{
+		b->GetGameObject()->Collided();
 		sf::Vector2f smallestSeparator = sf::Vector2f();
 		float separatorLength = FLT_MAX;
 		for each (sf::Vector2f sep in separationVectors)

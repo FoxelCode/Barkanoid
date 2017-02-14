@@ -11,6 +11,7 @@
 #include "GameArea.hpp"
 #include "Ball.hpp"
 #include "Paddle.hpp"
+#include "Brick.hpp"
 #include "AssetManager.hpp"
 
 class Game : public sf::Drawable, IUpdatable
@@ -19,6 +20,7 @@ public:
 	Game(sf::RenderWindow& window, sf::Vector2u size);
 
 	void Update(float delta);
+	void Add(GameObject* object);
 	void Collide(GameObject* a, GameObject* b);
 	void Collide(Ball* a, Paddle* b);
 
@@ -30,7 +32,10 @@ private:
 
 	AssetManager asset;
 
+	std::vector<GameObject*> gameObjects;
+
 	GameArea* gameArea = nullptr;
 	Ball* ball = nullptr;
 	Paddle* paddle = nullptr;
+	Brick* brick = nullptr;
 };

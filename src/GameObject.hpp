@@ -16,6 +16,10 @@ public:
 	virtual void Update(float delta);
 
 	virtual void Separate(sf::Vector2f separation) { Move(separation); }
+	virtual void Collided() {};
+
+	virtual void Kill() { alive = false; }
+	bool IsAlive() { return alive; }
 	Collider* GetCollider() { return collider; }
 	void SetTexture(sf::Texture* tex, float scale = 1.0f);
 	void SetTextureRect(sf::IntRect rect);
@@ -25,4 +29,7 @@ protected:
 	sf::Texture* texture;
 	float textureScale;
 	sf::Sprite sprite;
+
+private:
+	bool alive = true;
 };

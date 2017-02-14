@@ -7,8 +7,8 @@ Paddle::Paddle(sf::Vector2f pos)
 	: GameObject(), angleRange(160.0f)
 {
 	SetPosition(pos);
-	size = sf::Vector2f(40.0f, 16.0f);
-	collider = new AABBCollider(this, sf::Vector2f(-30.0f, -8.0f), size);
+	size = sf::Vector2f(60.0f, 12.0f);
+	collider = new AABBCollider(this, sf::Vector2f(-size.x / 2.0f, -size.y / 2.0f), size);
 
 	SetTexture(Util::GetAssetManager()->GetTexture("paddle.png"), 2.0f);
 	sf::Vector2i sliceSize = sf::Vector2i(6, 6);

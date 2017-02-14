@@ -4,6 +4,7 @@
 
 class Palette
 {
+public:
 	static const sf::Color Black;
 	static const sf::Color DarkBlue;
 	static const sf::Color DarkPurple;

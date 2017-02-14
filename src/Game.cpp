@@ -1,7 +1,10 @@
 #include "Game.hpp"
+
 #include "Math.hpp"
 #include "Collision.hpp"
 #include "Util.hpp"
+#include "Palette.hpp"
+
 #include <vector>
 #include <cfloat>
 #include <iostream>
@@ -15,6 +18,14 @@ Game::Game(sf::RenderWindow& window, sf::Vector2u size)
 	ball = new Ball(sf::Vector2f(100.0f, 100.0f));
 	paddle = new Paddle(sf::Vector2f((float)size.x / 2.0f, (float)size.y - 100.0f));
 	gameArea = new GameArea(sf::Vector2f(), sf::Vector2f((float)size.x, (float)size.y));
+	brick = new Brick(sf::Vector2f((float)size.x / 2.0f, 50.0f), Palette::Red);
+
+	Add(ball);
+	Add(paddle);
+	Add(gameArea->leftWall);
+	Add(gameArea->topWall);
+	Add(gameArea->rightWall);
+	Add(brick);
 }
 
 void Game::Update(float delta)
@@ -27,6 +38,27 @@ void Game::Update(float delta)
 	Collide(ball, gameArea->leftWall);
 	Collide(ball, gameArea->topWall);
 	Collide(ball, gameArea->rightWall);
+	Collide(ball, brick);
+
+	auto it = gameObjects.begin();
+	while (it != gameObjects.end())
+	{
+		if (!(*it)->IsAlive())
+		{
+			GameObject* toErase = (*it);
+			it = gameObjects.erase(it);
+			delete toErase;
+		}
+		else
+		{
+			it++;
+		}
+	}
+}
+
+void Game::Add(GameObject* object)
+{
+	gameObjects.push_back(object);
 }
 
 void Game::Collide(GameObject* a, GameObject* b)
@@ -41,7 +73,8 @@ void Game::Collide(Ball* a, Paddle* b)
 
 void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(*gameArea, states);
-	target.draw(*paddle, states);
-	target.draw(*ball, states);
+	for each (GameObject* object in gameObjects)
+	{
+		target.draw(*object, states);
+	}
 }
