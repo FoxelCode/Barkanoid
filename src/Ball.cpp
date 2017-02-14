@@ -2,14 +2,15 @@
 #include <iostream>
 #include "Math.hpp"
 #include "CircleCollider.hpp"
+#include "Util.hpp"
 
 Ball::Ball(sf::Vector2f pos)
-	: GameObject(), radius(10.0f), velocity(200.0f, 200.0f)
+	: GameObject(), velocity(200.0f, 200.0f)
 {
 	SetPosition(pos);
-	collider = new CircleCollider(this, sf::Vector2f(-10.0f, -10.0f), 10.0f);
-	LoadTexture("ball.png");
-	sprite.setPosition(-10.0f, -10.0f);
+	collider = new CircleCollider(this, sf::Vector2f(-8.0f, -8.0f), 8.0f);
+	SetTexture(Util::GetAssetManager()->GetTexture("ball.png"), 2.0f);
+	sprite.setPosition(-8.0f, -8.0f);
 }
 
 void Ball::Update(float delta)

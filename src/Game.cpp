@@ -1,6 +1,7 @@
 #include "Game.hpp"
 #include "Math.hpp"
 #include "Collision.hpp"
+#include "Util.hpp"
 #include <vector>
 #include <cfloat>
 #include <iostream>
@@ -9,6 +10,8 @@
 Game::Game(sf::RenderWindow& window, sf::Vector2u size)
 	: window(&window), size(size)
 {
+	Util::SetAssetManager(&asset);
+
 	ball = new Ball(sf::Vector2f(100.0f, 100.0f));
 	paddle = new Paddle(sf::Vector2f((float)size.x / 2.0f, (float)size.y - 100.0f));
 	gameArea = new GameArea(sf::Vector2f(), sf::Vector2f((float)size.x, (float)size.y));

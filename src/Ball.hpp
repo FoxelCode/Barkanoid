@@ -12,6 +12,5 @@ public:
 	void TurnTowards(float angle);
 
 private:
-	float radius;
 	sf::Vector2f velocity;
 };

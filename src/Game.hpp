@@ -4,11 +4,14 @@
 #include <SFML\Graphics\RenderTarget.hpp>
 #include <SFML\Graphics\RenderStates.hpp>
 #include <SFML\Graphics\RenderWindow.hpp>
+#include <SFML\Graphics\Font.hpp>
+#include <SFML\Graphics\Text.hpp>
 
 #include "IUpdatable.hpp"
 #include "GameArea.hpp"
 #include "Ball.hpp"
 #include "Paddle.hpp"
+#include "AssetManager.hpp"
 
 class Game : public sf::Drawable, IUpdatable
 {
@@ -22,8 +25,10 @@ public:
 private:
 	void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
-	sf::RenderWindow* window;
+	const sf::RenderWindow* window;
 	sf::Vector2u size;
+
+	AssetManager asset;
 
 	GameArea* gameArea = nullptr;
 	Ball* ball = nullptr;

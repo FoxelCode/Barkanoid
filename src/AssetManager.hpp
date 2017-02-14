@@ -7,7 +7,7 @@ class AssetManager
 {
 public:
 	~AssetManager();
-	sf::Texture* loadTexture(std::string filename);
+	sf::Texture* GetTexture(std::string filename);
 
 private:
 	std::map<std::string, sf::Texture*> textures;

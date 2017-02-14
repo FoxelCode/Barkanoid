@@ -8,12 +8,12 @@ AssetManager::~AssetManager()
 	}
 }
 
-sf::Texture* AssetManager::loadTexture(std::string filename)
+sf::Texture* AssetManager::GetTexture(std::string filename)
 {
 	std::map<std::string, sf::Texture*>::iterator it = textures.find(filename);
-	if (it == textures.end())
+	if (it != textures.end())
 		return it->second;
-	sf::Texture* tex;
+	sf::Texture* tex = new sf::Texture();
 	tex->loadFromFile("res\\" + filename);
 	textures.insert(std::pair<std::string, sf::Texture*>(filename, tex));
 	return tex;

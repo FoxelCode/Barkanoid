@@ -17,12 +17,12 @@ public:
 
 	virtual void Separate(sf::Vector2f separation) { Move(separation); }
 	Collider* GetCollider() { return collider; }
-	void LoadTexture(std::string filename, float scale = 1.0f);
+	void SetTexture(sf::Texture* tex, float scale = 1.0f);
 	void SetTextureRect(sf::IntRect rect);
 
 protected:
 	Collider* collider = nullptr;
-	sf::Texture texture;
+	sf::Texture* texture;
 	float textureScale;
 	sf::Sprite sprite;
 };

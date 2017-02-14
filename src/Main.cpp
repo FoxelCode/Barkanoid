@@ -3,24 +3,23 @@
 #include <thread>
 #include "Game.hpp"
 
-void renderThread(sf::RenderWindow* window, Game* game)
-{
-	while (window->isOpen())
-	{
-		window->clear();
-		window->draw(*game);
-		window->display();
-	}
-}
-
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(600, 800), "Barkanoid Woof Woof");
-	window.setVerticalSyncEnabled(true);
-	window.setActive(false);
+	sf::RenderTexture renderTexture;
+
+	if (!renderTexture.create(window.getSize().x, window.getSize().y))
+	{
+		return -1;
+	}
+
+	//window.setVerticalSyncEnabled(true);
+	window.setFramerateLimit(60);
 	sf::Clock deltaClock;
+	const float deltaTime = 0.01f;
+	float deltaAccumulator = 0.0f;
+
 	Game* game = new Game(window, sf::Vector2u(600, 800));
-	std::thread render(renderThread, &window, game);
 
 	while (window.isOpen())
 	{
@@ -32,12 +31,25 @@ int main()
 		}
 
 		float delta = deltaClock.restart().asSeconds();
-		game->Update(delta);
-		if (delta > 0.02f)
-			std::cout << "STUTTER: " << delta << std::endl;
-	}
+		deltaAccumulator += delta;
 
-	render.join();
+		while (deltaAccumulator >= deltaTime)
+		{
+			game->Update(deltaTime);
+			deltaAccumulator -= deltaTime;
+		}
+
+		renderTexture.clear();
+		renderTexture.draw(*game);
+		renderTexture.display();
+
+		const sf::Texture& t = renderTexture.getTexture();
+		const sf::Sprite s(t);
+
+		window.clear();
+		window.draw(s);
+		window.display();
+	}
 
 	return 0;
 }

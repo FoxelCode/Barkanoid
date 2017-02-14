@@ -22,10 +22,10 @@ void GameObject::Update(float delta)
 {
 }
 
-void GameObject::LoadTexture(std::string filename, float textureScale)
+void GameObject::SetTexture(sf::Texture* tex, float textureScale)
 {
-	texture.loadFromFile("res\\" + filename);
-	sprite.setTexture(texture);
+	this->texture = tex;
+	sprite.setTexture(*tex);
 	this->textureScale = textureScale;
 	sprite.setScale(textureScale, textureScale);
 }
