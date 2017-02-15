@@ -4,8 +4,8 @@
 #include "Util.hpp"
 
 Wall::Wall(sf::Vector2f pos, sf::Vector2f size)
+	: GameObject(pos)
 {
-	SetPosition(pos);
 	SetTexture(Util::GetAssetManager()->GetTexture("wall.png"));
 	texture->setRepeated(true);
 	SetTextureRect(sf::IntRect(0, 0, size.x, size.y));

@@ -6,12 +6,6 @@
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(600, 800), "Barkanoid Woof Woof");
-	sf::RenderTexture renderTexture;
-
-	if (!renderTexture.create(window.getSize().x, window.getSize().y))
-	{
-		return -1;
-	}
 
 	//window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
@@ -39,15 +33,8 @@ int main()
 			deltaAccumulator -= deltaTime;
 		}
 
-		renderTexture.clear();
-		renderTexture.draw(*game);
-		renderTexture.display();
-
-		const sf::Texture& t = renderTexture.getTexture();
-		const sf::Sprite s(t);
-
 		window.clear();
-		window.draw(s);
+		window.draw(*game);
 		window.display();
 	}
 

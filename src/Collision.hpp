@@ -13,4 +13,6 @@ public:
 private:
 	static void AABBToAABB(AABBCollider* a, AABBCollider* b);
 	static void CircleToAABB(CircleCollider* a, AABBCollider* b);
+
+	static sf::Vector2f offset;
 };

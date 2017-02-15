@@ -11,6 +11,7 @@ class GameObject : public Transformable, public sf::Drawable, IUpdatable
 {
 public:
 	GameObject() {}
+	GameObject(sf::Vector2f pos) { SetPosition(pos); }
 	~GameObject();
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	virtual void Update(float delta);

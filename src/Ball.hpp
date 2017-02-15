@@ -13,4 +13,5 @@ public:
 
 private:
 	sf::Vector2f velocity;
+	float angle;
 };

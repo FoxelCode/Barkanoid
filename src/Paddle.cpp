@@ -4,9 +4,8 @@
 #include "Util.hpp"
 
 Paddle::Paddle(sf::Vector2f pos)
-	: GameObject(), angleRange(160.0f)
+	: GameObject(pos), angleRange(160.0f)
 {
-	SetPosition(pos);
 	size = sf::Vector2f(60.0f, 12.0f);
 	collider = new AABBCollider(this, sf::Vector2f(-size.x / 2.0f, -size.y / 2.0f), size);
 

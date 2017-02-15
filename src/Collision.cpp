@@ -4,9 +4,33 @@
 #include "Math.hpp"
 #include "Paddle.hpp"
 #include "Ball.hpp"
+#include "ListCollider.hpp"
+
+sf::Vector2f Collision::offset = sf::Vector2f();
 
 void Collision::Collide(Collider* a, Collider* b)
 {
+	if (a->GetType() == ColliderType::List)
+	{
+		ListCollider* aList = static_cast<ListCollider*>(a);
+		offset += aList->GetOffset();
+		for each (Collider* collider in aList->GetColliders())
+		{
+			Collide(collider, b);
+		}
+		offset -= aList->GetOffset();
+	}
+	if (b->GetType() == ColliderType::List)
+	{
+		ListCollider* bList = static_cast<ListCollider*>(b);
+		offset += bList->GetOffset();
+		for each (Collider* collider in bList->GetColliders())
+		{
+			Collide(a, collider);
+		}
+		offset -= bList->GetOffset();
+	}
+
 	if (a->GetType() == ColliderType::Circle && b->GetType() == ColliderType::AABB)
 		CircleToAABB(static_cast<CircleCollider*>(a), static_cast<AABBCollider*>(b));
 	else if (a->GetType() == ColliderType::AABB && b->GetType() == ColliderType::AABB)
@@ -111,7 +135,7 @@ void Collision::AABBToAABB(AABBCollider * a, AABBCollider * b)
 void Collision::CircleToAABB(CircleCollider* a, AABBCollider* b)
 {
 	sf::Vector2f aPos = a->GetGameObject()->GetPosition() + a->GetOffset();
-	sf::Vector2f bPos = b->GetGameObject()->GetPosition() + b->GetOffset();
+	sf::Vector2f bPos = b->GetGameObject()->GetPosition() + b->GetOffset() + offset;
 	sf::FloatRect aBounds = a->getGlobalBounds();
 	aBounds.left += aPos.x;
 	aBounds.top += aPos.y;

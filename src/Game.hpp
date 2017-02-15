@@ -11,7 +11,7 @@
 #include "GameArea.hpp"
 #include "Ball.hpp"
 #include "Paddle.hpp"
-#include "Brick.hpp"
+#include "Level.hpp"
 #include "AssetManager.hpp"
 
 class Game : public sf::Drawable, IUpdatable
@@ -37,5 +37,5 @@ private:
 	GameArea* gameArea = nullptr;
 	Ball* ball = nullptr;
 	Paddle* paddle = nullptr;
-	Brick* brick = nullptr;
+	Level* level = nullptr;
 };

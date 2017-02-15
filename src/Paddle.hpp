@@ -11,7 +11,7 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	float GetReflectionScalar(sf::Vector2f pos);
-	float GetAngleRange() { return angleRange * (PIELLO_DARKNESS_MY_OLD_FRIEND / 180.0f); }
+	float GetAngleRange() { return angleRange * ((float)PIELLO_DARKNESS_MY_OLD_FRIEND / 180.0f); }
 
 private:
 	sf::Sprite leftSide;

@@ -6,8 +6,8 @@
 #include <iostream>
 
 Brick::Brick(sf::Vector2f pos, sf::Color colour)
+	: GameObject(pos)
 {
-	SetPosition(pos);
 	collider = new AABBCollider(this, sf::Vector2f(), sf::Vector2f(32.0f, 16.0f));
 
 	SetTexture(Util::GetAssetManager()->GetTexture("brick_base.png"), 2.0f);

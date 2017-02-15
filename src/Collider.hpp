@@ -6,7 +6,8 @@
 enum ColliderType
 {
 	AABB,
-	Circle
+	Circle,
+	List
 };
 
 class GameObject;
