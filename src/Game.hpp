@@ -29,6 +29,7 @@ private:
 
 	const sf::RenderWindow* window;
 	sf::Vector2u size;
+	sf::Color bgColour;
 
 	AssetManager asset;
 

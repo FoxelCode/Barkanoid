@@ -34,3 +34,8 @@ void GameObject::SetTextureRect(sf::IntRect rect)
 {
 	sprite.setTextureRect(rect);
 }
+
+void GameObject::SetFrame(int frame)
+{
+	SetTextureRect(sf::IntRect(frame * frameSize.x, 0, frameSize.x, frameSize.y));
+}

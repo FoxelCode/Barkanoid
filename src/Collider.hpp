@@ -20,6 +20,7 @@ public:
 	virtual void Draw(sf::RenderTarget& target, sf::RenderStates states) const {}
 
 	virtual ColliderType GetType() { return ColliderType::AABB; }
+	virtual sf::FloatRect GetBounds();
 	GameObject* GetGameObject() { return gameObject; }
 	sf::Vector2f GetOffset() const { return offset; }
 

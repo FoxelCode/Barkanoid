@@ -4,7 +4,7 @@
 #include <SFML\Graphics\RenderTarget.hpp>
 
 GameArea::GameArea(sf::Vector2f pos, sf::Vector2f size)
-	: GameObject(pos), size(size), wallThickness(20.0f)
+	: GameObject(pos), size(size), wallThickness(16.0f)
 {
 	leftWall = new Wall(sf::Vector2f(0.0f, wallThickness + pos.y), sf::Vector2f(wallThickness, size.y));
 	topWall = new Wall(sf::Vector2f(0.0f, pos.y), sf::Vector2f(size.x, wallThickness));

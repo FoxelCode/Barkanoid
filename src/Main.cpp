@@ -5,15 +5,16 @@
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(600, 800), "Barkanoid Woof Woof");
+	sf::RenderWindow window(sf::VideoMode(480, 640), "Barkanoid Woof Woof");
 
 	//window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
 	sf::Clock deltaClock;
 	const float deltaTime = 0.01f;
 	float deltaAccumulator = 0.0f;
+	sf::Color clearColour = sf::Color::Black;
 
-	Game* game = new Game(window, sf::Vector2u(600, 800));
+	Game* game = new Game(window, sf::Vector2u(480, 640));
 
 	while (window.isOpen())
 	{
@@ -33,7 +34,6 @@ int main()
 			deltaAccumulator -= deltaTime;
 		}
 
-		window.clear();
 		window.draw(*game);
 		window.display();
 	}

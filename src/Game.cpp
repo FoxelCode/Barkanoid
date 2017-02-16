@@ -11,14 +11,17 @@
 #include <SFML\Window\Mouse.hpp>
 
 Game::Game(sf::RenderWindow& window, sf::Vector2u size)
-	: window(&window), size(size)
+	: window(&window), size(size), bgColour(Palette::Black)
 {
 	Util::SetAssetManager(&asset);
 
-	ball = new Ball(sf::Vector2f(100.0f, (float)size.y - 150.0f));
-	paddle = new Paddle(sf::Vector2f((float)size.x / 2.0f, (float)size.y - 100.0f));
+	ball = new Ball(sf::Vector2f(100.0f, 300.0f));
+	paddle = new Paddle(sf::Vector2f((float)size.x / 2.0f, (float)size.y - 46.0f));
 	gameArea = new GameArea(sf::Vector2f(0.0f, 64.0f), sf::Vector2f((float)size.x, (float)size.y - 64.0f));
-	level = new Level(sf::Vector2f(40.0f, 104.0f));
+	level = new Level(sf::Vector2f(16.0f, 104.0f));
+	bgColour = level->GetBGColour();
+
+	sf::FloatRect levelBounds = level->GetCollider()->GetBounds();
 
 	Add(ball);
 	Add(paddle);
@@ -71,6 +74,7 @@ void Game::Collide(Ball* a, Paddle* b)
 
 void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	target.clear(bgColour);
 	for each (GameObject* object in gameObjects)
 	{
 		target.draw(*object, states);

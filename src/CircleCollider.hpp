@@ -21,5 +21,7 @@ public:
 		target.draw(*this, states);
 	}
 
+	virtual sf::FloatRect GetBounds();
+
 	ColliderType GetType() { return ColliderType::Circle; }
 };

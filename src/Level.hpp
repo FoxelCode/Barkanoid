@@ -10,9 +10,13 @@ public:
 	virtual void Update(float delta);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
+	void LoadLevel(int* variants, int* colours, sf::Vector2u size);
+	sf::Color GetBGColour() { return bgColour; }
+
+private:
 	void AddBrick(Brick* brick);
 	void RemoveBrick(Brick* brick);
 
-private:
 	std::vector<Brick*> bricks;
+	sf::Color bgColour;
 };

@@ -1,5 +1,7 @@
 #include "AssetManager.hpp"
 
+#include <fstream>
+
 AssetManager::~AssetManager()
 {
 	for each (std::pair<std::string, sf::Texture*> texPair in textures)
@@ -14,7 +16,24 @@ sf::Texture* AssetManager::GetTexture(std::string filename)
 	if (it != textures.end())
 		return it->second;
 	sf::Texture* tex = new sf::Texture();
-	tex->loadFromFile("res\\" + filename);
+	tex->loadFromFile("res\\gfx\\" + filename);
 	textures.insert(std::pair<std::string, sf::Texture*>(filename, tex));
 	return tex;
+}
+
+std::string AssetManager::GetLevel(std::string filename)
+{
+	std::string output;
+	std::string line;
+	std::ifstream inFile;
+	inFile.open("res\\lvl\\" + filename);
+	if (!inFile.is_open())
+		return std::string();
+	while (!inFile.eof())
+	{
+		std::getline(inFile, line);
+		output += line;
+	}
+	inFile.close();
+	return output;
 }

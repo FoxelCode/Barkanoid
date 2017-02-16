@@ -5,7 +5,7 @@
 #include "Util.hpp"
 
 Ball::Ball(sf::Vector2f pos)
-	: GameObject(pos), velocity(50.0f, -400.0f)
+	: GameObject(pos), velocity(100.0f, -400.0f)
 {
 	collider = new CircleCollider(this, sf::Vector2f(-8.0f, -8.0f), 8.0f);
 	SetTexture(Util::GetAssetManager()->GetTexture("ball.png"), 2.0f);
