@@ -23,6 +23,8 @@ int main()
 		{
 			if (event.type == sf::Event::Closed)
 				window.close();
+			else
+				game->HandleEvent(event);
 		}
 
 		float delta = deltaClock.restart().asSeconds();

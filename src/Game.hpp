@@ -24,12 +24,17 @@ public:
 	void Collide(GameObject* a, GameObject* b);
 	void Collide(Ball* a, Paddle* b);
 
+	void HandleEvent(sf::Event evt);
+
 private:
 	void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
 	const sf::RenderWindow* window;
 	sf::Vector2u size;
 	sf::Color bgColour;
+
+	bool paused = false;
+	bool allowStep = false;
 
 	AssetManager asset;
 

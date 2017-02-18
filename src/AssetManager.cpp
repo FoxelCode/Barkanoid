@@ -28,7 +28,7 @@ std::string AssetManager::GetLevel(std::string filename)
 	std::ifstream inFile;
 	inFile.open("res\\lvl\\" + filename);
 	if (!inFile.is_open())
-		return std::string();
+		return "";
 	while (!inFile.eof())
 	{
 		std::getline(inFile, line);

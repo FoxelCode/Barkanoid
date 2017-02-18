@@ -6,7 +6,7 @@
 class Level : public GameObject
 {
 public:
-	Level(sf::Vector2f pos);
+	Level(sf::Vector2f pos, sf::Vector2f maxArea);
 	virtual void Update(float delta);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
@@ -20,5 +20,6 @@ private:
 	void RemoveBrick(Brick* brick);
 
 	std::vector<Brick*> bricks;
+	sf::Vector2f maxArea;
 	sf::Color bgColour;
 };
