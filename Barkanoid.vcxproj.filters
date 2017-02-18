@@ -69,6 +69,9 @@
     <ClCompile Include="src\CircleCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ball.hpp">
@@ -130,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="src\json\json.hpp">
       <Filter>Header Files\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Log.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
