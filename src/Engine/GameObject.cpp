@@ -2,7 +2,11 @@
 
 GameObject::~GameObject()
 {
-	delete collider;
+	if (collider != nullptr)
+	{
+		delete collider;
+		collider = nullptr;
+	}
 }
 
 void GameObject::draw(sf::RenderTarget& target, sf::RenderStates states) const

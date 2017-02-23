@@ -8,6 +8,14 @@ UI::UI(sf::Vector2u size)
 
 UI::~UI()
 {
+	for (auto& life : lives)
+	{
+		if (life != nullptr)
+		{
+			delete life;
+			life = nullptr;
+		}
+	}
 	lives.clear();
 }
 
@@ -21,7 +29,19 @@ void UI::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void UI::SetLives(size_t amount)
 {
+	if (lives.size() > 0)
+	{
+		for (auto& life : lives)
+		{
+			if (life != nullptr)
+			{
+				delete life;
+				life = nullptr;
+			}
+		}
+	}
 	lives.clear();
+
 	for (size_t i = 0; i < amount; i++)
 	{
 		sf::Vector2f lifePos = livesPos + sf::Vector2f(i * (lifeWidth + livesSpacing), 0.0f);

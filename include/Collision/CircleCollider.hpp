@@ -16,7 +16,6 @@ public:
 		setOutlineThickness(-1.0f);
 		setOutlineColor(sf::Color::Green);
 	};
-	~CircleCollider() = default;
 
 	void Draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{

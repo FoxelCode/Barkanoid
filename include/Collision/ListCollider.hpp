@@ -11,7 +11,6 @@ class ListCollider : public Collider
 public:
 	ListCollider(GameObject* gameObject)
 		: Collider(gameObject) {};
-	~ListCollider() = default;
 
 	void Draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{

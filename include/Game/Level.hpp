@@ -7,6 +7,7 @@ class Level : public GameObject
 {
 public:
 	Level(sf::Vector2f pos, sf::Vector2f maxArea);
+	~Level();
 	virtual void Update(float delta);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 

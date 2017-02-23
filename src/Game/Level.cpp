@@ -17,6 +17,11 @@ Level::Level(sf::Vector2f pos, sf::Vector2f maxArea)
 	LoadLevel("level1");
 }
 
+Level::~Level()
+{
+	ClearLevel();
+}
+
 void Level::Update(float delta)
 {
 	for (size_t i = 0; i < bricks.size(); )
@@ -47,7 +52,11 @@ void Level::ClearLevel()
 	static_cast<ListCollider*>(collider)->Clear();
 	for (int i = bricks.size() - 1; i >= 0; i--)
 	{
-		delete bricks[i];
+		if (bricks[i] != nullptr)
+		{
+			delete bricks[i];
+			bricks[i] = nullptr;
+		}
 	}
 	bricks.clear();
 }
@@ -182,6 +191,17 @@ void Level::LoadLevel(std::string levelName)
 
 	// Create the bricks according to JSON data
 	CreateBricks(variantData, colourData, levelSize);
+
+	if (variantData != nullptr)
+	{
+		delete[] variantData;
+		variantData = nullptr;
+	}
+	if (colourData != nullptr)
+	{
+		delete[] colourData;
+		colourData = nullptr;
+	}
 }
 
 void Level::CreateBricks(int* variants, int* colours, sf::Vector2u size)

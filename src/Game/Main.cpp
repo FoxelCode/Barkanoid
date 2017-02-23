@@ -1,4 +1,6 @@
+#ifndef NDEBUG
 #include <vld.h>
+#endif
 
 #include <iostream>
 #include <thread>

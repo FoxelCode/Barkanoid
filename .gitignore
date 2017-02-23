@@ -5,3 +5,4 @@
 *.VC.opendb
 *.vcxproj
 .vs/
+/ipch

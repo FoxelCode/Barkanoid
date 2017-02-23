@@ -26,11 +26,31 @@ Barkanoid::Barkanoid(sf::RenderWindow& window, sf::Vector2u size)
 
 Barkanoid::~Barkanoid()
 {
-	delete gameArea;
-	delete ball;
-	delete paddle;
-	delete level;
-	delete ui;
+	if (gameArea != nullptr)
+	{
+		delete gameArea;
+		gameArea = nullptr;
+	}
+	if (ball != nullptr)
+	{
+		delete ball;
+		ball = nullptr;
+	}
+	if (paddle != nullptr)
+	{
+		delete paddle;
+		paddle = nullptr;
+	}
+	if (level != nullptr)
+	{
+		delete level;
+		level = nullptr;
+	}
+	if (ui != nullptr)
+	{
+		delete ui;
+		ui = nullptr;
+	}
 }
 
 void Barkanoid::draw(sf::RenderTarget& target, sf::RenderStates states) const
