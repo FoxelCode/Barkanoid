@@ -22,9 +22,12 @@ Brick::Brick(sf::Vector2f pos, sf::Color colour, int variant)
 
 void Brick::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform.translate(GetPosition());
-	target.draw(sprite, states);
-	target.draw(highlight, states);
+	if (IsAlive())
+	{
+		states.transform.translate(GetPosition());
+		target.draw(sprite, states);
+		target.draw(highlight, states);
+	}
 }
 
 void Brick::Collided()

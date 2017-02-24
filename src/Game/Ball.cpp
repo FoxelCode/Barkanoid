@@ -9,9 +9,9 @@
 Ball::Ball(sf::Vector2f pos)
 	: GameObject(pos), velocityVec(), velocity(400.0f), angle(0.5f)
 {
-	collider = new CircleCollider(this, sf::Vector2f(-8.0f, -8.0f), 8.0f);
+	collider = new CircleCollider(this, sf::Vector2f(-6.0f, -6.0f), 6.0f);
 	SetTexture(G::GetAssetManager()->GetTexture("ball.png"), 2.0f);
-	sprite.setPosition(-8.0f, -8.0f);
+	sprite.setPosition(-6.0f, -6.0f);
 
 	SetAngle(angle);
 }
@@ -25,14 +25,21 @@ void Ball::Separate(sf::Vector2f separation)
 {
 	GameObject::Separate(separation);
 
-	sf::Vector2f separationNormal = separation;
+	// Shortest axis reflection
+	if (fabsf(separation.y) >= fabsf(separation.x))
+		velocityVec.y *= -1.0f;
+	else
+		velocityVec.x *= -1.0f;
+
+	// Proper reflection
+	/*sf::Vector2f separationNormal = separation;
 	float separationLength = sqrtf(separation.x * separation.x + separation.y * separation.y);
 	separationNormal.x /= separationLength;
 	separationNormal.y /= separationLength;
 
 	float VdotN = velocityVec.x * separationNormal.x + velocityVec.y * separationNormal.y;
 	velocityVec.x = velocityVec.x - 2 * VdotN * separationNormal.x;
-	velocityVec.y = velocityVec.y - 2 * VdotN * separationNormal.y;
+	velocityVec.y = velocityVec.y - 2 * VdotN * separationNormal.y;*/
 }
 
 void Ball::SetAngle(float angle)

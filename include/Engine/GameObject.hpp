@@ -27,9 +27,9 @@ public:
 	void SetFrame(int frame);
 
 	virtual void Kill() { alive = false; }
-	bool IsAlive() { return alive; }
+	bool IsAlive() const { return alive; }
 	void SetActive(bool v) { active = v; }
-	bool IsActive() { return active; }
+	bool IsActive() const { return active; }
 
 protected:
 	Collider* collider = nullptr;
