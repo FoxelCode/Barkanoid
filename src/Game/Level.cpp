@@ -22,7 +22,15 @@ Level::~Level()
 	ClearLevel();
 }
 
-void Level::Update(float delta)
+void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	for each (Brick* brick in bricks)
+	{
+		target.draw(*brick, states);
+	}
+}
+
+void Level::RemoveDead()
 {
 	for (size_t i = 0; i < bricks.size(); )
 	{
@@ -36,14 +44,6 @@ void Level::Update(float delta)
 		{
 			i++;
 		}
-	}
-}
-
-void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	for each (Brick* brick in bricks)
-	{
-		target.draw(*brick, states);
 	}
 }
 

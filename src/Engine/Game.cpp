@@ -1,10 +1,12 @@
 #include "Engine/Game.hpp"
 
 #include "Util/Math.hpp"
+#include "Util/Random.hpp"
 #include "Collision/Collision.hpp"
 #include "Engine/G.hpp"
 #include "Game/Palette.hpp"
 #include "Engine/Input.hpp"
+#include "Engine/State.hpp"
 
 #include <vector>
 #include <cfloat>
@@ -14,83 +16,67 @@
 #include <SFML\Window\Mouse.hpp>
 #include <SFML\Window\Keyboard.hpp>
 
-Game::Game(sf::RenderWindow& window, sf::Vector2u size)
-	: window(&window), size(size), bgColour(Palette::Black)
+Game::Game(sf::RenderWindow& window, sf::Vector2u size, State* initialState)
+	: window(&window), size(size)
 {
+	G::SetGame(this);
 	G::SetAssetManager(&asset);
 	Input::SetWindow(&window);
+	Random::Seed();
 
 	window.setKeyRepeatEnabled(false);
+
+	ASSERT(initialState != nullptr);
+	state = initialState;
+	state->SetGame(this);
+	state->Init();
 }
 
 Game::~Game()
 {
-	gameObjects.clear();
+	if (state != nullptr)
+	{
+		delete state;
+		state = nullptr;
+	}
 }
 
 void Game::Update(float delta)
 {
+	allowStep = false;
+
 	if (Input::JustPressed(sf::Keyboard::P))
 		paused = !paused;
 	if (Input::JustPressed(sf::Keyboard::O))
 		showColliders = !showColliders;
 
+	if (paused && Input::JustPressed(sf::Keyboard::N))
+		allowStep = true;
+
 	if (!paused || allowStep)
-	{
-		auto it = gameObjects.begin();
-		while (it != gameObjects.end())
-		{
-			if (!(*it)->IsAlive())
-			{
-				GameObject* toErase = (*it);
-				it = gameObjects.erase(it);
-				delete toErase;
-			}
-			else
-			{
-				it++;
-			}
-		}
+		state->Update(delta);
 
-		for each (GameObject* object in gameObjects)
-		{
-			if (object->IsActive())
-				object->Update(delta);
-		}
-
-		allowStep = false;
-	}
-	else
-	{
-		if (Input::JustPressed(sf::Keyboard::N))
-			allowStep = true;
-	}
 	Input::Update();
-}
-
-void Game::Add(GameObject* object)
-{
-	gameObjects.push_back(object);
-}
-
-void Game::Collide(GameObject* a, GameObject* b)
-{
-	Collision::Collide(a->GetCollider(), b->GetCollider());
 }
 
 void Game::HandleEvent(sf::Event evt)
 {
-	if (evt.type == sf::Event::KeyPressed || evt.type == sf::Event::KeyReleased)
+	if (evt.type == sf::Event::KeyPressed || evt.type == sf::Event::KeyReleased
+		|| evt.type == sf::Event::MouseButtonPressed || evt.type == sf::Event::MouseButtonReleased)
 		Input::HandleEvent(evt);
+}
+
+void Game::SwitchState(State* newState)
+{
+	ASSERT(newState != nullptr);
+	if (state != nullptr)
+		delete state;
+	state = newState;
+	state->SetGame(this);
+	state->Init();
 }
 
 void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.clear(bgColour);
-	for each (GameObject* object in gameObjects)
-	{
-		target.draw(*object, states);
-		if (showColliders)
-			(*object).drawCollider(target, states);
-	}
+	state->draw(target, states);
 }

@@ -2,10 +2,26 @@
 
 #include "Engine/Input.hpp"
 #include "Collision/Collision.hpp"
+#include "Util/Random.hpp"
 
-Barkanoid::Barkanoid(sf::RenderWindow& window, sf::Vector2u size)
-	: Game(window, size), lives(2)
+Barkanoid::Barkanoid()
+	: State(), lives(2)
 {
+}
+
+Barkanoid::~Barkanoid()
+{
+	if (ui != nullptr)
+	{
+		delete ui;
+		ui = nullptr;
+	}
+}
+
+void Barkanoid::Init()
+{
+	sf::Vector2u size = GetGame()->GetSize();
+
 	ball = new Ball(sf::Vector2f(100.0f, 300.0f));
 	paddle = new Paddle(sf::Vector2f((float)size.x / 2.0f, (float)size.y - 46.0f));
 	gameArea = new GameArea(sf::Vector2f(0.0f, 64.0f), sf::Vector2f((float)size.x, (float)size.y - 64.0f));
@@ -21,83 +37,68 @@ Barkanoid::Barkanoid(sf::RenderWindow& window, sf::Vector2u size)
 	Add(gameArea);
 	Add(level);
 
-	Reset();
-}
+	paddle->SetHorizontalRange(sf::Vector2f(16.0f, size.x - 16.0f));
 
-Barkanoid::~Barkanoid()
-{
-	if (gameArea != nullptr)
-	{
-		delete gameArea;
-		gameArea = nullptr;
-	}
-	if (ball != nullptr)
-	{
-		delete ball;
-		ball = nullptr;
-	}
-	if (paddle != nullptr)
-	{
-		delete paddle;
-		paddle = nullptr;
-	}
-	if (level != nullptr)
-	{
-		delete level;
-		level = nullptr;
-	}
-	if (ui != nullptr)
-	{
-		delete ui;
-		ui = nullptr;
-	}
+	ResetLevel();
 }
 
 void Barkanoid::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	Game::draw(target, states);
+	State::draw(target, states);
 	target.draw(*ui, states);
 }
 
 void Barkanoid::Update(float delta)
 {
-	Game::Update(delta);
+	State::Update(delta);
 
-	Collide(ball, paddle);
-	Game::Collide(ball, gameArea);
-	Game::Collide(ball, level);
+	if (Input::JustPressed(sf::Keyboard::M))
+	{
+		GetGame()->SwitchState(new Barkanoid());
+		return;
+	}
+
+	if (ball->IsMoving())
+	{
+		Collide(ball, paddle);
+		State::Collide(ball, gameArea);
+		State::Collide(ball, level);
+	}
 
 	// Check if the ball has passed the bottom of the screen -> lose a life
-	if (ball->GetPosition().y > size.y + ball->GetRadius())
+	if (ball->GetPosition().y > GetGame()->GetSize().y + ball->GetRadius())
 	{
-		ball->SetPosition(size.x / 2.0f, size.y / 2.0f);
+		ball->SetPosition(GetGame()->GetSize().x / 2.0f, GetGame()->GetSize().y / 2.0f);
 		lives--;
 		if (lives < 0)
 		{
 			level->ClearLevel();
 			level->LoadLevel("level1");
-			Reset();
+			ResetLevel();
 		}
 		else
 		{
-			ui->SetLives(lives);
+			ResetLife();
 		}
 	}
 
-	// Restrict paddle movement to the game area
-	float paddleX = Math::clamp(paddle->GetPosition().x, 16.0f + paddle->GetCollider()->GetBounds().width / 2.0f,
-		size.x - 16.0f - paddle->GetCollider()->GetBounds().width / 2.0f);
-	paddle->SetPosition(paddleX, paddle->GetPosition().y);
+	level->RemoveDead();
 }
 
-void Barkanoid::Collide(Ball* a, Paddle* b)
+bool Barkanoid::Collide(Ball* a, Paddle* b)
 {
-	Collision::PaddleCollide(static_cast<CircleCollider*>(a->GetCollider()), static_cast<AABBCollider*>(b->GetCollider()));
+	return Collision::PaddleCollide(static_cast<CircleCollider*>(a->GetCollider()), static_cast<AABBCollider*>(b->GetCollider()));
 }
 
-void Barkanoid::Reset()
+void Barkanoid::ResetLevel()
 {
 	lives = 2;
+	ResetLife();
+}
+
+void Barkanoid::ResetLife()
+{
 	ui->SetLives(lives);
-	//ball->SetPosition(sf::Vector2f(paddle->GetPosition().x, paddle->GetPosition().y ))
+	ball->SetPosition(paddle->GetPosition().x + (Random::Float(paddle->GetSize().x / 2.0f) - paddle->GetSize().x / 4.0f), 0.0f);
+	paddle->AttachBall(ball);
 }

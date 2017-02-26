@@ -1,9 +1,9 @@
 #include "Game/UI.hpp"
 
 UI::UI(sf::Vector2u size)
-	: size(size), livesSpacing(6.0f), lifeWidth(40.0f)
+	: size(size), livesSpacing(6.0f), lifeWidth(36.0f)
 {
-	livesPos = sf::Vector2f(40.0f, size.y - 20.0f);
+	livesPos = sf::Vector2f(24.0f + lifeWidth, size.y - 20.0f);
 }
 
 UI::~UI()

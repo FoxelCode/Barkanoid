@@ -34,9 +34,10 @@ public:
 		bounds.top = GetGameObject()->GetPosition().y;
 		return bounds;
 	}
-	void CalculateBounds();
 
 private:
+	void CalculateBounds();
+
 	std::vector<Collider*> colliders;
 	sf::FloatRect bounds;
 };

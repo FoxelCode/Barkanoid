@@ -8,6 +8,10 @@
 
 bool Collision::Collide(Collider* a, Collider* b)
 {
+	// Check that both colliders are attached to living GameObjects
+	if (!a->GetGameObject()->IsAlive() || !b->GetGameObject()->IsAlive())
+		return false;
+
 	sf::FloatRect aBounds = a->GetBounds();
 	sf::FloatRect bBounds = b->GetBounds();
 

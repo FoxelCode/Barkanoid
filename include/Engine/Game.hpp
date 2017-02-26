@@ -10,32 +10,36 @@
 #include "IUpdatable.hpp"
 #include "GameObject.hpp"
 #include "AssetManager.hpp"
+class State;
 
 class Game : public sf::Drawable, IUpdatable
 {
 public:
-	Game(sf::RenderWindow& window, sf::Vector2u size);
+	Game(sf::RenderWindow& window, sf::Vector2u size, State* initialState);
 	~Game();
 
 	virtual void Update(float delta);
 	void Add(GameObject* object);
-	void Collide(GameObject* a, GameObject* b);
 
 	void HandleEvent(sf::Event evt);
+	void SwitchState(State* newState);
+
+	sf::Vector2u GetSize() { return size; }
+	bool IsPaused() { return paused; }
+	bool IsShowColliders() { return showColliders; }
+	bool IsAllowStep() { return allowStep; }
 
 protected:
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
 	const sf::RenderWindow* window;
-	sf::Vector2u size;
-	sf::Color bgColour;
+	const sf::Vector2u size;
 
 	bool paused = false;
 	bool showColliders = false;
 	bool allowStep = false;
 
-	std::vector<GameObject*> gameObjects;
-
 private:
 	AssetManager asset;
+	State* state = nullptr;
 };

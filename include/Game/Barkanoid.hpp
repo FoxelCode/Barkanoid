@@ -1,22 +1,26 @@
 #pragma once
 
-#include "Engine\Game.hpp"
+#include "Engine/State.hpp"
+#include "Engine/Game.hpp"
 #include "GameArea.hpp"
 #include "Ball.hpp"
 #include "Paddle.hpp"
 #include "Level.hpp"
 #include "UI.hpp"
 
-class Barkanoid : public Game
+class Barkanoid : public State
 {
 public:
-	Barkanoid(sf::RenderWindow& window, sf::Vector2u size);
+	Barkanoid();
 	~Barkanoid();
-	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
-
+	
+	void Init();
+	void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 	void Update(float delta);
-	void Collide(Ball* a, Paddle* b);
-	void Reset();
+
+	bool Collide(Ball* a, Paddle* b);
+	void ResetLevel();
+	void ResetLife();
 
 private:
 	GameArea* gameArea = nullptr;

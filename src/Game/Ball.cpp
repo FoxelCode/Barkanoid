@@ -10,15 +10,17 @@ Ball::Ball(sf::Vector2f pos)
 	: GameObject(pos), velocityVec(), velocity(400.0f), angle(0.5f)
 {
 	collider = new CircleCollider(this, sf::Vector2f(-6.0f, -6.0f), 6.0f);
-	SetTexture(G::GetAssetManager()->GetTexture("ball.png"), 2.0f);
-	sprite.setPosition(-6.0f, -6.0f);
+
+	LoadGraphic(G::GetAssetManager()->GetTexture("ball.png"));
+	graphic->setPosition(-6.0f, -6.0f);
 
 	SetAngle(angle);
 }
 
 void Ball::Update(float delta)
 {
-	Move(delta * velocityVec.x, delta * velocityVec.y);
+	if (moving)
+		Move(delta * velocityVec.x, delta * velocityVec.y);
 }
 
 void Ball::Separate(sf::Vector2f separation)
@@ -30,6 +32,8 @@ void Ball::Separate(sf::Vector2f separation)
 		velocityVec.y *= -1.0f;
 	else
 		velocityVec.x *= -1.0f;
+
+	Move(0.01f * velocityVec.x, 0.01f * velocityVec.y);
 
 	// Proper reflection
 	/*sf::Vector2f separationNormal = separation;

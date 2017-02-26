@@ -7,6 +7,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Engine/Game.hpp"
 #include "Game/Barkanoid.hpp"
 
 int main()
@@ -18,9 +19,11 @@ int main()
 
 	sf::Clock deltaClock;
 	const float deltaTime = 1.0f / 100.0f;
+	const float maxDeltaAccumulator = deltaTime * 2.0f;
 	float deltaAccumulator = 0.0f;
 
-	Barkanoid* game = new Barkanoid(window, sf::Vector2u(480, 640));
+	Barkanoid* state = new Barkanoid();
+	Game game(window, sf::Vector2u(480, 640), state);
 
 	while (window.isOpen())
 	{
@@ -30,23 +33,23 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 			else
-				game->HandleEvent(event);
+				game.HandleEvent(event);
 		}
 
 		float delta = deltaClock.restart().asSeconds();
 		deltaAccumulator += delta;
+		if (deltaAccumulator > maxDeltaAccumulator)
+			deltaAccumulator = maxDeltaAccumulator;
 
 		while (deltaAccumulator >= deltaTime)
 		{
-			game->Update(deltaTime);
+			game.Update(deltaTime);
 			deltaAccumulator -= deltaTime;
 		}
 
-		window.draw(*game);
+		window.draw(game);
 		window.display();
 	}
-
-	delete game;
 
 	return 0;
 }

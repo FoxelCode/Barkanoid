@@ -1,5 +1,7 @@
 #include "Engine/GameObject.hpp"
 
+#include "Graphics/SlicedGraphic.hpp"
+
 GameObject::~GameObject()
 {
 	if (collider != nullptr)
@@ -7,15 +9,21 @@ GameObject::~GameObject()
 		delete collider;
 		collider = nullptr;
 	}
+	if (graphic != nullptr)
+	{
+		delete graphic;
+		graphic = nullptr;
+	}
 }
 
 void GameObject::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.transform.translate(GetPosition());
-	target.draw(sprite, states);
+	if (graphic != nullptr)
+		target.draw(*graphic, states);
 }
 
-void GameObject::drawCollider(sf::RenderTarget& target, sf::RenderStates states) const
+void GameObject::DrawCollider(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	if (collider)
 	{
@@ -27,20 +35,32 @@ void GameObject::Update(float delta)
 {
 }
 
-void GameObject::SetTexture(sf::Texture* tex, float textureScale)
+void GameObject::LoadGraphic(sf::Texture* tex)
 {
-	this->texture = tex;
-	sprite.setTexture(*tex);
-	this->textureScale = textureScale;
-	sprite.setScale(textureScale, textureScale);
+	graphic = new Graphic();
+	graphic->SetTexture(tex);
 }
 
-void GameObject::SetTextureRect(sf::IntRect rect)
+void GameObject::LoadSlicedGraphic(sf::Texture* tex)
 {
-	sprite.setTextureRect(rect);
+	graphic = new SlicedGraphic();
+	graphic->SetTexture(tex);
 }
 
-void GameObject::SetFrame(int frame)
-{
-	SetTextureRect(sf::IntRect(frame * frameSize.x, 0, frameSize.x, frameSize.y));
-}
+//void GameObject::SetTexture(sf::Texture* tex, float textureScale)
+//{
+//	this->texture = tex;
+//	sprite.setTexture(*tex);
+//	this->textureScale = textureScale;
+//	sprite.setScale(textureScale, textureScale);
+//}
+//
+//void GameObject::SetTextureRect(sf::IntRect rect)
+//{
+//	sprite.setTextureRect(rect);
+//}
+//
+//void GameObject::SetFrame(int frame)
+//{
+//	SetTextureRect(sf::IntRect(frame * frameSize.x, 0, frameSize.x, frameSize.y));
+//}

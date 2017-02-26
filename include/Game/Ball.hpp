@@ -12,10 +12,14 @@ public:
 
 	void SetAngle(float angle);
 	void SetVelocity(float velocity);
+	void SetMoving(bool moving) { this->moving = moving; }
 	float GetRadius();
+	bool IsMoving() { return moving; }
 
 private:
 	sf::Vector2f velocityVec;
 	float velocity;
 	float angle;
+
+	bool moving = true;
 };
