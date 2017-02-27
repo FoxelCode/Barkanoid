@@ -10,6 +10,8 @@ public:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	virtual void Collided();
 
+	static const sf::Vector2u brickSize;
+
 private:
 	sf::Sprite highlight;
 };

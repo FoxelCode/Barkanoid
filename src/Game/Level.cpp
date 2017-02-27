@@ -9,21 +9,12 @@ using json = nlohmann::json;
 #include "Engine/G.hpp"
 #include "Util/Log.hpp"
 
-Level::Level(sf::Vector2f pos, sf::Vector2u size)
-	: GameObject(pos), size(size), bgColour(Palette::Black)
+Level::Level(sf::Vector2f pos, sf::Vector2f maxArea)
+	: GameObject(pos), originPos(pos), maxArea(maxArea), bgColour(Palette::Black)
 {
 	collider = new ListCollider(this);
 
-	for (size_t y = 0; y < size.y; y++)
-	{
-		bricks.push_back(std::vector<Brick*>());
-		for (size_t x = 0; x < size.x; x++)
-		{
-			bricks[y].push_back(nullptr);
-		}
-	}
-
-	LoadLevel("level1");
+	LoadLevel("level2");
 }
 
 Level::~Level()
@@ -98,57 +89,62 @@ void Level::LoadLevel(std::string levelName)
 		LOG_WARNING("No \"bgColour\" found in \"" + fileName + "\", assuming 0");
 
 	// Get level size
-	sf::Vector2u levelSize = sf::Vector2u(14, 18);
+	size = sf::Vector2u(maxArea.x / Brick::brickSize.x, maxArea.y / Brick::brickSize.y);
 	if (levelJson.find("size") != levelJson.end())
 	{
 		json sizeJson = levelJson["size"];
 		if (sizeJson.find("width") != sizeJson.end())
 		{
 			if (sizeJson["width"].is_number_unsigned())
-				levelSize.x = sizeJson["width"].get<unsigned>();
+				size.x = sizeJson["width"].get<unsigned>();
 			else
-				LOG_WARNING("\"width\" should be an unsigned integer, assuming " + std::to_string(levelSize.x));
+				LOG_WARNING("\"width\" should be an unsigned integer, assuming " + std::to_string(size.x));
 		}
 		else
-			LOG_WARNING("No \"width\" found in \"size\", assuming " + std::to_string(levelSize.x));
+			LOG_WARNING("No \"width\" found in \"size\", assuming " + std::to_string(size.x));
 
 		if (sizeJson.find("height") != sizeJson.end())
 		{
 			if (sizeJson["height"].is_number_unsigned())
-				levelSize.y = sizeJson["height"].get<unsigned>();
+				size.y = sizeJson["height"].get<unsigned>();
 			else
-				LOG_WARNING("\"height\" should be an unsigned integer, assuming " + std::to_string(levelSize.y));
+				LOG_WARNING("\"height\" should be an unsigned integer, assuming " + std::to_string(size.y));
 		}
 		else
-			LOG_WARNING("No \"height\" found in \"size\", assuming " + std::to_string(levelSize.y));
+			LOG_WARNING("No \"height\" found in \"size\", assuming " + std::to_string(size.y));
 	}
 	else
-		LOG_WARNING("No \"size\" found in \"" + fileName + "\", assuming " + std::to_string(levelSize.x) + "x" + std::to_string(levelSize.y));
+		LOG_WARNING("No \"size\" found in \"" + fileName + "\", assuming " + std::to_string(size.x) + "x" + std::to_string(size.y));
+
+	// Set brick offset based on the level size
+	sf::Vector2f newPos = originPos;
+	newPos.x += maxArea.x / 2.0f - (size.x * Brick::brickSize.x) / 2.0f;
+	SetPosition(newPos);
 
 	// Get variant data
-	int* variantData = new int[levelSize.y * levelSize.x];
+	int* variantData = new int[size.y * size.x];
 	if (levelJson.find("brickVariants") != levelJson.end())
 	{
 		json variantJson = levelJson["brickVariants"];
 		if (variantJson.is_array())
 		{
 			size_t variantCount = variantJson.size();
-			if (variantCount != levelSize.x * levelSize.y)
+			if (variantCount != size.x * size.y)
 			{
-				LOG_ERROR("brickVariants has " + std::to_string(variantCount) + " values (should be " + std::to_string(levelSize.x * levelSize.y) + ")");
+				LOG_ERROR("brickVariants has " + std::to_string(variantCount) + " values (should be " + std::to_string(size.x * size.y) + ")");
 				return;
 			}
-			for (size_t y = 0; y < levelSize.y; y++)
+			for (size_t y = 0; y < size.y; y++)
 			{
-				for (size_t x = 0; x < levelSize.x; x++)
+				for (size_t x = 0; x < size.x; x++)
 				{
-					if (!variantJson.at(y * levelSize.x + x).is_number_unsigned())
+					if (!variantJson.at(y * size.x + x).is_number_unsigned())
 					{
 						LOG_WARNING("brickVariants[" + std::to_string(x) + ", " + std::to_string(y) + "] should be an unsigned integer, assuming 0");
-						variantData[y * levelSize.x + x] = 0;
+						variantData[y * size.x + x] = 0;
 						continue;
 					}
-					variantData[y * levelSize.x + x] = variantJson.at(y * levelSize.x + x).get<unsigned>();
+					variantData[y * size.x + x] = variantJson.at(y * size.x + x).get<unsigned>();
 				}
 			}
 		}
@@ -165,29 +161,29 @@ void Level::LoadLevel(std::string levelName)
 	}
 
 	// Get colour data
-	int* colourData = new int[levelSize.y * levelSize.x];
+	int* colourData = new int[size.y * size.x];
 	if (levelJson.find("brickVariants") != levelJson.end())
 	{
 		json colourJson = levelJson["brickColours"];
 		if (colourJson.is_array())
 		{
 			size_t colourCount = colourJson.size();
-			if (colourCount != levelSize.x * levelSize.y)
+			if (colourCount != size.x * size.y)
 			{
-				LOG_ERROR("brickColours has " + std::to_string(colourCount) + " values (should be " + std::to_string(levelSize.x * levelSize.y) + ")");
+				LOG_ERROR("brickColours has " + std::to_string(colourCount) + " values (should be " + std::to_string(size.x * size.y) + ")");
 				return;
 			}
-			for (size_t y = 0; y < levelSize.y; y++)
+			for (size_t y = 0; y < size.y; y++)
 			{
-				for (size_t x = 0; x < levelSize.x; x++)
+				for (size_t x = 0; x < size.x; x++)
 				{
-					if (!colourJson.at(y * levelSize.x + x).is_number_unsigned())
+					if (!colourJson.at(y * size.x + x).is_number_unsigned())
 					{
 						LOG_WARNING("brickColours[" + std::to_string(x) + ", " + std::to_string(y) + "] should be an unsigned integer, assuming 0");
-						colourData[y * levelSize.x + x] = 0;
+						colourData[y * size.x + x] = 0;
 						continue;
 					}
-					colourData[y * levelSize.x + x] = colourJson.at(y * levelSize.x + x).get<unsigned>();
+					colourData[y * size.x + x] = colourJson.at(y * size.x + x).get<unsigned>();
 				}
 			}
 		}
@@ -203,6 +199,9 @@ void Level::LoadLevel(std::string levelName)
 		return;
 	}
 
+	// Initialise the brick 2D vector with the correct size
+	InitBricks();
+
 	// Create the bricks according to JSON data
 	CreateBricks(variantData, colourData);
 
@@ -215,6 +214,18 @@ void Level::LoadLevel(std::string levelName)
 	{
 		delete[] colourData;
 		colourData = nullptr;
+	}
+}
+
+void Level::InitBricks()
+{
+	for (size_t y = 0; y < size.y; y++)
+	{
+		bricks.push_back(std::vector<Brick*>());
+		for (size_t x = 0; x < size.x; x++)
+		{
+			bricks[y].push_back(nullptr);
+		}
 	}
 }
 

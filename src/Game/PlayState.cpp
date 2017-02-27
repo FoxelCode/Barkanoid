@@ -25,7 +25,7 @@ void PlayState::Init()
 	ball = new Ball(sf::Vector2f(100.0f, 300.0f));
 	paddle = new Paddle(sf::Vector2f((float)size.x / 2.0f, (float)size.y - 46.0f));
 	gameArea = new GameArea(sf::Vector2f(0.0f, 64.0f), sf::Vector2f((float)size.x, (float)size.y - 64.0f));
-	level = new Level(sf::Vector2f(16.0f, 104.0f), sf::Vector2u(14, 18));
+	level = new Level(sf::Vector2f(16.0f, 104.0f), sf::Vector2f((float)size.x - gameArea->GetWallThickness() * 2.0f, size.y));
 	bgColour = level->GetBGColour();
 
 	ui = new UI(size);
