@@ -1,15 +1,15 @@
-#include "Game/Barkanoid.hpp"
+#include "Game/PlayState.hpp"
 
 #include "Engine/Input.hpp"
 #include "Collision/Collision.hpp"
 #include "Util/Random.hpp"
 
-Barkanoid::Barkanoid()
+PlayState::PlayState()
 	: State(), lives(2)
 {
 }
 
-Barkanoid::~Barkanoid()
+PlayState::~PlayState()
 {
 	if (ui != nullptr)
 	{
@@ -18,7 +18,7 @@ Barkanoid::~Barkanoid()
 	}
 }
 
-void Barkanoid::Init()
+void PlayState::Init()
 {
 	sf::Vector2u size = GetGame()->GetSize();
 
@@ -42,19 +42,19 @@ void Barkanoid::Init()
 	ResetLevel();
 }
 
-void Barkanoid::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void PlayState::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	State::draw(target, states);
 	target.draw(*ui, states);
 }
 
-void Barkanoid::Update(float delta)
+void PlayState::Update(float delta)
 {
 	State::Update(delta);
 
 	if (Input::JustPressed(sf::Keyboard::M))
 	{
-		GetGame()->SwitchState(new Barkanoid());
+		GetGame()->SwitchState(new PlayState());
 		return;
 	}
 
@@ -85,18 +85,18 @@ void Barkanoid::Update(float delta)
 	level->RemoveDead();
 }
 
-bool Barkanoid::Collide(Ball* a, Paddle* b)
+bool PlayState::Collide(Ball* a, Paddle* b)
 {
 	return Collision::PaddleCollide(static_cast<CircleCollider*>(a->GetCollider()), static_cast<AABBCollider*>(b->GetCollider()));
 }
 
-void Barkanoid::ResetLevel()
+void PlayState::ResetLevel()
 {
 	lives = 2;
 	ResetLife();
 }
 
-void Barkanoid::ResetLife()
+void PlayState::ResetLife()
 {
 	ui->SetLives(lives);
 	ball->SetPosition(paddle->GetPosition().x + (Random::Float(paddle->GetSize().x / 2.0f) - paddle->GetSize().x / 4.0f), 0.0f);

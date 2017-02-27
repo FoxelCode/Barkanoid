@@ -8,11 +8,11 @@
 #include "Level.hpp"
 #include "UI.hpp"
 
-class Barkanoid : public State
+class PlayState : public State
 {
 public:
-	Barkanoid();
-	~Barkanoid();
+	PlayState();
+	~PlayState();
 	
 	void Init();
 	void draw(sf::RenderTarget &target, sf::RenderStates states) const;

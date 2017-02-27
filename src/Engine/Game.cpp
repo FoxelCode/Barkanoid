@@ -57,6 +57,9 @@ void Game::Update(float delta)
 		state->Update(delta);
 
 	Input::Update();
+
+	if (newState != nullptr)
+		ActuallySwitchState();
 }
 
 void Game::HandleEvent(sf::Event evt)
@@ -69,14 +72,20 @@ void Game::HandleEvent(sf::Event evt)
 void Game::SwitchState(State* newState)
 {
 	ASSERT(newState != nullptr);
-	if (state != nullptr)
-		delete state;
-	state = newState;
-	state->SetGame(this);
-	state->Init();
+	this->newState = newState;
 }
 
 void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	state->draw(target, states);
+}
+
+void Game::ActuallySwitchState()
+{
+	if (state != nullptr)
+		delete state;
+	state = newState;
+	newState = nullptr;
+	state->SetGame(this);
+	state->Init();
 }

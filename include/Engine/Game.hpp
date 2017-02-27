@@ -32,6 +32,8 @@ public:
 protected:
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
+	void ActuallySwitchState();
+
 	const sf::RenderWindow* window;
 	const sf::Vector2u size;
 
@@ -42,4 +44,5 @@ protected:
 private:
 	AssetManager asset;
 	State* state = nullptr;
+	State* newState = nullptr;
 };
