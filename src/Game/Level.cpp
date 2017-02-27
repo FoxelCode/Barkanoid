@@ -9,10 +9,19 @@ using json = nlohmann::json;
 #include "Engine/G.hpp"
 #include "Util/Log.hpp"
 
-Level::Level(sf::Vector2f pos, sf::Vector2f maxArea)
-	: GameObject(pos), maxArea(maxArea), bgColour(Palette::Black)
+Level::Level(sf::Vector2f pos, sf::Vector2u size)
+	: GameObject(pos), size(size), bgColour(Palette::Black)
 {
 	collider = new ListCollider(this);
+
+	for (size_t y = 0; y < size.y; y++)
+	{
+		bricks.push_back(std::vector<Brick*>());
+		for (size_t x = 0; x < size.x; x++)
+		{
+			bricks[y].push_back(nullptr);
+		}
+	}
 
 	LoadLevel("level1");
 }
@@ -24,25 +33,29 @@ Level::~Level()
 
 void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	for each (Brick* brick in bricks)
+	for each (std::vector<Brick*> row in bricks)
 	{
-		target.draw(*brick, states);
+		for each (Brick* brick in row)
+		{
+			if (brick != nullptr)
+				target.draw(*brick, states);
+		}
 	}
 }
 
 void Level::RemoveDead()
 {
-	for (size_t i = 0; i < bricks.size(); )
+	for (size_t y = 0; y < size.y; y++)
 	{
-		if (!bricks[i]->IsAlive())
+		for (size_t x = 0; x < size.x; x++)
 		{
-			Brick* toErase = bricks[i];
-			RemoveBrick(toErase);
-			delete toErase;
-		}
-		else
-		{
-			i++;
+			if (bricks[y][x] != nullptr)
+			{
+				if (!bricks[y][x]->IsAlive())
+				{
+					RemoveBrick(sf::Vector2u(x, y));
+				}
+			}
 		}
 	}
 }
@@ -50,13 +63,14 @@ void Level::RemoveDead()
 void Level::ClearLevel()
 {
 	static_cast<ListCollider*>(collider)->Clear();
-	for (int i = bricks.size() - 1; i >= 0; i--)
+	for (size_t y = 0; y < size.y; y++)
 	{
-		if (bricks[i] != nullptr)
+		for (size_t x = 0; x < size.x; x++)
 		{
-			delete bricks[i];
-			bricks[i] = nullptr;
+			delete bricks[y][x];
+			bricks[y][x] = nullptr;
 		}
+		bricks[y].clear();
 	}
 	bricks.clear();
 }
@@ -190,7 +204,7 @@ void Level::LoadLevel(std::string levelName)
 	}
 
 	// Create the bricks according to JSON data
-	CreateBricks(variantData, colourData, levelSize);
+	CreateBricks(variantData, colourData);
 
 	if (variantData != nullptr)
 	{
@@ -204,35 +218,32 @@ void Level::LoadLevel(std::string levelName)
 	}
 }
 
-void Level::CreateBricks(int* variants, int* colours, sf::Vector2u size)
+void Level::CreateBricks(int* variants, int* colours)
 {
 	for (size_t y = 0; y < size.y; y++)
 	{
 		for (size_t x = 0; x < size.x; x++)
 		{
 			if (variants[y * size.x + x] > 0)
-				AddBrick(new Brick(sf::Vector2f(x * 32.0f, y * 16.0f), Palette::Colours[colours[y * size.x + x]], variants[y * size.x + x] - 1));
+				AddBrick(new Brick(sf::Vector2f(x * 32.0f, y * 16.0f), Palette::Colours[colours[y * size.x + x]], variants[y * size.x + x] - 1), sf::Vector2u(x, y));
 		}
 	}
 }
 
-void Level::AddBrick(Brick* brick)
+void Level::AddBrick(Brick* brick, sf::Vector2u pos)
 {
-	bricks.push_back(brick);
+	if (bricks[pos.y][pos.x] != nullptr)
+		RemoveBrick(pos);
+	bricks[pos.y][pos.x] = brick;
 	brick->SetParent(this);
 	static_cast<ListCollider*>(collider)->AddCollider(brick->GetCollider());
 }
 
-void Level::RemoveBrick(Brick* brick)
+void Level::RemoveBrick(sf::Vector2u pos)
 {
-	brick->SetParent(nullptr);
-	for (auto it = bricks.begin(); it != bricks.end(); it++)
-	{
-		if ((*it) == brick)
-		{
-			bricks.erase(it);
-			break;
-		}
-	}
-	static_cast<ListCollider*>(collider)->RemoveCollider(brick->GetCollider());
+	bricks[pos.y][pos.x]->SetParent(nullptr);
+	static_cast<ListCollider*>(collider)->RemoveCollider(bricks[pos.y][pos.x]->GetCollider());
+	if (bricks[pos.y][pos.x] != nullptr)
+		delete bricks[pos.y][pos.x];
+	bricks[pos.y][pos.x] = nullptr;
 }

@@ -64,6 +64,8 @@ void Button::LoadButtonGraphic(sf::Texture* tex, sf::Vector2f frameSize, sf::Vec
 
 void Button::CenterText()
 {
+	// No idea why the vertical centering works with height * 1.5 but somehow it does
+	// So if it breaks at some point it's probably this
 	text.setPosition(-text.getGlobalBounds().width / 2.0f, -text.getGlobalBounds().height * 1.5f);
 }
 
