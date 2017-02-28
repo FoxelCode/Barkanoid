@@ -25,17 +25,17 @@ void PlayState::Init()
 	ball = new Ball(sf::Vector2f(100.0f, 300.0f));
 	paddle = new Paddle(sf::Vector2f((float)size.x / 2.0f, (float)size.y - 46.0f));
 	gameArea = new GameArea(sf::Vector2f(0.0f, 64.0f), sf::Vector2f((float)size.x, (float)size.y - 64.0f));
-	level = new Level(sf::Vector2f(16.0f, 104.0f), sf::Vector2f((float)size.x - gameArea->GetWallThickness() * 2.0f, size.y));
-	bgColour = level->GetBGColour();
+	stage = new Stage(sf::Vector2f(16.0f, 104.0f), sf::Vector2f((float)size.x - gameArea->GetWallThickness() * 2.0f, (float)size.y));
+	bgColour = stage->GetBGColour();
 
 	ui = new UI(size);
 
-	sf::FloatRect levelBounds = level->GetCollider()->GetBounds();
+	sf::FloatRect levelBounds = stage->GetCollider()->GetBounds();
 
 	Add(ball);
 	Add(paddle);
 	Add(gameArea);
-	Add(level);
+	Add(stage);
 
 	paddle->SetHorizontalRange(sf::Vector2f(16.0f, size.x - 16.0f));
 
@@ -56,7 +56,7 @@ void PlayState::Update(float delta)
 	{
 		Collide(ball, paddle);
 		State::Collide(ball, gameArea);
-		State::Collide(ball, level);
+		State::Collide(ball, stage);
 	}
 
 	// Check if the ball has passed the bottom of the screen -> lose a life
@@ -66,8 +66,7 @@ void PlayState::Update(float delta)
 		lives--;
 		if (lives < 0)
 		{
-			level->ClearLevel();
-			level->LoadLevel("level1");
+			stage->Clear();
 			ResetLevel();
 		}
 		else
@@ -76,7 +75,7 @@ void PlayState::Update(float delta)
 		}
 	}
 
-	level->RemoveDead();
+	stage->RemoveDead();
 }
 
 bool PlayState::Collide(Ball* a, Paddle* b)

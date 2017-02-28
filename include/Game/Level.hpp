@@ -1,30 +1,17 @@
 #pragma once
 
-#include "Engine/GameObject.hpp"
-#include "Brick.hpp"
+#include <vector>
 
-class Level : public GameObject
+class Level
 {
 public:
-	Level(sf::Vector2f pos, sf::Vector2f maxArea);
-	~Level();
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	Level(std::string levelData);
 
-	void RemoveDead();
-	void ClearLevel();
-	void LoadLevel(std::string levelName);
-
-	sf::Color GetBGColour() { return bgColour; }
+	std::string GetLevelName() { return levelName; }
+	std::string GetNextStage();
 
 private:
-	void InitBricks();
-	void CreateBricks(int* variants, int* colours);
-	void AddBrick(Brick* brick, sf::Vector2u pos);
-	void RemoveBrick(sf::Vector2u pos);
-
-	std::vector<std::vector<Brick*>> bricks;
-	sf::Vector2f originPos;
-	sf::Vector2f maxArea;
-	sf::Vector2u size;
-	sf::Color bgColour;
+	std::string levelName;
+	int currentStage;
+	std::vector<std::string> stageNames;
 };

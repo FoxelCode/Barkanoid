@@ -1,0 +1,7 @@
+{
+    "levels":
+    [
+        { "name":"All good in the neighbourhood", "folder":"level1" },
+        { "name":"Whoa dude chill", "folder":"level2" }
+    ]
+}

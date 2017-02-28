@@ -5,7 +5,7 @@
 #include "GameArea.hpp"
 #include "Ball.hpp"
 #include "Paddle.hpp"
-#include "Level.hpp"
+#include "Stage.hpp"
 #include "UI.hpp"
 
 class PlayState : public State
@@ -26,7 +26,7 @@ private:
 	GameArea* gameArea = nullptr;
 	Ball* ball = nullptr;
 	Paddle* paddle = nullptr;
-	Level* level = nullptr;
+	Stage* stage = nullptr;
 	UI* ui = nullptr;
 
 	int lives;

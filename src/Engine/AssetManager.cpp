@@ -38,14 +38,35 @@ sf::Font* AssetManager::GetFont(std::string filename)
 	return fnt;
 }
 
-std::string AssetManager::GetLevel(std::string filename)
+std::string AssetManager::GetLevels()
+{
+	return ReadFile("res/lvl/levels.json");
+}
+
+std::string AssetManager::GetLevel(std::string levelName)
+{
+	std::string path = "res/lvl/" + levelName + "/level.json";
+	return ReadFile(path);
+}
+
+std::string AssetManager::GetStage(std::string levelName, std::string stageName)
+{
+	std::string path = "res/lvl/" + levelName + "/" + stageName + ".json";
+	return ReadFile(path);
+}
+
+std::string AssetManager::ReadFile(std::string path)
 {
 	std::string output;
 	std::string line;
 	std::ifstream inFile;
-	inFile.open("res\\lvl\\" + filename);
+	inFile.open(path);
 	if (!inFile.is_open())
+	{
+		LOG_ERROR("Couldn't open file: " + path);
 		return "";
+	}
+
 	while (!inFile.eof())
 	{
 		std::getline(inFile, line);
