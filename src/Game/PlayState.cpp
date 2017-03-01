@@ -39,11 +39,10 @@ void PlayState::Init()
 	ball = new Ball(sf::Vector2f(100.0f, 300.0f));
 	paddle = new Paddle(sf::Vector2f((float)size.x / 2.0f, (float)size.y - 46.0f));
 	gameArea = new GameArea(sf::Vector2f(0.0f, 64.0f), sf::Vector2f((float)size.x, (float)size.y - 64.0f));
+
 	stage = new Stage(sf::Vector2f(16.0f, 104.0f), sf::Vector2f((float)size.x - gameArea->GetWallThickness() * 2.0f, (float)size.y));
 
 	ui = new UI(size);
-
-	sf::FloatRect levelBounds = stage->GetCollider()->GetBounds();
 
 	Add(ball);
 	Add(paddle);
@@ -88,6 +87,8 @@ void PlayState::Update(float delta)
 		}
 	}
 
+	ui->SetTime(stageClock.getElapsedTime());
+
 	stage->RemoveDead();
 }
 
@@ -99,6 +100,7 @@ bool PlayState::Collide(Ball* a, Paddle* b)
 void PlayState::ResetLevel()
 {
 	lives = 2;
+	stageClock.restart();
 
 	std::string stageName = level->GetNextStage();
 	stage->Load(G::GetAssetManager()->GetStage(levelName, stageName));

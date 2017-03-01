@@ -33,4 +33,5 @@ private:
 	UI* ui = nullptr;
 
 	int lives;
+	sf::Clock stageClock;
 };

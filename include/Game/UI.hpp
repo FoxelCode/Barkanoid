@@ -13,6 +13,7 @@ public:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	void SetLives(size_t amount);
+	void SetTime(sf::Time time);
 
 private:
 	sf::Vector2u size;
@@ -21,4 +22,6 @@ private:
 	sf::Vector2f livesPos;
 	float livesSpacing;
 	float lifeWidth;
+
+	sf::Text timer;
 };

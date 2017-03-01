@@ -1,9 +1,16 @@
 #include "Game/UI.hpp"
 
+#include "Engine/G.hpp"
+
 UI::UI(sf::Vector2u size)
 	: size(size), livesSpacing(6.0f), lifeWidth(36.0f)
 {
 	livesPos = sf::Vector2f(24.0f + lifeWidth, size.y - 20.0f);
+
+	timer.setPosition(8.0f, 8.0f);
+	timer.setFont(*G::GetAssetManager()->GetFont("standur.ttf"));
+	timer.setFillColor(sf::Color::White);
+	timer.setString("0:00");
 }
 
 UI::~UI()
@@ -25,6 +32,7 @@ void UI::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		target.draw(*paddle, states);
 	}
+	target.draw(timer, states);
 }
 
 void UI::SetLives(size_t amount)
@@ -50,4 +58,13 @@ void UI::SetLives(size_t amount)
 		life->SetWidth(lifeWidth);
 		lives.push_back(life);
 	}
+}
+
+void UI::SetTime(sf::Time time)
+{
+	int totalSeconds = time.asSeconds();
+	int minutes = totalSeconds / 60;
+	int seconds = totalSeconds - minutes * 60;
+	std::string secondsStr = (seconds < 10) ? ("0" + std::to_string(seconds)) : std::to_string(seconds);
+	timer.setString(std::to_string(minutes) + ":" + secondsStr);
 }
