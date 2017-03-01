@@ -10,7 +10,7 @@ public:
 	~MenuState();
 	void Init();
 
-	static void StartButtonPressed();
+	void StartButtonPressed();
 
 private:
 	Button* startButton = nullptr;

@@ -6,10 +6,16 @@
 #include "Collision/AABBCollider.hpp"
 
 Button::Button(sf::Vector2f pos, sf::Vector2f size, ButtonCallback callback)
-	: size(size), callback(callback)
+	: size(size), callbackType(CallbackType::Void), callback(callback)
 {
 	SetPosition(pos);
+	collider = new AABBCollider(this, -size / 2.0f, size);
+}
 
+Button::Button(sf::Vector2f pos, sf::Vector2f size, ButtonStringCallback callback)
+	: size(size), callbackType(CallbackType::String), callback(callback)
+{
+	SetPosition(pos);
 	collider = new AABBCollider(this, -size / 2.0f, size);
 }
 
@@ -30,7 +36,15 @@ void Button::Update(float delta)
 	{
 		if (hovering && pressed)
 		{
-			callback();
+			switch (callbackType)
+			{
+			case Button::Void:
+				callback.callback();
+				break;
+			case Button::String:
+				callback.stringCallback(text.getString());
+				break;
+			}
 		}
 		pressed = false;
 	}
