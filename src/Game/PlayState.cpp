@@ -4,6 +4,7 @@
 #include "Collision/Collision.hpp"
 #include "Util/Random.hpp"
 #include "Engine/G.hpp"
+#include "Game/LevelSelectState.hpp"
 
 PlayState::PlayState(std::string levelName)
 	: State(), lives(2), levelName(levelName)
@@ -26,6 +27,11 @@ PlayState::~PlayState()
 	{
 		delete stageCompleteScreen;
 		stageCompleteScreen = nullptr;
+	}
+	if (gameOverScreen != nullptr)
+	{
+		delete gameOverScreen;
+		gameOverScreen = nullptr;
 	}
 }
 
@@ -57,7 +63,6 @@ void PlayState::Init()
 	paddle->SetHorizontalRange(sf::Vector2f(16.0f, size.x - 16.0f));
 
 	ResetLevel();
-	NextStage();
 }
 
 void PlayState::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -67,6 +72,8 @@ void PlayState::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	
 	if (stageCompleteScreen != nullptr)
 		target.draw(*stageCompleteScreen, states);
+	if (gameOverScreen != nullptr)
+		target.draw(*gameOverScreen, states);
 }
 
 void PlayState::Update(float delta)
@@ -89,8 +96,10 @@ void PlayState::Update(float delta)
 			lives--;
 			if (lives < 0)
 			{
-				stage->Clear();
-				ResetLevel();
+				gameOverScreen = new GameOverScreen(GetGame()->GetSize(),
+					std::bind(&PlayState::BackToLevelSelect, this),
+					std::bind(&PlayState::GameOverResetLevel, this));
+				waiting = true;
 			}
 			else
 			{
@@ -116,6 +125,10 @@ void PlayState::Update(float delta)
 		{
 			stageCompleteScreen->Update(delta);
 		}
+		if (gameOverScreen != nullptr)
+		{
+			gameOverScreen->Update(delta);
+		}
 	}
 }
 
@@ -137,6 +150,8 @@ void PlayState::NextStage()
 void PlayState::ResetLevel()
 {
 	lives = 2;
+	level->Reset();
+	NextStage();
 }
 
 void PlayState::ResetLife()
@@ -155,4 +170,21 @@ void PlayState::StageCompleteClicked()
 	}
 	waiting = false;
 	NextStage();
+}
+
+void PlayState::BackToLevelSelect()
+{
+	LevelSelectState* state = new LevelSelectState();
+	GetGame()->SwitchState(state);
+}
+
+void PlayState::GameOverResetLevel()
+{
+	if (gameOverScreen != nullptr)
+	{
+		delete gameOverScreen;
+		gameOverScreen = nullptr;
+	}
+	waiting = false;
+	ResetLevel();
 }

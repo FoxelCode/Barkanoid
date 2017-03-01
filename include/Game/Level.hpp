@@ -7,6 +7,8 @@ class Level
 public:
 	Level(std::string levelData);
 
+	void Reset() { currentStage = -1; }
+
 	std::string GetLevelName() { return levelName; }
 	std::string GetStageName() { return stageNames[currentStage]; }
 	std::string GetNextStage();

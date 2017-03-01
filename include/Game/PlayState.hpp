@@ -9,6 +9,7 @@
 #include "Stage.hpp"
 #include "UI.hpp"
 #include "StageCompleteScreen.hpp"
+#include "GameOverScreen.hpp"
 
 class PlayState : public State
 {
@@ -27,6 +28,8 @@ public:
 	void ResetLife();
 
 	void StageCompleteClicked();
+	void BackToLevelSelect();
+	void GameOverResetLevel();
 
 private:
 	GameArea* gameArea = nullptr;
@@ -38,6 +41,7 @@ private:
 	UI* ui = nullptr;
 
 	StageCompleteScreen* stageCompleteScreen = nullptr;
+	GameOverScreen* gameOverScreen = nullptr;
 	bool waiting = false;
 
 	int lives;
