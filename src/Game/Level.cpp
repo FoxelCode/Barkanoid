@@ -30,7 +30,7 @@ Level::Level(std::string levelData)
 		}
 		else
 		{
-			LOG_ERROR("stages should be an array");
+			LOG_ERROR("\"stages\" should be an array");
 			return;
 		}
 	}
@@ -43,7 +43,7 @@ Level::Level(std::string levelData)
 
 std::string Level::GetNextStage()
 {
-	if (currentStage < (stageNames.size() - 1))
+	if (currentStage < ((int)stageNames.size() - 1))
 	{
 		currentStage++;
 		return stageNames[currentStage];

@@ -3,14 +3,20 @@
 #include "Engine/Input.hpp"
 #include "Collision/Collision.hpp"
 #include "Util/Random.hpp"
+#include "Engine/G.hpp"
 
-PlayState::PlayState()
-	: State(), lives(2)
+PlayState::PlayState(std::string levelName)
+	: State(), lives(2), levelName(levelName)
 {
 }
 
 PlayState::~PlayState()
 {
+	if (level != nullptr)
+	{
+		delete level;
+		level = nullptr;
+	}
 	if (ui != nullptr)
 	{
 		delete ui;
@@ -22,11 +28,18 @@ void PlayState::Init()
 {
 	sf::Vector2u size = GetGame()->GetSize();
 
+	std::string levelData = G::GetAssetManager()->GetLevel(levelName);
+	if (levelData == "")
+	{
+		LOG_ERROR("Trying to load level with no data");
+		return;
+	}
+	level = new Level(levelData);
+
 	ball = new Ball(sf::Vector2f(100.0f, 300.0f));
 	paddle = new Paddle(sf::Vector2f((float)size.x / 2.0f, (float)size.y - 46.0f));
 	gameArea = new GameArea(sf::Vector2f(0.0f, 64.0f), sf::Vector2f((float)size.x, (float)size.y - 64.0f));
 	stage = new Stage(sf::Vector2f(16.0f, 104.0f), sf::Vector2f((float)size.x - gameArea->GetWallThickness() * 2.0f, (float)size.y));
-	bgColour = stage->GetBGColour();
 
 	ui = new UI(size);
 
@@ -86,6 +99,11 @@ bool PlayState::Collide(Ball* a, Paddle* b)
 void PlayState::ResetLevel()
 {
 	lives = 2;
+
+	std::string stageName = level->GetNextStage();
+	stage->Load(G::GetAssetManager()->GetStage(levelName, stageName));
+	bgColour = stage->GetBGColour();
+
 	ResetLife();
 }
 

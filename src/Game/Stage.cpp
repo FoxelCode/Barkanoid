@@ -13,8 +13,6 @@ Stage::Stage(sf::Vector2f pos, sf::Vector2f maxArea)
 	: GameObject(pos), originPos(pos), maxArea(maxArea), bgColour(Palette::Black)
 {
 	collider = new ListCollider(this);
-
-	Load(G::GetAssetManager()->GetStage("level1", "stage1"));
 }
 
 Stage::~Stage()
@@ -68,6 +66,13 @@ void Stage::Clear()
 
 void Stage::Load(std::string stageData)
 {
+	// Remove the old stage if one exists
+	if (bricks.size() > 0U)
+	{
+		Clear();
+		InitBricks();
+	}
+	
 	if (stageData == "")
 	{
 		LOG_ERROR("Trying to load Stage with no data");

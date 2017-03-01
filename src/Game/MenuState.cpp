@@ -2,7 +2,7 @@
 
 #include "Engine/Game.hpp"
 #include "Engine/G.hpp"
-#include "Game/PlayState.hpp"
+#include "Game/LevelSelectState.hpp"
 
 MenuState::MenuState()
 {
@@ -28,5 +28,5 @@ void MenuState::Init()
 
 void MenuState::StartButtonPressed()
 {
-	GetGame()->SwitchState(new PlayState());
+	GetGame()->SwitchState(new LevelSelectState());
 }

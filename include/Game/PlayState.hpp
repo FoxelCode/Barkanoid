@@ -5,13 +5,14 @@
 #include "GameArea.hpp"
 #include "Ball.hpp"
 #include "Paddle.hpp"
+#include "Level.hpp"
 #include "Stage.hpp"
 #include "UI.hpp"
 
 class PlayState : public State
 {
 public:
-	PlayState();
+	PlayState(std::string levelName);
 	~PlayState();
 	
 	void Init();
@@ -26,6 +27,8 @@ private:
 	GameArea* gameArea = nullptr;
 	Ball* ball = nullptr;
 	Paddle* paddle = nullptr;
+	std::string levelName;
+	Level* level = nullptr;
 	Stage* stage = nullptr;
 	UI* ui = nullptr;
 
