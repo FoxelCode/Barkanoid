@@ -22,6 +22,11 @@ PlayState::~PlayState()
 		delete ui;
 		ui = nullptr;
 	}
+	if (stageCompleteScreen != nullptr)
+	{
+		delete stageCompleteScreen;
+		stageCompleteScreen = nullptr;
+	}
 }
 
 void PlayState::Init()
@@ -52,44 +57,66 @@ void PlayState::Init()
 	paddle->SetHorizontalRange(sf::Vector2f(16.0f, size.x - 16.0f));
 
 	ResetLevel();
+	NextStage();
 }
 
 void PlayState::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	State::draw(target, states);
 	target.draw(*ui, states);
+	
+	if (stageCompleteScreen != nullptr)
+		target.draw(*stageCompleteScreen, states);
 }
 
 void PlayState::Update(float delta)
 {
-	State::Update(delta);
-
-	if (ball->IsMoving())
+	if (!waiting)
 	{
-		Collide(ball, paddle);
-		State::Collide(ball, gameArea);
-		State::Collide(ball, stage);
-	}
+		State::Update(delta);
 
-	// Check if the ball has passed the bottom of the screen -> lose a life
-	if (ball->GetPosition().y > GetGame()->GetSize().y + ball->GetRadius())
+		if (ball->IsMoving())
+		{
+			Collide(ball, paddle);
+			State::Collide(ball, gameArea);
+			State::Collide(ball, stage);
+		}
+
+		// Check if the ball has passed the bottom of the screen -> lose a life
+		if (ball->GetPosition().y > GetGame()->GetSize().y + ball->GetRadius())
+		{
+			ball->SetPosition(GetGame()->GetSize().x / 2.0f, GetGame()->GetSize().y / 2.0f);
+			lives--;
+			if (lives < 0)
+			{
+				stage->Clear();
+				ResetLevel();
+			}
+			else
+			{
+				ResetLife();
+			}
+		}
+
+		ui->SetTime(stageClock.getElapsedTime());
+
+		stage->RemoveDead();
+
+		// Check if the stage has been completed
+		if (stage->GetBrickCount() <= 0)
+		{
+			stageCompleteScreen = new StageCompleteScreen(GetGame()->GetSize(), level->GetStageName());
+			stageCompleteScreen->SetCallback(std::bind(&PlayState::StageCompleteClicked, this));
+			waiting = true;
+		}
+	}
+	else
 	{
-		ball->SetPosition(GetGame()->GetSize().x / 2.0f, GetGame()->GetSize().y / 2.0f);
-		lives--;
-		if (lives < 0)
+		if (stageCompleteScreen != nullptr)
 		{
-			stage->Clear();
-			ResetLevel();
-		}
-		else
-		{
-			ResetLife();
+			stageCompleteScreen->Update(delta);
 		}
 	}
-
-	ui->SetTime(stageClock.getElapsedTime());
-
-	stage->RemoveDead();
 }
 
 bool PlayState::Collide(Ball* a, Paddle* b)
@@ -97,16 +124,19 @@ bool PlayState::Collide(Ball* a, Paddle* b)
 	return Collision::PaddleCollide(static_cast<CircleCollider*>(a->GetCollider()), static_cast<AABBCollider*>(b->GetCollider()));
 }
 
-void PlayState::ResetLevel()
+void PlayState::NextStage()
 {
-	lives = 2;
-	stageClock.restart();
-
 	std::string stageName = level->GetNextStage();
 	stage->Load(G::GetAssetManager()->GetStage(levelName, stageName));
 	bgColour = stage->GetBGColour();
 
+	stageClock.restart();
 	ResetLife();
+}
+
+void PlayState::ResetLevel()
+{
+	lives = 2;
 }
 
 void PlayState::ResetLife()
@@ -114,4 +144,15 @@ void PlayState::ResetLife()
 	ui->SetLives(lives);
 	ball->SetPosition(paddle->GetPosition().x + (Random::Float(paddle->GetSize().x / 2.0f) - paddle->GetSize().x / 4.0f), 0.0f);
 	paddle->AttachBall(ball);
+}
+
+void PlayState::StageCompleteClicked()
+{
+	if (stageCompleteScreen != nullptr)
+	{
+		delete stageCompleteScreen;
+		stageCompleteScreen = nullptr;
+	}
+	waiting = false;
+	NextStage();
 }

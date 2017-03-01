@@ -70,7 +70,6 @@ void Stage::Load(std::string stageData)
 	if (bricks.size() > 0U)
 	{
 		Clear();
-		InitBricks();
 	}
 	
 	if (stageData == "")
@@ -205,6 +204,9 @@ void Stage::Load(std::string stageData)
 	// Initialise the brick 2D vector with the correct size
 	InitBricks();
 
+	// Set brick count back to 0 before adding new ones
+	brickCount = 0;
+
 	// Create the bricks according to JSON data
 	CreateBricks(variantData, colourData);
 
@@ -251,6 +253,7 @@ void Stage::AddBrick(Brick* brick, sf::Vector2u pos)
 	bricks[pos.y][pos.x] = brick;
 	brick->SetParent(this);
 	static_cast<ListCollider*>(collider)->AddCollider(brick->GetCollider());
+	brickCount++;
 }
 
 void Stage::RemoveBrick(sf::Vector2u pos)
@@ -260,4 +263,5 @@ void Stage::RemoveBrick(sf::Vector2u pos)
 	if (bricks[pos.y][pos.x] != nullptr)
 		delete bricks[pos.y][pos.x];
 	bricks[pos.y][pos.x] = nullptr;
+	brickCount--;
 }

@@ -8,6 +8,7 @@
 #include "Level.hpp"
 #include "Stage.hpp"
 #include "UI.hpp"
+#include "StageCompleteScreen.hpp"
 
 class PlayState : public State
 {
@@ -20,8 +21,12 @@ public:
 	void Update(float delta);
 
 	bool Collide(Ball* a, Paddle* b);
+
+	void NextStage();
 	void ResetLevel();
 	void ResetLife();
+
+	void StageCompleteClicked();
 
 private:
 	GameArea* gameArea = nullptr;
@@ -31,6 +36,9 @@ private:
 	Level* level = nullptr;
 	Stage* stage = nullptr;
 	UI* ui = nullptr;
+
+	StageCompleteScreen* stageCompleteScreen = nullptr;
+	bool waiting = false;
 
 	int lives;
 	sf::Clock stageClock;

@@ -8,6 +8,7 @@ public:
 	Level(std::string levelData);
 
 	std::string GetLevelName() { return levelName; }
+	std::string GetStageName() { return stageNames[currentStage]; }
 	std::string GetNextStage();
 
 private:
