@@ -20,7 +20,7 @@ Ball::Ball(sf::Vector2f pos)
 void Ball::Update(float delta)
 {
 	if (moving)
-		Move(delta * velocityVec.x, delta * velocityVec.y);
+		Move(velocityVec * delta);
 }
 
 void Ball::Separate(sf::Vector2f separation)

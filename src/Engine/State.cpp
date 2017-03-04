@@ -23,10 +23,10 @@ State::~State()
 
 void State::Update(float delta)
 {
-	for each (GameObject* object in gameObjects)
+	for (int i = 0; i < gameObjects.size(); i++)
 	{
-		if (object->IsActive())
-			object->Update(delta);
+		if (gameObjects[i]->IsActive())
+			gameObjects[i]->Update(delta);
 	}
 }
 
@@ -43,11 +43,23 @@ void State::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void State::Add(GameObject* object)
 {
+	if (object == nullptr)
+	{
+		LOG_WARNING("Trying to add nullptr to State");
+		return;
+	}
+
 	gameObjects.push_back(object);
 }
 
 void State::Remove(GameObject* object)
 {
+	if (object == nullptr)
+	{
+		LOG_WARNING("Trying to remove nullptr from State");
+		return;
+	}
+
 	for (auto it = gameObjects.begin(); it != gameObjects.end(); it++)
 	{
 		if ((*it) == object)

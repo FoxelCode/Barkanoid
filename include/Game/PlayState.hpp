@@ -7,6 +7,7 @@
 #include "Paddle.hpp"
 #include "Level.hpp"
 #include "Stage.hpp"
+#include "Treat.hpp"
 #include "UI.hpp"
 #include "StageCompleteScreen.hpp"
 #include "GameOverScreen.hpp"
@@ -21,6 +22,8 @@ public:
 	void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 	void Update(float delta);
 
+	void Add(GameObject* object);
+	void Remove(GameObject* object);
 	bool Collide(Ball* a, Paddle* b);
 
 	void NextStage();
@@ -38,6 +41,7 @@ private:
 	std::string levelName;
 	Level* level = nullptr;
 	Stage* stage = nullptr;
+	std::vector<Treat*> treats;
 	UI* ui = nullptr;
 
 	StageCompleteScreen* stageCompleteScreen = nullptr;

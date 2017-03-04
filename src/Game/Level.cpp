@@ -48,6 +48,5 @@ std::string Level::GetNextStage()
 		currentStage++;
 		return stageNames[currentStage];
 	}
-	LOG_ERROR("Trying to get next Stage but Level has no Stages left");
 	return "";
 }

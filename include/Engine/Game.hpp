@@ -24,6 +24,7 @@ public:
 	void HandleEvent(sf::Event evt);
 	void SwitchState(State* newState);
 
+	State* GetState() { return state; }
 	sf::Vector2u GetSize() { return size; }
 	bool IsPaused() { return paused; }
 	bool IsShowColliders() { return showColliders; }

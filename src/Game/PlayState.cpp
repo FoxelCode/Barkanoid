@@ -89,6 +89,19 @@ void PlayState::Update(float delta)
 			State::Collide(ball, stage);
 		}
 
+		// Collide all treats with the level and remove ones that have gone offscreen
+		Treat* treat = nullptr;
+		for (size_t i = 0; i < treats.size(); i++)
+		{
+			treat = treats[i];
+			State::Collide(treat, gameArea);
+			if (treat->GetPosition().y - 50.0f > GetGame()->GetSize().y)
+			{
+				Remove(treat);
+				delete treat;
+			}
+		}
+
 		// Check if the ball has passed the bottom of the screen -> lose a life
 		if (ball->GetPosition().y > GetGame()->GetSize().y + ball->GetRadius())
 		{
@@ -132,6 +145,43 @@ void PlayState::Update(float delta)
 	}
 }
 
+void PlayState::Add(GameObject* object)
+{
+	if (object == nullptr)
+	{
+		LOG_WARNING("Trying to add nullptr to PlayState");
+		return;
+	}
+
+	State::Add(object);
+
+	if (dynamic_cast<Treat*>(object))
+		treats.push_back(reinterpret_cast<Treat*>(object));
+}
+
+void PlayState::Remove(GameObject* object)
+{
+	if (object == nullptr)
+	{
+		LOG_WARNING("Trying to remove nullptr from PlayState");
+		return;
+	}
+
+	State::Remove(object);
+
+	if (dynamic_cast<Treat*>(object))
+	{
+		for (auto it = treats.begin(); it != treats.end(); it++)
+		{
+			if ((*it) == reinterpret_cast<Treat*>(object))
+			{
+				treats.erase(it);
+				return;
+			}
+		}
+	}
+}
+
 bool PlayState::Collide(Ball* a, Paddle* b)
 {
 	return Collision::PaddleCollide(static_cast<CircleCollider*>(a->GetCollider()), static_cast<AABBCollider*>(b->GetCollider()));
@@ -140,6 +190,13 @@ bool PlayState::Collide(Ball* a, Paddle* b)
 void PlayState::NextStage()
 {
 	std::string stageName = level->GetNextStage();
+	// Return to level select if there are no stages left in the level
+	if (stageName == "")
+	{
+		BackToLevelSelect();
+		return;
+	}
+
 	stage->Load(G::GetAssetManager()->GetStage(levelName, stageName));
 	bgColour = stage->GetBGColour();
 

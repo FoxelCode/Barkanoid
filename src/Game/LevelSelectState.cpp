@@ -80,7 +80,7 @@ void LevelSelectState::Init()
 	int i = 0;
 	for (auto it = levelDatas.begin(); it != levelDatas.end(); it++)
 	{
-		Button* levelButton = new Button(sf::Vector2f((float)stageSize.x / 2.0f, i * 60.0f + 30.0f), sf::Vector2f(stageSize.x, 60.0f), (ButtonStringCallback)std::bind(&LevelSelectState::LevelButtonPressed, this, _1));
+		Button* levelButton = new Button(sf::Vector2f((float)stageSize.x / 2.0f, i * 60.0f + 30.0f), sf::Vector2f((float)stageSize.x, 60.0f), (ButtonStringCallback)std::bind(&LevelSelectState::LevelButtonPressed, this, _1));
 		levelButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
 		levelButton->GetText()->setFont(*G::GetAssetManager()->GetFont("standur.ttf"));
 		levelButton->GetText()->setFillColor(sf::Color::Black);

@@ -1,7 +1,11 @@
 #include "Game/Brick.hpp"
 
 #include "Engine/G.hpp"
+#include "Engine/State.hpp"
 #include "Collision/AABBCollider.hpp"
+#include "Game/Treat.hpp"
+#include "Util/Random.hpp"
+#include "Util/Math.hpp"
 
 #include <iostream>
 
@@ -31,4 +35,7 @@ void Brick::draw(sf::RenderTarget& target, sf::RenderStates states) const
 void Brick::Collided()
 {
 	Kill();
+
+	Treat* treat = new Treat(GetPosition(), -PIELLO_DARKNESS_MY_OLD_FRIEND + Random::Float(PIELLO_DARKNESS_MY_OLD_FRIEND));
+	G::GetGame()->GetState()->Add(treat);
 }
