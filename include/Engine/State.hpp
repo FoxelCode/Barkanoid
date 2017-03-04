@@ -17,7 +17,7 @@ public:
 
 	virtual void Add(GameObject* object);
 	virtual void Remove(GameObject* object);
-	void Collide(GameObject* a, GameObject* b);
+	bool Collide(GameObject* a, GameObject* b);
 
 	void SetGame(Game* game);
 

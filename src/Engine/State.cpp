@@ -23,7 +23,7 @@ State::~State()
 
 void State::Update(float delta)
 {
-	for (int i = 0; i < gameObjects.size(); i++)
+	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
 		if (gameObjects[i]->IsActive())
 			gameObjects[i]->Update(delta);
@@ -70,9 +70,9 @@ void State::Remove(GameObject* object)
 	}
 }
 
-void State::Collide(GameObject* a, GameObject* b)
+bool State::Collide(GameObject* a, GameObject* b)
 {
-	Collision::Collide(a->GetCollider(), b->GetCollider());
+	return Collision::Collide(a->GetCollider(), b->GetCollider());
 }
 
 void State::SetGame(Game* game)

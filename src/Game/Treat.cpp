@@ -1,15 +1,11 @@
 #include "Game/Treat.hpp"
 
-#include "Collision/AABBCollider.hpp"
 #include "Util/Math.hpp"
 
 Treat::Treat(sf::Vector2f pos, float launchAngle)
 	: gravity(100.0f)
 {
 	SetPosition(pos);
-
-	float radius = 5.0f;
-	collider = new AABBCollider(this, sf::Vector2f(-radius, -radius), sf::Vector2f(radius * 2.0f, radius * 2.0f));
 
 	float initialVelocity = 100.0f;
 	velocity.x = cosf(launchAngle) * initialVelocity;

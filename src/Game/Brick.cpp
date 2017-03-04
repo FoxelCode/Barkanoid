@@ -3,7 +3,7 @@
 #include "Engine/G.hpp"
 #include "Engine/State.hpp"
 #include "Collision/AABBCollider.hpp"
-#include "Game/Treat.hpp"
+#include "Game/PointTreat.hpp"
 #include "Util/Random.hpp"
 #include "Util/Math.hpp"
 
@@ -22,7 +22,7 @@ Brick::Brick(sf::Vector2f pos, sf::Color colour, int variant)
 	graphic->SetFrameSize(fSize);
 	graphic->SetFrame(variant);
 	highlight.setTexture(*G::GetAssetManager()->GetTexture("brick_high.png"));
-	highlight.setTextureRect(sf::IntRect(variant * fSize.x, 0, fSize.x, fSize.y));
+	highlight.setTextureRect(sf::IntRect(variant * (int)fSize.x, 0, (int)fSize.x, (int)fSize.y));
 }
 
 void Brick::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -36,6 +36,6 @@ void Brick::Collided()
 {
 	Kill();
 
-	Treat* treat = new Treat(GetPosition(), -PIELLO_DARKNESS_MY_OLD_FRIEND + Random::Float(PIELLO_DARKNESS_MY_OLD_FRIEND));
+	PointTreat* treat = new PointTreat(GetPosition(), -(float)PIELLO_DARKNESS_MY_OLD_FRIEND + Random::Float((float)PIELLO_DARKNESS_MY_OLD_FRIEND));
 	G::GetGame()->GetState()->Add(treat);
 }

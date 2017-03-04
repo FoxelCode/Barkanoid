@@ -26,9 +26,13 @@ public:
 	void Remove(GameObject* object);
 	bool Collide(Ball* a, Paddle* b);
 
+	void AddPoints(int points);
+	void SetPoints(int points);
+
 	void NextStage();
 	void ResetLevel();
 	void ResetLife();
+	void ClearTreats();
 
 	void StageCompleteClicked();
 	void BackToLevelSelect();
@@ -49,5 +53,6 @@ private:
 	bool waiting = false;
 
 	int lives;
+	int points;
 	sf::Clock stageClock;
 };

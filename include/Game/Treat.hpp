@@ -2,6 +2,8 @@
 
 #include "Engine/GameObject.hpp"
 
+class PlayState;
+
 class Treat : public GameObject
 {
 public:
@@ -9,6 +11,8 @@ public:
 	virtual void Update(float delta);
 
 	void Separate(sf::Vector2f separation);
+
+	virtual void AddAward(PlayState* state) = 0;
 
 private:
 	sf::Vector2f velocity;

@@ -14,6 +14,7 @@ public:
 
 	void SetLives(size_t amount);
 	void SetTime(sf::Time time);
+	void SetPoints(int points);
 
 private:
 	sf::Vector2u size;
@@ -24,4 +25,5 @@ private:
 	float lifeWidth;
 
 	sf::Text timer;
+	sf::Text points;
 };

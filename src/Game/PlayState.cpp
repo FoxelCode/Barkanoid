@@ -89,13 +89,19 @@ void PlayState::Update(float delta)
 			State::Collide(ball, stage);
 		}
 
-		// Collide all treats with the level and remove ones that have gone offscreen
+		// Collide all treats and remove ones that have gone offscreen
 		Treat* treat = nullptr;
 		for (size_t i = 0; i < treats.size(); i++)
 		{
 			treat = treats[i];
 			State::Collide(treat, gameArea);
-			if (treat->GetPosition().y - 50.0f > GetGame()->GetSize().y)
+			bool hitPaddle = false;
+			if (State::Collide(treat, paddle))
+			{
+				treat->AddAward(this);
+				hitPaddle = true;
+			}
+			if (hitPaddle || treat->GetPosition().y - 50.0f > GetGame()->GetSize().y)
 			{
 				Remove(treat);
 				delete treat;
@@ -187,6 +193,18 @@ bool PlayState::Collide(Ball* a, Paddle* b)
 	return Collision::PaddleCollide(static_cast<CircleCollider*>(a->GetCollider()), static_cast<AABBCollider*>(b->GetCollider()));
 }
 
+void PlayState::AddPoints(int points)
+{
+	this->points += points;
+	ui->SetPoints(this->points);
+}
+
+void PlayState::SetPoints(int points)
+{
+	this->points = points;
+	ui->SetPoints(this->points);
+}
+
 void PlayState::NextStage()
 {
 	std::string stageName = level->GetNextStage();
@@ -200,6 +218,8 @@ void PlayState::NextStage()
 	stage->Load(G::GetAssetManager()->GetStage(levelName, stageName));
 	bgColour = stage->GetBGColour();
 
+	ClearTreats();
+	SetPoints(0);
 	stageClock.restart();
 	ResetLife();
 }
@@ -207,6 +227,8 @@ void PlayState::NextStage()
 void PlayState::ResetLevel()
 {
 	lives = 2;
+	SetPoints(0);
+	ClearTreats();
 	level->Reset();
 	NextStage();
 }
@@ -216,6 +238,23 @@ void PlayState::ResetLife()
 	ui->SetLives(lives);
 	ball->SetPosition(paddle->GetPosition().x + (Random::Float(paddle->GetSize().x / 2.0f) - paddle->GetSize().x / 4.0f), 0.0f);
 	paddle->AttachBall(ball);
+}
+
+void PlayState::ClearTreats()
+{
+	for (size_t i = 0; i < treats.size();)
+	{
+		if (treats[i] != nullptr)
+		{
+			Treat* treat = treats[i];
+			if (treat != nullptr)
+			{
+				Remove(treat);
+				delete treat;
+			}
+		}
+	}
+	treats.clear();
 }
 
 void PlayState::StageCompleteClicked()
