@@ -3,7 +3,7 @@
 #include "Engine/G.hpp"
 #include "Engine/State.hpp"
 #include "Collision/AABBCollider.hpp"
-#include "Game/Treats/MagneticPaddleTreat.hpp"
+#include "Game/Treats/MultiballTreat.hpp"
 #include "Util/Random.hpp"
 #include "Util/Math.hpp"
 
@@ -36,6 +36,6 @@ void Brick::Collided(GameObject* other)
 {
 	Kill();
 
-	MagneticPaddleTreat* treat = new MagneticPaddleTreat(GetPosition(), -(float)PIELLO_DARKNESS_MY_OLD_FRIEND + Random::Float((float)PIELLO_DARKNESS_MY_OLD_FRIEND));
+	MultiballTreat* treat = new MultiballTreat(GetPosition(), -(float)PIELLO_DARKNESS_MY_OLD_FRIEND + Random::Float((float)PIELLO_DARKNESS_MY_OLD_FRIEND));
 	G::GetGame()->GetState()->Add(treat);
 }

@@ -14,6 +14,7 @@ public:
 	void SetVelocity(float velocity);
 	void SetMoving(bool moving) { this->moving = moving; }
 	float GetRadius();
+	float GetAngle() { return angle; }
 	bool IsMoving() { return moving; }
 
 private:

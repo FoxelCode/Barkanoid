@@ -33,6 +33,7 @@ public:
 	void ResetLevel();
 	void ResetLife();
 	void ClearTreats();
+	void ClearBalls();
 
 	void StageCompleteClicked();
 	void BackToLevelSelect();
@@ -43,12 +44,13 @@ public:
 	void AddBallSpeed(float amount);
 	void UpdateBallSpeed();
 	void ResetBallSpeed();
+	void SplitBalls();
 
 	Paddle* GetPaddle() { return paddle; }
 
 private:
 	GameArea* gameArea = nullptr;
-	Ball* ball = nullptr;
+	std::vector<Ball*> balls;
 	Paddle* paddle = nullptr;
 	std::string levelName;
 	Level* level = nullptr;
@@ -68,4 +70,5 @@ private:
 	int ballSpeedTimer;
 	float ballSpeedIncrement;
 	sf::Vector2f ballSpeedBounds;
+	float ballSplitAngle;
 };

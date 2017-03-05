@@ -7,7 +7,8 @@
 #include "Game/LevelSelectState.hpp"
 
 PlayState::PlayState(std::string levelName)
-	: State(), lives(2), levelName(levelName), ballSpeedIncrement(1.0f), ballSpeedBounds(300.0f, 800.0f)
+	: State(), lives(2), levelName(levelName), ballSpeedIncrement(1.0f), ballSpeedBounds(300.0f, 800.0f),
+	  ballSplitAngle((float)PIELLO_DARKNESS_MY_OLD_FRIEND / 4.0f)
 {
 }
 
@@ -50,7 +51,6 @@ void PlayState::Init()
 	}
 	level = new Level(levelData);
 
-	ball = new Ball(sf::Vector2f(100.0f, 300.0f));
 	paddle = new Paddle(sf::Vector2f((float)size.x / 2.0f, (float)size.y - 46.0f));
 	gameArea = new GameArea(sf::Vector2f(0.0f, 64.0f), sf::Vector2f((float)size.x, (float)size.y - 64.0f));
 
@@ -58,7 +58,6 @@ void PlayState::Init()
 
 	ui = new UI(size);
 
-	Add(ball);
 	Add(paddle);
 	Add(gameArea);
 	Add(stage);
@@ -85,16 +84,19 @@ void PlayState::Update(float delta)
 	{
 		State::Update(delta);
 
-		if (ball->IsMoving())
+		for each (Ball* ball in balls)
 		{
-			Collide(ball, paddle);
-			State::Collide(ball, gameArea);
-			State::Collide(ball, stage);
+			if (ball->IsMoving())
+			{
+				Collide(ball, paddle);
+				State::Collide(ball, gameArea);
+				State::Collide(ball, stage);
+			}
 		}
 
 		// Collide all treats and remove ones that have gone offscreen
 		Treat* treat = nullptr;
-		for (size_t i = 0; i < treats.size(); i++)
+		for (size_t i = 0; i < treats.size();)
 		{
 			treat = treats[i];
 			State::Collide(treat, gameArea);
@@ -109,25 +111,20 @@ void PlayState::Update(float delta)
 				Remove(treat);
 				delete treat;
 			}
+			else i++;
 		}
 
-		// Check if the ball has passed the bottom of the screen -> lose a life
-		if (ball->GetPosition().y > GetGame()->GetSize().y + ball->GetRadius())
+		Ball* ball = nullptr;
+		for (size_t i = 0; i < balls.size();)
 		{
-			ball->SetPosition(GetGame()->GetSize().x / 2.0f, GetGame()->GetSize().y / 2.0f);
-			lives--;
-			if (lives < 0)
+			ball = balls[i];
+			// Check if the ball has passed the bottom of the screen
+			if (ball->GetPosition().y > GetGame()->GetSize().y + ball->GetRadius())
 			{
-				gameOverScreen = new GameOverScreen(GetGame()->GetSize(),
-					std::bind(&PlayState::BackToLevelSelect, this),
-					std::bind(&PlayState::GameOverResetLevel, this));
-				waiting = true;
-				SetMouseCaptured(false);
+				Remove(ball);
+				delete ball;
 			}
-			else
-			{
-				ResetLife();
-			}
+			else i++;
 		}
 
 		// Increase ball speed
@@ -144,6 +141,24 @@ void PlayState::Update(float delta)
 		ui->SetTime(stageClock.getElapsedTime());
 
 		stage->RemoveDead();
+
+		// Check if there are no balls left -> lose a life
+		if (balls.size() == 0)
+		{
+			lives--;
+			if (lives < 0)
+			{
+				gameOverScreen = new GameOverScreen(GetGame()->GetSize(),
+					std::bind(&PlayState::BackToLevelSelect, this),
+					std::bind(&PlayState::GameOverResetLevel, this));
+				waiting = true;
+				SetMouseCaptured(false);
+			}
+			else
+			{
+				ResetLife();
+			}
+		}
 
 		// Check if the stage has been completed
 		if (stage->GetBrickCount() <= 0)
@@ -179,6 +194,8 @@ void PlayState::Add(GameObject* object)
 
 	if (dynamic_cast<Treat*>(object))
 		treats.push_back(reinterpret_cast<Treat*>(object));
+	if (dynamic_cast<Ball*>(object))
+		balls.push_back(reinterpret_cast<Ball*>(object));
 }
 
 void PlayState::Remove(GameObject* object)
@@ -198,6 +215,17 @@ void PlayState::Remove(GameObject* object)
 			if ((*it) == reinterpret_cast<Treat*>(object))
 			{
 				treats.erase(it);
+				return;
+			}
+		}
+	}
+	if (dynamic_cast<Ball*>(object))
+	{
+		for (auto it = balls.begin(); it != balls.end(); it++)
+		{
+			if ((*it) == reinterpret_cast<Ball*>(object))
+			{
+				balls.erase(it);
 				return;
 			}
 		}
@@ -236,6 +264,7 @@ void PlayState::NextStage()
 	SetMouseCaptured(true);
 
 	ClearTreats();
+	ClearBalls();
 	SetPoints(0);
 	stageClock.restart();
 	ballSpeedTimer = 0;
@@ -253,7 +282,11 @@ void PlayState::ResetLevel()
 void PlayState::ResetLife()
 {
 	ui->SetLives(lives);
+
+	Ball* ball = new Ball(sf::Vector2f(100.0f, 300.0f));
 	ball->SetPosition(paddle->GetPosition().x + (Random::Float(paddle->GetSize().x / 2.0f) - paddle->GetSize().x / 4.0f), 0.0f);
+	Add(ball);
+
 	paddle->SetMagnetic(false);
 	paddle->AttachBall(ball);
 }
@@ -273,6 +306,23 @@ void PlayState::ClearTreats()
 		}
 	}
 	treats.clear();
+}
+
+void PlayState::ClearBalls()
+{
+	for (size_t i = 0; i < balls.size();)
+	{
+		if (balls[i] != nullptr)
+		{
+			Ball* ball = balls[i];
+			if (ball != nullptr)
+			{
+				Remove(ball);
+				delete ball;
+			}
+		}
+	}
+	balls.clear();
 }
 
 void PlayState::StageCompleteClicked()
@@ -318,11 +368,30 @@ void PlayState::AddBallSpeed(float amount)
 
 void PlayState::UpdateBallSpeed()
 {
-	ball->SetVelocity(ballSpeed);
+	for each (Ball* ball in balls)
+	{
+		ball->SetVelocity(ballSpeed);
+	}
 }
 
 void PlayState::ResetBallSpeed()
 {
 	ballSpeed = 400.0f;
 	UpdateBallSpeed();
+}
+
+void PlayState::SplitBalls()
+{
+	size_t currentBallCount = balls.size();
+	for (size_t i = 0; i < currentBallCount; i++)
+	{
+		Ball* ball = balls[i];
+		float ballAngle = ball->GetAngle();
+		ball->SetAngle(ballAngle - ballSplitAngle / 2.0f);
+
+		Ball* newBall = new Ball(ball->GetPosition());
+		newBall->SetVelocity(ballSpeed);
+		newBall->SetAngle(ballAngle + ballSplitAngle / 2.0f);
+		Add(newBall);
+	}
 }
