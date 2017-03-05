@@ -7,7 +7,7 @@
 #include "Paddle.hpp"
 #include "Level.hpp"
 #include "Stage.hpp"
-#include "Treat.hpp"
+#include "Treats/Treat.hpp"
 #include "UI.hpp"
 #include "StageCompleteScreen.hpp"
 #include "GameOverScreen.hpp"
@@ -37,6 +37,10 @@ public:
 	void StageCompleteClicked();
 	void BackToLevelSelect();
 	void GameOverResetLevel();
+
+	void SetMouseCaptured(bool captured);
+
+	Paddle* GetPaddle() { return paddle; }
 
 private:
 	GameArea* gameArea = nullptr;

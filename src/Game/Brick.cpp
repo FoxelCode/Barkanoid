@@ -3,7 +3,7 @@
 #include "Engine/G.hpp"
 #include "Engine/State.hpp"
 #include "Collision/AABBCollider.hpp"
-#include "Game/PointTreat.hpp"
+#include "Game/Treats/PaddleWidthTreat.hpp"
 #include "Util/Random.hpp"
 #include "Util/Math.hpp"
 
@@ -36,6 +36,6 @@ void Brick::Collided()
 {
 	Kill();
 
-	PointTreat* treat = new PointTreat(GetPosition(), -(float)PIELLO_DARKNESS_MY_OLD_FRIEND + Random::Float((float)PIELLO_DARKNESS_MY_OLD_FRIEND));
+	PaddleWidthTreat* treat = new PaddleWidthTreat(GetPosition(), -(float)PIELLO_DARKNESS_MY_OLD_FRIEND + Random::Float((float)PIELLO_DARKNESS_MY_OLD_FRIEND), PaddleWidthTreat::Type::WidthDown);
 	G::GetGame()->GetState()->Add(treat);
 }

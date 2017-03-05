@@ -111,10 +111,13 @@
     <ClCompile Include="src\Game\GameOverScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\Treat.cpp">
+    <ClCompile Include="src\Game\Treats\Treat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\PointTreat.cpp">
+    <ClCompile Include="src\Game\Treats\PointTreat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Treats\PaddleWidthTreat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -227,10 +230,13 @@
     <ClInclude Include="include\Game\GameOverScreen.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Game\Treat.hpp">
+    <ClInclude Include="include\Game\Treats\Treat.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Game\PointTreat.hpp">
+    <ClInclude Include="include\Game\Treats\PointTreat.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Treats\PaddleWidthTreat.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,4 @@
-#include "Game/Treat.hpp"
+#include "Game/Treats/Treat.hpp"
 
 #include "Util/Math.hpp"
 

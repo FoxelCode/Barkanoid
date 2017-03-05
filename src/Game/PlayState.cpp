@@ -13,6 +13,8 @@ PlayState::PlayState(std::string levelName)
 
 PlayState::~PlayState()
 {
+	SetMouseCaptured(false);
+
 	if (level != nullptr)
 	{
 		delete level;
@@ -37,6 +39,7 @@ PlayState::~PlayState()
 
 void PlayState::Init()
 {
+	SetMouseCaptured(true);
 	sf::Vector2u size = GetGame()->GetSize();
 
 	std::string levelData = G::GetAssetManager()->GetLevel(levelName);
@@ -119,6 +122,7 @@ void PlayState::Update(float delta)
 					std::bind(&PlayState::BackToLevelSelect, this),
 					std::bind(&PlayState::GameOverResetLevel, this));
 				waiting = true;
+				SetMouseCaptured(false);
 			}
 			else
 			{
@@ -136,6 +140,7 @@ void PlayState::Update(float delta)
 			stageCompleteScreen = new StageCompleteScreen(GetGame()->GetSize(), level->GetStageName());
 			stageCompleteScreen->SetCallback(std::bind(&PlayState::StageCompleteClicked, this));
 			waiting = true;
+			SetMouseCaptured(false);
 		}
 	}
 	else
@@ -217,6 +222,7 @@ void PlayState::NextStage()
 
 	stage->Load(G::GetAssetManager()->GetStage(levelName, stageName));
 	bgColour = stage->GetBGColour();
+	SetMouseCaptured(true);
 
 	ClearTreats();
 	SetPoints(0);
@@ -283,4 +289,10 @@ void PlayState::GameOverResetLevel()
 	}
 	waiting = false;
 	ResetLevel();
+}
+
+void PlayState::SetMouseCaptured(bool captured)
+{
+	GetGame()->GetWindow()->setMouseCursorGrabbed(captured);
+	GetGame()->GetWindow()->setMouseCursorVisible(!captured);
 }

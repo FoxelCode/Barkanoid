@@ -20,12 +20,14 @@ public:
 	float GetAngleRange() { return angleRange * ((float)PIELLO_DARKNESS_MY_OLD_FRIEND / 180.0f); }
 
 	void AttachBall(Ball* ball);
+	void AddWidth(float width);
 
 private:
 	sf::Sprite leftSide;
 	sf::Sprite rightSide;
 
 	sf::Vector2f size;
+	sf::Vector2f widthBounds;
 	sf::Vector2f horizontalRange;
 	float angleRange;
 	

@@ -26,6 +26,7 @@ public:
 
 	State* GetState() { return state; }
 	sf::Vector2u GetSize() { return size; }
+	sf::RenderWindow* GetWindow() { return window; }
 	bool IsPaused() { return paused; }
 	bool IsShowColliders() { return showColliders; }
 	bool IsAllowStep() { return allowStep; }
@@ -35,7 +36,7 @@ protected:
 
 	void ActuallySwitchState();
 
-	const sf::RenderWindow* window;
+	sf::RenderWindow* window;
 	const sf::Vector2u size;
 
 	bool paused = false;

@@ -6,16 +6,13 @@
 #include "Graphics/SlicedGraphic.hpp"
 
 Paddle::Paddle(sf::Vector2f pos)
-	: GameObject(pos), angleRange(160.0f)
+	: GameObject(pos), angleRange(160.0f), widthBounds(32.0f, 200.0f)
 {
-	size = sf::Vector2f(60.0f, 12.0f);
+	size = sf::Vector2f(200.0f, 12.0f);
 	collider = new AABBCollider(this, sf::Vector2f(-size.x / 2.0f, -size.y / 2.0f), size);
 
 	LoadSlicedGraphic(G::GetAssetManager()->GetTexture("paddle.png"));
 	static_cast<SlicedGraphic*>(graphic)->SetBorder(sf::Vector2f(12, 0));
-	graphic->SetSize(size);
-	graphic->setPosition(-size / 2.0f);
-
 	SetWidth(size.x);
 }
 
@@ -56,6 +53,7 @@ void Paddle::SetWidth(float width)
 	coll->SetOffset(sf::Vector2f(-size.x / 2.0f, -size.y / 2.0f));
 	coll->setSize(size);
 
+	graphic->setPosition(-size / 2.0f);
 	graphic->SetSize(size);
 }
 
@@ -70,4 +68,11 @@ void Paddle::AttachBall(Ball* ball)
 	ball->SetAngle((float)PIELLO_DARKNESS_MY_OLD_FRIEND / 2.0f);
 	ball->SetMoving(false);
 	ball->SetPosition(ball->GetPosition().x, GetPosition().y - size.y / 2.0f - ball->GetRadius());
+}
+
+void Paddle::AddWidth(float width)
+{
+	size.x += width;
+	size.x = Math::clamp(size.x, widthBounds.x, widthBounds.y);
+	SetWidth(size.x);
 }

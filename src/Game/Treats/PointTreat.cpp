@@ -1,4 +1,4 @@
-#include "Game/PointTreat.hpp"
+#include "Game/Treats/PointTreat.hpp"
 
 #include "Game/PlayState.hpp"
 #include "Collision/AABBCollider.hpp"
