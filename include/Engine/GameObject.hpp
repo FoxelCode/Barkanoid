@@ -20,7 +20,7 @@ public:
 	virtual void Update(float delta);
 
 	virtual void Separate(sf::Vector2f separation) { Move(separation); }
-	virtual void Collided() {};
+	virtual void Collided(GameObject* other) {};
 
 	void LoadGraphic(sf::Texture* tex);
 	void LoadSlicedGraphic(sf::Texture* tex);

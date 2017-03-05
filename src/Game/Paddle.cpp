@@ -4,9 +4,10 @@
 #include "Engine/G.hpp"
 #include "Engine/Input.hpp"
 #include "Graphics/SlicedGraphic.hpp"
+#include "Game/Ball.hpp"
 
 Paddle::Paddle(sf::Vector2f pos)
-	: GameObject(pos), angleRange(160.0f), widthBounds(32.0f, 200.0f)
+	: GameObject(pos), angleRange(160.0f), widthBounds(32.0f, 200.0f), magnetic(false)
 {
 	size = sf::Vector2f(200.0f, 12.0f);
 	collider = new AABBCollider(this, sf::Vector2f(-size.x / 2.0f, -size.y / 2.0f), size);
@@ -20,8 +21,6 @@ void Paddle::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.transform.translate(GetPosition());
 	target.draw(*graphic, states);
-	target.draw(leftSide, states);
-	target.draw(rightSide, states);
 }
 
 void Paddle::Update(float delta)
@@ -43,6 +42,14 @@ void Paddle::Update(float delta)
 			ball.first->SetMoving(true);
 		}
 		attachedBalls.clear();
+	}
+}
+
+void Paddle::Collided(GameObject* other)
+{
+	if (magnetic && dynamic_cast<Ball*>(other))
+	{
+		AttachBall(reinterpret_cast<Ball*>(other));
 	}
 }
 

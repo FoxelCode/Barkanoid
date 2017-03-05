@@ -78,7 +78,7 @@ bool Collision::PaddleCollide(CircleCollider* a, AABBCollider* b)
 			a->GetGameObject()->Separate(separation);
 		else
 			a->GetGameObject()->Separate(-separation);
-		b->GetGameObject()->Collided();
+		b->GetGameObject()->Collided(a->GetGameObject());
 		collided = true;
 	}
 
@@ -91,7 +91,7 @@ bool Collision::PaddleCollide(CircleCollider* a, AABBCollider* b)
 			if (delta.y >= 0)
 			{
 				a->GetGameObject()->Separate(separation);
-				b->GetGameObject()->Collided();
+				b->GetGameObject()->Collided(a->GetGameObject());
 				Paddle* paddle = static_cast<Paddle*>(b->GetGameObject());
 				Ball* ball = static_cast<Ball*>(a->GetGameObject());
 				float targetAngle = paddle->GetReflectionScalar(aCenter) * paddle->GetAngleRange() / 2.0f - (float)PIELLO_DARKNESS_MY_OLD_FRIEND / 2.0f;
@@ -101,7 +101,7 @@ bool Collision::PaddleCollide(CircleCollider* a, AABBCollider* b)
 			else
 			{
 				a->GetGameObject()->Separate(-separation);
-				b->GetGameObject()->Collided();
+				b->GetGameObject()->Collided(a->GetGameObject());
 			}
 			collided = true;
 		}
@@ -128,7 +128,7 @@ bool Collision::PaddleCollide(CircleCollider* a, AABBCollider* b)
 
 				// Proper reflection separation
 				a->GetGameObject()->Separate(-Math::normalise(cornerDelta) * (aRadius - Math::magnitude(cornerDelta)));
-				b->GetGameObject()->Collided();
+				b->GetGameObject()->Collided(a->GetGameObject());
 
 				collided = true;
 				break;
@@ -174,7 +174,7 @@ bool Collision::AABBToAABB(AABBCollider* a, AABBCollider* b)
 		}
 		else
 			a->GetGameObject()->Separate(sf::Vector2f(yOverlap * Math::sign(bCenter.y - aCenter.y), 0.0f));
-		b->GetGameObject()->Collided();
+		b->GetGameObject()->Collided(a->GetGameObject());
 		return true;
 	}
 	return false;
@@ -277,8 +277,8 @@ bool Collision::CircleToAABB(CircleCollider* a, AABBCollider* b)
 				a->GetGameObject()->Separate(sf::Vector2f(0.0f, vSeparation));
 		}
 
-		// Notify the other collider's GameObject that we collided
-		b->GetGameObject()->Collided();
+		// Notify the colliders' GameObjects that we collided
+		b->GetGameObject()->Collided(a->GetGameObject());
 	}
 
 	return collided;

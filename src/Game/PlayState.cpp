@@ -254,6 +254,7 @@ void PlayState::ResetLife()
 {
 	ui->SetLives(lives);
 	ball->SetPosition(paddle->GetPosition().x + (Random::Float(paddle->GetSize().x / 2.0f) - paddle->GetSize().x / 4.0f), 0.0f);
+	paddle->SetMagnetic(false);
 	paddle->AttachBall(ball);
 }
 

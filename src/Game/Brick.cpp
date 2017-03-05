@@ -3,7 +3,7 @@
 #include "Engine/G.hpp"
 #include "Engine/State.hpp"
 #include "Collision/AABBCollider.hpp"
-#include "Game/Treats/BallSpeedTreat.hpp"
+#include "Game/Treats/MagneticPaddleTreat.hpp"
 #include "Util/Random.hpp"
 #include "Util/Math.hpp"
 
@@ -32,10 +32,10 @@ void Brick::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(highlight, states);
 }
 
-void Brick::Collided()
+void Brick::Collided(GameObject* other)
 {
 	Kill();
 
-	BallSpeedTreat* treat = new BallSpeedTreat(GetPosition(), -(float)PIELLO_DARKNESS_MY_OLD_FRIEND + Random::Float((float)PIELLO_DARKNESS_MY_OLD_FRIEND), BallSpeedTreat::Type::SpeedDown);
+	MagneticPaddleTreat* treat = new MagneticPaddleTreat(GetPosition(), -(float)PIELLO_DARKNESS_MY_OLD_FRIEND + Random::Float((float)PIELLO_DARKNESS_MY_OLD_FRIEND));
 	G::GetGame()->GetState()->Add(treat);
 }

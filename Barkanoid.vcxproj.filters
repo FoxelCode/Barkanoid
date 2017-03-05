@@ -123,6 +123,9 @@
     <ClCompile Include="src\Game\Treats\BallSpeedTreat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Game\Treats\MagneticPaddleTreat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Collision\AABBCollider.hpp">
@@ -243,6 +246,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Game\Treats\BallSpeedTreat.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Treats\MagneticPaddleTreat.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
