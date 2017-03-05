@@ -40,6 +40,7 @@ public:
 
 	void SetMouseCaptured(bool captured);
 
+	void AddBallSpeed(float amount);
 	void UpdateBallSpeed();
 	void ResetBallSpeed();
 
@@ -66,5 +67,5 @@ private:
 	float ballSpeed;
 	int ballSpeedTimer;
 	float ballSpeedIncrement;
-	float maxBallSpeed;
+	sf::Vector2f ballSpeedBounds;
 };

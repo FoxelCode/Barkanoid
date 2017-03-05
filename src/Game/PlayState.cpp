@@ -7,7 +7,7 @@
 #include "Game/LevelSelectState.hpp"
 
 PlayState::PlayState(std::string levelName)
-	: State(), lives(2), levelName(levelName), ballSpeedIncrement(1.0f), maxBallSpeed(800.0f)
+	: State(), lives(2), levelName(levelName), ballSpeedIncrement(1.0f), ballSpeedBounds(300.0f, 800.0f)
 {
 }
 
@@ -132,14 +132,14 @@ void PlayState::Update(float delta)
 
 		// Increase ball speed
 		int stageClockSeconds = (int)stageClock.getElapsedTime().asSeconds();
-		bool updateBallSpeed = stageClockSeconds > ballSpeedTimer;
+		float speedToAdd = 0.0f;
 		while (stageClockSeconds > ballSpeedTimer)
 		{
 			ballSpeedTimer++;
-			ballSpeed += ballSpeedIncrement;
+			speedToAdd += ballSpeedIncrement;
 		}
-		if (updateBallSpeed)
-			UpdateBallSpeed();
+		if (speedToAdd > 0.0f)
+			AddBallSpeed(speedToAdd);
 
 		ui->SetTime(stageClock.getElapsedTime());
 
@@ -306,6 +306,13 @@ void PlayState::SetMouseCaptured(bool captured)
 {
 	GetGame()->GetWindow()->setMouseCursorGrabbed(captured);
 	GetGame()->GetWindow()->setMouseCursorVisible(!captured);
+}
+
+void PlayState::AddBallSpeed(float amount)
+{
+	ballSpeed += amount;
+	ballSpeed = Math::clamp(ballSpeed, ballSpeedBounds.x, ballSpeedBounds.y);
+	UpdateBallSpeed();
 }
 
 void PlayState::UpdateBallSpeed()
