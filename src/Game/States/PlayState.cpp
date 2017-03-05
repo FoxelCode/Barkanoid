@@ -77,6 +77,9 @@ void PlayState::Update(float delta)
 	{
 		State::Update(delta);
 
+		// Update stage time
+		stageTime += sf::milliseconds(delta * 1000);
+
 		// Collide balls
 		for each (Ball* ball in balls)
 		{
@@ -122,7 +125,7 @@ void PlayState::Update(float delta)
 		}
 
 		// Increase ball speed
-		int stageClockSeconds = (int)stageClock.getElapsedTime().asSeconds();
+		int stageClockSeconds = (int)stageTime.asSeconds();
 		float speedToAdd = 0.0f;
 		while (stageClockSeconds > ballSpeedTimer)
 		{
@@ -133,7 +136,7 @@ void PlayState::Update(float delta)
 			AddBallSpeed(speedToAdd);
 
 		// Set UI timer
-		ui->SetTime(stageClock.getElapsedTime());
+		ui->SetTime(stageTime);
 
 		// Remove dead GameObjects
 		stage->RemoveDead();
@@ -266,7 +269,7 @@ void PlayState::NextStage()
 	ClearTreats();
 	ClearBalls();
 	SetPoints(0);
-	stageClock.restart();
+	stageTime = sf::Time();
 	ballSpeedTimer = 0;
 	ResetBallSpeed();
 	ResetLife();

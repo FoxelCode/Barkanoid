@@ -70,7 +70,7 @@ private:
 
 	int lives;
 	int points;
-	sf::Clock stageClock;
+	sf::Time stageTime;
 
 	float ballSpeed;
 	int ballSpeedTimer;
