@@ -7,7 +7,7 @@
 #include "Game/LevelSelectState.hpp"
 
 PlayState::PlayState(std::string levelName)
-	: State(), lives(2), levelName(levelName)
+	: State(), lives(2), levelName(levelName), ballSpeedIncrement(1.0f), maxBallSpeed(800.0f)
 {
 }
 
@@ -130,6 +130,17 @@ void PlayState::Update(float delta)
 			}
 		}
 
+		// Increase ball speed
+		int stageClockSeconds = (int)stageClock.getElapsedTime().asSeconds();
+		bool updateBallSpeed = stageClockSeconds > ballSpeedTimer;
+		while (stageClockSeconds > ballSpeedTimer)
+		{
+			ballSpeedTimer++;
+			ballSpeed += ballSpeedIncrement;
+		}
+		if (updateBallSpeed)
+			UpdateBallSpeed();
+
 		ui->SetTime(stageClock.getElapsedTime());
 
 		stage->RemoveDead();
@@ -227,14 +238,14 @@ void PlayState::NextStage()
 	ClearTreats();
 	SetPoints(0);
 	stageClock.restart();
+	ballSpeedTimer = 0;
+	ResetBallSpeed();
 	ResetLife();
 }
 
 void PlayState::ResetLevel()
 {
 	lives = 2;
-	SetPoints(0);
-	ClearTreats();
 	level->Reset();
 	NextStage();
 }
@@ -295,4 +306,15 @@ void PlayState::SetMouseCaptured(bool captured)
 {
 	GetGame()->GetWindow()->setMouseCursorGrabbed(captured);
 	GetGame()->GetWindow()->setMouseCursorVisible(!captured);
+}
+
+void PlayState::UpdateBallSpeed()
+{
+	ball->SetVelocity(ballSpeed);
+}
+
+void PlayState::ResetBallSpeed()
+{
+	ballSpeed = 400.0f;
+	UpdateBallSpeed();
 }

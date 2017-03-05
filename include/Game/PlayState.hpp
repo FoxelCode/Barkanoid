@@ -40,6 +40,9 @@ public:
 
 	void SetMouseCaptured(bool captured);
 
+	void UpdateBallSpeed();
+	void ResetBallSpeed();
+
 	Paddle* GetPaddle() { return paddle; }
 
 private:
@@ -59,4 +62,9 @@ private:
 	int lives;
 	int points;
 	sf::Clock stageClock;
+
+	float ballSpeed;
+	int ballSpeedTimer;
+	float ballSpeedIncrement;
+	float maxBallSpeed;
 };

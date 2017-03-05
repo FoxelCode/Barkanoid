@@ -32,22 +32,12 @@ void Ball::Separate(sf::Vector2f separation)
 		velocityVec.y *= -1.0f;
 	else
 		velocityVec.x *= -1.0f;
-
-	Move(0.01f * velocityVec.x, 0.01f * velocityVec.y);
-
-	// Proper reflection
-	/*sf::Vector2f separationNormal = separation;
-	float separationLength = sqrtf(separation.x * separation.x + separation.y * separation.y);
-	separationNormal.x /= separationLength;
-	separationNormal.y /= separationLength;
-
-	float VdotN = velocityVec.x * separationNormal.x + velocityVec.y * separationNormal.y;
-	velocityVec.x = velocityVec.x - 2 * VdotN * separationNormal.x;
-	velocityVec.y = velocityVec.y - 2 * VdotN * separationNormal.y;*/
+	SetAngle(atan2f(velocityVec.y, velocityVec.x));
 }
 
 void Ball::SetAngle(float angle)
 {
+	this->angle = angle;
 	sf::Vector2f dir = sf::Vector2f(cosf(angle), sinf(angle));
 	velocityVec = dir * velocity;
 }
