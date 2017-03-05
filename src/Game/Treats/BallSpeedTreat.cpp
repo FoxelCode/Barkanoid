@@ -1,8 +1,8 @@
-#include "Game/Treats/BallSpeedTreat.hpp"
+#include "Game/Entities/Treats/BallSpeedTreat.hpp"
 
 #include "Collision/AABBCollider.hpp"
 #include "Engine/G.hpp"
-#include "Game/PlayState.hpp"
+#include "Game/States/PlayState.hpp"
 
 BallSpeedTreat::BallSpeedTreat(sf::Vector2f pos, float launchAngle, Type type)
 	: Treat(pos, launchAngle), type(type), speedChange(50.0f)

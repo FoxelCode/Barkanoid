@@ -1,4 +1,4 @@
-#include "Game/StageCompleteScreen.hpp"
+#include "Game/Screens/StageCompleteScreen.hpp"
 
 #include "Engine/G.hpp"
 #include "Engine/Input.hpp"

@@ -1,6 +1,6 @@
-#include "Game/GameArea.hpp"
+#include "Game/Entities/GameArea.hpp"
 
-#include <SFML\Graphics\RenderTarget.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 
 #include "Collision/ListCollider.hpp"
 

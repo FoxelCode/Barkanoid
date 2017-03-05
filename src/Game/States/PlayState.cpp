@@ -1,10 +1,10 @@
-#include "Game/PlayState.hpp"
+#include "Game/States/PlayState.hpp"
 
 #include "Engine/Input.hpp"
 #include "Collision/Collision.hpp"
 #include "Util/Random.hpp"
 #include "Engine/G.hpp"
-#include "Game/LevelSelectState.hpp"
+#include "Game/States/LevelSelectState.hpp"
 
 PlayState::PlayState(std::string levelName)
 	: State(), lives(2), levelName(levelName), ballSpeedIncrement(1.0f), ballSpeedBounds(300.0f, 800.0f),

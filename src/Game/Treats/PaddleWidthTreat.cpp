@@ -1,8 +1,8 @@
-#include "Game/Treats/PaddleWidthTreat.hpp"
+#include "Game/Entities/Treats/PaddleWidthTreat.hpp"
 
 #include "Collision/AABBCollider.hpp"
 #include "Engine/G.hpp"
-#include "Game/PlayState.hpp"
+#include "Game/States/PlayState.hpp"
 
 PaddleWidthTreat::PaddleWidthTreat(sf::Vector2f pos, float launchAngle, Type type)
 	: Treat(pos, launchAngle), type(type), widthChange(20.0f)

@@ -2,8 +2,8 @@
 
 #include "Engine/GameObject.hpp"
 #include "Util/Math.hpp"
-#include "Game/Paddle.hpp"
-#include "Game/Ball.hpp"
+#include "Game/Entities/Paddle.hpp"
+#include "Game/Entities/Ball.hpp"
 #include "Collision/ListCollider.hpp"
 
 bool Collision::Collide(Collider* a, Collider* b)

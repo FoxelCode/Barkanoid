@@ -1,4 +1,4 @@
-#include "Game/GameOverScreen.hpp"
+#include "Game/Screens/GameOverScreen.hpp"
 
 #include "Engine/G.hpp"
 

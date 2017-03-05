@@ -1,8 +1,8 @@
-#include "Game/MenuState.hpp"
+#include "Game/States/MenuState.hpp"
 
 #include "Engine/Game.hpp"
 #include "Engine/G.hpp"
-#include "Game/LevelSelectState.hpp"
+#include "Game/States/LevelSelectState.hpp"
 
 MenuState::MenuState()
 {

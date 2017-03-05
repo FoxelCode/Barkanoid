@@ -1,8 +1,8 @@
-#include "Game/Treats/MagneticPaddleTreat.hpp"
+#include "Game/Entities/Treats/MagneticPaddleTreat.hpp"
 
 #include "Collision/AABBCollider.hpp"
 #include "Engine/G.hpp"
-#include "Game/PlayState.hpp"
+#include "Game/States/PlayState.hpp"
 
 MagneticPaddleTreat::MagneticPaddleTreat(sf::Vector2f pos, float launchAngle)
 	: Treat(pos, launchAngle)

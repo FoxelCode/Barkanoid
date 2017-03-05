@@ -8,7 +8,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Engine/Game.hpp"
-#include "Game/MenuState.hpp"
+#include "Game/States/MenuState.hpp"
 
 int main()
 {

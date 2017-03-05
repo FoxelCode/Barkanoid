@@ -1,10 +1,10 @@
-#include "Game/LevelSelectState.hpp"
+#include "Game/States/LevelSelectState.hpp"
 
 #include "JSON/json.hpp"
 using json = nlohmann::json;
 
 #include "Engine/G.hpp"
-#include "Game/PlayState.hpp"
+#include "Game/States/PlayState.hpp"
 
 void LevelSelectState::Init()
 {

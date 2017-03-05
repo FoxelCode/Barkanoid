@@ -4,7 +4,7 @@
 
 #include "Engine/GameObject.hpp"
 #include "Util/Math.hpp"
-#include "Game/Ball.hpp"
+#include "Game/Entities/Ball.hpp"
 
 class Paddle : public GameObject
 {

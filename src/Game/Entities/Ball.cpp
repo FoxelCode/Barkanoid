@@ -1,4 +1,4 @@
-#include "Game/Ball.hpp"
+#include "Game/Entities/Ball.hpp"
 
 #include <iostream>
 

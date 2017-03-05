@@ -1,8 +1,8 @@
-#include "Game/Treats/MultiballTreat.hpp"
+#include "Game/Entities/Treats/MultiballTreat.hpp"
 
 #include "Collision/AABBCollider.hpp"
 #include "Engine/G.hpp"
-#include "Game/PlayState.hpp"
+#include "Game/States/PlayState.hpp"
 
 MultiballTreat::MultiballTreat(sf::Vector2f pos, float launchAngle)
 	: Treat(pos, launchAngle)

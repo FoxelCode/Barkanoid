@@ -1,10 +1,10 @@
-#include "Game/Paddle.hpp"
+#include "Game/Entities/Paddle.hpp"
 
 #include "Collision/AABBCollider.hpp"
 #include "Engine/G.hpp"
 #include "Engine/Input.hpp"
 #include "Graphics/SlicedGraphic.hpp"
-#include "Game/Ball.hpp"
+#include "Game/Entities/Ball.hpp"
 
 Paddle::Paddle(sf::Vector2f pos)
 	: GameObject(pos), angleRange(160.0f), widthBounds(32.0f, 200.0f), magnetic(false)

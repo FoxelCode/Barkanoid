@@ -1,4 +1,4 @@
-#include "Game/Stage.hpp"
+#include "Game/Entities/Stage.hpp"
 
 #include <array>
 

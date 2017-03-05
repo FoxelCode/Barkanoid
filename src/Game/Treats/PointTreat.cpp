@@ -1,6 +1,6 @@
-#include "Game/Treats/PointTreat.hpp"
+#include "Game/Entities/Treats/PointTreat.hpp"
 
-#include "Game/PlayState.hpp"
+#include "Game/States/PlayState.hpp"
 #include "Collision/AABBCollider.hpp"
 #include "Engine/G.hpp"
 

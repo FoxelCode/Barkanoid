@@ -1,9 +1,9 @@
-#include "Game/Brick.hpp"
+#include "Game/Entities/Brick.hpp"
 
 #include "Engine/G.hpp"
 #include "Engine/State.hpp"
 #include "Collision/AABBCollider.hpp"
-#include "Game/Treats/MultiballTreat.hpp"
+#include "Game/Entities/Treats/MultiballTreat.hpp"
 #include "Util/Random.hpp"
 #include "Util/Math.hpp"
 

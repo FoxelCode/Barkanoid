@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/GameObject.hpp"
-#include "Palette.hpp"
+#include "Game/Palette.hpp"
 
 class Brick : public GameObject
 {

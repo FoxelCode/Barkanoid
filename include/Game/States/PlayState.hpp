@@ -2,15 +2,15 @@
 
 #include "Engine/State.hpp"
 #include "Engine/Game.hpp"
-#include "GameArea.hpp"
-#include "Ball.hpp"
-#include "Paddle.hpp"
-#include "Level.hpp"
-#include "Stage.hpp"
-#include "Treats/Treat.hpp"
-#include "UI.hpp"
-#include "StageCompleteScreen.hpp"
-#include "GameOverScreen.hpp"
+#include "Game/Entities/GameArea.hpp"
+#include "Game/Entities/Ball.hpp"
+#include "Game/Entities/Paddle.hpp"
+#include "Game/Entities/Level.hpp"
+#include "Game/Entities/Stage.hpp"
+#include "Game/Entities/Treats/Treat.hpp"
+#include "Game/Entities/UI.hpp"
+#include "Game/Screens/StageCompleteScreen.hpp"
+#include "Game/Screens/GameOverScreen.hpp"
 
 class PlayState : public State
 {

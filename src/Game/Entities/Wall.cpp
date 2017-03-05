@@ -1,4 +1,4 @@
-#include "Game/Wall.hpp"
+#include "Game/Entities/Wall.hpp"
 
 #include "Collision/AABBCollider.hpp"
 #include "Engine/G.hpp"
