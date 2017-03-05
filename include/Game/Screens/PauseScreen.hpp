@@ -8,25 +8,29 @@
 #include "Engine/GameObject.hpp"
 #include "UI/Button.hpp"
 
-class GameOverScreen : public GameObject
+class PauseScreen : public GameObject
 {
 public:
-	GameOverScreen(sf::Vector2u size, std::function<void()> backToSelectCallback, std::function<void()> retryLevelCallback);
-	~GameOverScreen();
+	PauseScreen(sf::Vector2u size, std::function<void()> continueCallback, std::function<void()> backToSelectCallback, std::function<void()> retryLevelCallback);
+	~PauseScreen();
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	void Update(float delta);
 
+	void ContinueClicked() { continueClicked = true; }
 	void BackToSelectClicked() { backToSelectClicked = true; }
 	void RetryLevelClicked() { retryLevelClicked = true; }
 
 private:
+	std::function<void()> continueCallback = nullptr;
 	std::function<void()> backToSelectCallback = nullptr;
 	std::function<void()> retryLevelCallback = nullptr;
+	bool continueClicked = false;
 	bool backToSelectClicked = false;
 	bool retryLevelClicked = false;
 
 	sf::RectangleShape dimmer;
 	sf::Text banner;
+	Button* continueButton;
 	Button* backToSelectButton;
 	Button* retryLevelButton;
 };

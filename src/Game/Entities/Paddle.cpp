@@ -83,3 +83,8 @@ void Paddle::AddWidth(float width)
 	size.x = Math::clamp(size.x, widthBounds.x, widthBounds.y);
 	SetWidth(size.x);
 }
+
+void Paddle::Reset()
+{
+	attachedBalls.clear();
+}

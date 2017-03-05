@@ -9,6 +9,7 @@
 #include "Game/Entities/Stage.hpp"
 #include "Game/Entities/Treats/Treat.hpp"
 #include "Game/Entities/UI.hpp"
+#include "Game/Screens/PauseScreen.hpp"
 #include "Game/Screens/StageCompleteScreen.hpp"
 #include "Game/Screens/GameOverScreen.hpp"
 
@@ -35,6 +36,10 @@ public:
 	void ClearTreats();
 	void ClearBalls();
 
+	void UpdateScreens(float delta);
+	void ClearScreens();
+
+	void PauseContinueClicked();
 	void StageCompleteClicked();
 	void BackToLevelSelect();
 	void GameOverResetLevel();
@@ -58,6 +63,7 @@ private:
 	std::vector<Treat*> treats;
 	UI* ui = nullptr;
 
+	PauseScreen* pauseScreen = nullptr;
 	StageCompleteScreen* stageCompleteScreen = nullptr;
 	GameOverScreen* gameOverScreen = nullptr;
 	bool waiting = false;

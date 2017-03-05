@@ -26,16 +26,7 @@ PlayState::~PlayState()
 		delete ui;
 		ui = nullptr;
 	}
-	if (stageCompleteScreen != nullptr)
-	{
-		delete stageCompleteScreen;
-		stageCompleteScreen = nullptr;
-	}
-	if (gameOverScreen != nullptr)
-	{
-		delete gameOverScreen;
-		gameOverScreen = nullptr;
-	}
+	ClearScreens();
 }
 
 void PlayState::Init()
@@ -72,6 +63,8 @@ void PlayState::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	State::draw(target, states);
 	target.draw(*ui, states);
 	
+	if (pauseScreen != nullptr)
+		target.draw(*pauseScreen, states);
 	if (stageCompleteScreen != nullptr)
 		target.draw(*stageCompleteScreen, states);
 	if (gameOverScreen != nullptr)
@@ -84,6 +77,7 @@ void PlayState::Update(float delta)
 	{
 		State::Update(delta);
 
+		// Collide balls
 		for each (Ball* ball in balls)
 		{
 			if (ball->IsMoving())
@@ -114,11 +108,11 @@ void PlayState::Update(float delta)
 			else i++;
 		}
 
+		// Check for balls that have gone offscreen
 		Ball* ball = nullptr;
 		for (size_t i = 0; i < balls.size();)
 		{
 			ball = balls[i];
-			// Check if the ball has passed the bottom of the screen
 			if (ball->GetPosition().y > GetGame()->GetSize().y + ball->GetRadius())
 			{
 				Remove(ball);
@@ -138,8 +132,10 @@ void PlayState::Update(float delta)
 		if (speedToAdd > 0.0f)
 			AddBallSpeed(speedToAdd);
 
+		// Set UI timer
 		ui->SetTime(stageClock.getElapsedTime());
 
+		// Remove dead GameObjects
 		stage->RemoveDead();
 
 		// Check if there are no balls left -> lose a life
@@ -168,17 +164,21 @@ void PlayState::Update(float delta)
 			waiting = true;
 			SetMouseCaptured(false);
 		}
+
+		//Check for pause keypress
+		if (Input::JustPressed(sf::Keyboard::Escape) || Input::JustPressed(sf::Keyboard::P))
+		{
+			pauseScreen = new PauseScreen(GetGame()->GetSize(),
+				std::bind(&PlayState::PauseContinueClicked, this),
+				std::bind(&PlayState::BackToLevelSelect, this),
+				std::bind(&PlayState::GameOverResetLevel, this));
+			waiting = true;
+			SetMouseCaptured(false);
+		}
 	}
 	else
 	{
-		if (stageCompleteScreen != nullptr)
-		{
-			stageCompleteScreen->Update(delta);
-		}
-		if (gameOverScreen != nullptr)
-		{
-			gameOverScreen->Update(delta);
-		}
+		UpdateScreens(delta);
 	}
 }
 
@@ -276,6 +276,7 @@ void PlayState::ResetLevel()
 {
 	lives = 2;
 	level->Reset();
+	paddle->Reset();
 	NextStage();
 }
 
@@ -325,13 +326,51 @@ void PlayState::ClearBalls()
 	balls.clear();
 }
 
-void PlayState::StageCompleteClicked()
+void PlayState::UpdateScreens(float delta)
 {
+	if (pauseScreen != nullptr)
+	{
+		pauseScreen->Update(delta);
+	}
+	if (stageCompleteScreen != nullptr)
+	{
+		stageCompleteScreen->Update(delta);
+	}
+	if (gameOverScreen != nullptr)
+	{
+		gameOverScreen->Update(delta);
+	}
+}
+
+void PlayState::ClearScreens()
+{
+	if (pauseScreen != nullptr)
+	{
+		delete pauseScreen;
+		pauseScreen = nullptr;
+	}
 	if (stageCompleteScreen != nullptr)
 	{
 		delete stageCompleteScreen;
 		stageCompleteScreen = nullptr;
 	}
+	if (gameOverScreen != nullptr)
+	{
+		delete gameOverScreen;
+		gameOverScreen = nullptr;
+	}
+}
+
+void PlayState::PauseContinueClicked()
+{
+	ClearScreens();
+	waiting = false;
+	SetMouseCaptured(true);
+}
+
+void PlayState::StageCompleteClicked()
+{
+	ClearScreens();
 	waiting = false;
 	NextStage();
 }
@@ -344,11 +383,7 @@ void PlayState::BackToLevelSelect()
 
 void PlayState::GameOverResetLevel()
 {
-	if (gameOverScreen != nullptr)
-	{
-		delete gameOverScreen;
-		gameOverScreen = nullptr;
-	}
+	ClearScreens();
 	waiting = false;
 	ResetLevel();
 }

@@ -45,13 +45,15 @@ void Game::Update(float delta)
 {
 	allowStep = false;
 
-	if (Input::JustPressed(sf::Keyboard::P))
+#ifndef _NDEBUG
+	if (Input::JustPressed(sf::Keyboard::Num1))
 		paused = !paused;
-	if (Input::JustPressed(sf::Keyboard::O))
+	if (Input::JustPressed(sf::Keyboard::Num3))
 		showColliders = !showColliders;
 
-	if (paused && Input::JustPressed(sf::Keyboard::N))
+	if (paused && Input::JustPressed(sf::Keyboard::Num2))
 		allowStep = true;
+#endif
 
 	if (!paused || allowStep)
 		state->Update(delta);

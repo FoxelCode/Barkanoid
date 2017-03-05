@@ -24,6 +24,7 @@ public:
 
 	void AttachBall(Ball* ball);
 	void AddWidth(float width);
+	void Reset();
 
 private:
 	sf::Vector2f size;

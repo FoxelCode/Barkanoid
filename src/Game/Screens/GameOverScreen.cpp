@@ -67,13 +67,3 @@ void GameOverScreen::Update(float delta)
 	else if (retryLevelClicked)
 		retryLevelCallback();
 }
-
-void GameOverScreen::BackToSelectClicked()
-{
-	backToSelectClicked = true;
-}
-
-void GameOverScreen::RetryLevelClicked()
-{
-	retryLevelClicked = true;
-}
