@@ -78,7 +78,7 @@ void PlayState::Update(float delta)
 		State::Update(delta);
 
 		// Update stage time
-		stageTime += sf::milliseconds(delta * 1000);
+		stageTime += sf::milliseconds((sf::Int32)(delta * 1000.0f));
 
 		// Collide balls
 		for each (Ball* ball in balls)
