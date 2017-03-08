@@ -16,13 +16,14 @@
 #include <SFML\Window\Mouse.hpp>
 #include <SFML\Window\Keyboard.hpp>
 
-Game::Game(sf::RenderWindow& window, sf::Vector2u size, State* initialState)
+Game::Game(sf::RenderWindow& window, sf::Vector2u size, State* initialState, const float delta)
 	: window(&window), size(size)
 {
 	G::SetGame(this);
 	G::SetAssetManager(&asset);
 	Input::SetWindow(&window);
 	Random::Seed();
+	Collision::SetDelta(delta);
 
 	window.setKeyRepeatEnabled(false);
 

@@ -23,7 +23,7 @@ int main()
 	float deltaAccumulator = 0.0f;
 
 	MenuState* initialState = new MenuState();
-	Game game(window, sf::Vector2u(480, 640), initialState);
+	Game game(window, sf::Vector2u(480, 640), initialState, deltaTime);
 
 	while (window.isOpen())
 	{

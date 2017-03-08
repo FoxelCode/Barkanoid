@@ -25,6 +25,8 @@ public:
 	void LoadGraphic(sf::Texture* tex);
 	void LoadSlicedGraphic(sf::Texture* tex);
 
+	void SetVelocity(sf::Vector2f vel) { velocity = vel; }
+
 	sf::Vector2f GetVelocity() const { return velocity; }
 	sf::Vector2f GetTarget(float delta) const { return GetPosition() + velocity * delta; }
 	Collider* GetCollider() { return collider; }

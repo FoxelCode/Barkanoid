@@ -6,25 +6,23 @@
 #include "Game/Entities/Ball.hpp"
 #include "Collision/ListCollider.hpp"
 
+float Collision::delta = 1.0f;
+
 sf::Vector2f Collision::Collide(Collider* a, Collider* b)
 {
 	sf::FloatRect aBounds = a->GetBounds();
 	sf::FloatRect bBounds = b->GetBounds();
-	sf::Vector2f targetLocation = a->GetGameObject()->GetPosition() + a->GetGameObject()->GetVelocity();
+	sf::Vector2f targetMovement = a->GetGameObject()->GetVelocity() * delta;
 
-	// Broad phase collision
-	if (!a->GetBounds().intersects(b->GetBounds()))
-		return targetLocation;
-
-	sf::Vector2f newPos = sf::Vector2f();
+	sf::Vector2f newMovement = sf::Vector2f();
 	if (b->GetType() == ColliderType::List)
 	{
 		ListCollider* bList = static_cast<ListCollider*>(b);
 		for each (Collider* collider in bList->GetColliders())
 		{
-			newPos = Collide(a, collider);
-			if (newPos != targetLocation)
-				return newPos;
+			newMovement = Collide(a, collider);
+			if (newMovement != targetMovement)
+				return newMovement;
 		}
 	}
 
@@ -33,14 +31,56 @@ sf::Vector2f Collision::Collide(Collider* a, Collider* b)
 		sf::Vector2f newPos = AABBToAABB(static_cast<AABBCollider*>(a), static_cast<AABBCollider*>(b));
 		return newPos;
 	}
-	return targetLocation;
+	return targetMovement;
 }
 
 sf::Vector2f Collision::AABBToAABB(AABBCollider* a, AABBCollider* b)
 {
+	sf::Vector2f targetMovement = a->GetGameObject()->GetVelocity() * delta;
+
+	// Broadphase
+	sf::FloatRect broadphaseRect = GetSweepBroadphaseRect(a);
+	if (!broadphaseRect.intersects(b->GetBounds()))
+		return targetMovement;
+
+	// Sweep collision
 	sf::Vector2f normal;
 	float collisionTime = SweepAABB(a, b, normal);
-	return a->GetGameObject()->GetPosition() + a->GetGameObject()->GetVelocity() * collisionTime;
+
+	// Collision response ( reflection )
+
+	// Set new velocity after reflection
+	sf::Vector2f newVelocity = a->GetGameObject()->GetVelocity();
+	if (fabsf(normal.x) > 0.00001f)
+		newVelocity.x *= -1;
+	if (fabsf(normal.y) > 0.00001f)
+		newVelocity.y *= -1;
+	a->GetGameObject()->SetVelocity(newVelocity);
+
+	// Use remaining velocity to reflect
+	float remainingTime = 1.0 - collisionTime;
+	sf::Vector2f deflectMovement = newVelocity * delta * remainingTime;
+
+	// Notify both objects of the collision
+	a->GetGameObject()->Collided(b->GetGameObject());
+	b->GetGameObject()->Collided(a->GetGameObject());
+
+	return targetMovement * collisionTime + deflectMovement;
+}
+
+sf::FloatRect Collision::GetSweepBroadphaseRect(AABBCollider* a)
+{
+	sf::FloatRect bounds = a->getGlobalBounds();
+	bounds.left = a->GetPosition().x;
+	bounds.top = a->GetPosition().y;
+	sf::Vector2f vel = a->GetGameObject()->GetVelocity() * delta;
+
+	sf::FloatRect rect;
+	rect.left = (vel.x > 0) ? bounds.left : bounds.left + vel.x;
+	rect.top = (vel.y > 0) ? bounds.top : bounds.top + vel.y;
+	rect.width = (vel.x > 0) ? vel.x + bounds.width : bounds.width - vel.x;
+	rect.height = (vel.y > 0) ? vel.y + bounds.height : bounds.height - vel.y;
+	return rect;
 }
 
 float Collision::SweepAABB(AABBCollider* a, AABBCollider* b, sf::Vector2f& normal)
@@ -51,7 +91,7 @@ float Collision::SweepAABB(AABBCollider* a, AABBCollider* b, sf::Vector2f& norma
 	sf::FloatRect bBounds = b->getGlobalBounds();
 	bBounds.left = b->GetPosition().x;
 	bBounds.top = b->GetPosition().y;
-	sf::Vector2f aVel = a->GetGameObject()->GetVelocity();
+	sf::Vector2f aVel = a->GetGameObject()->GetVelocity() * delta;
 
 	float xInvEntry, yInvEntry;
 	float xInvExit, yInvExit;

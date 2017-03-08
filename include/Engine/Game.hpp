@@ -15,7 +15,7 @@ class State;
 class Game : public sf::Drawable, IUpdatable
 {
 public:
-	Game(sf::RenderWindow& window, sf::Vector2u size, State* initialState);
+	Game(sf::RenderWindow& window, sf::Vector2u size, State* initialState, const float delta);
 	~Game();
 
 	virtual void Update(float delta);

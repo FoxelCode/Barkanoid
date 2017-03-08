@@ -7,7 +7,7 @@
 #include "Game/States/LevelSelectState.hpp"
 
 PlayState::PlayState(std::string levelName)
-	: State(), lives(2), levelName(levelName), ballSpeedIncrement(1.0f), ballSpeedBounds(300.0f, 800.0f),
+	: State(), lives(2), levelName(levelName), ballSpeedIncrement(0.0f), ballSpeedBounds(300.0f, 800.0f),
 	  ballSplitAngle((float)PIELLO_DARKNESS_MY_OLD_FRIEND / 4.0f)
 {
 }
@@ -80,18 +80,37 @@ void PlayState::Update(float delta)
 		// Update stage time
 		stageTime += sf::milliseconds((sf::Int32)(delta * 1000.0f));
 
+		/*
+		 *	Collisions go here
+		 */
+
 		// Collide balls
 		for each (Ball* ball in balls)
 		{
 			if (ball->IsMoving())
 			{
-				sf::Vector2f targetPosition = ball->GetTarget(delta);
-				sf::Vector2f newTarget = Collide(ball, gameArea);
+				sf::Vector2f targetMovement = ball->GetVelocity() * delta;
 
-				if (newTarget != targetPosition)
-					ball->SetPosition(newTarget);
-				else
-					ball->SetPosition(targetPosition);
+				sf::Vector2f newMovement = Collide(ball, paddle);
+				if (newMovement != targetMovement)
+				{
+					ball->Move(newMovement);
+					continue;
+				}
+				newMovement = Collide(ball, gameArea);
+				if (newMovement != targetMovement)
+				{
+					ball->Move(newMovement);
+					continue;
+				}
+				newMovement = Collide(ball, stage);
+				if (newMovement != targetMovement)
+				{
+					ball->Move(newMovement);
+					continue;
+				}
+
+				ball->Move(targetMovement);
 			}
 		}
 
@@ -270,8 +289,8 @@ void PlayState::NextStage()
 	SetPoints(0);
 	stageTime = sf::Time();
 	ballSpeedTimer = 0;
-	ResetBallSpeed();
 	ResetLife();
+	ResetBallSpeed();
 }
 
 void PlayState::ResetLevel()

@@ -9,7 +9,7 @@
 const float Ball::SIZE = 12.0f;
 
 Ball::Ball(sf::Vector2f pos)
-	: GameObject(pos), velocityMag(100.0f), angle(0.0f)
+	: GameObject(pos), velocityMag(100.0f), angle(0.5f)
 {
 	collider = new AABBCollider(this, sf::Vector2f(-Ball::SIZE / 2.0f, -Ball::SIZE / 2.0f), sf::Vector2f(Ball::SIZE, Ball::SIZE));
 
