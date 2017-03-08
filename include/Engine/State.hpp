@@ -17,7 +17,7 @@ public:
 
 	virtual void Add(GameObject* object);
 	virtual void Remove(GameObject* object);
-	bool Collide(GameObject* a, GameObject* b);
+	sf::Vector2f Collide(GameObject* a, GameObject* b);
 
 	void SetGame(Game* game);
 

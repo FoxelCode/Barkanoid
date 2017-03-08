@@ -25,6 +25,8 @@ public:
 	void LoadGraphic(sf::Texture* tex);
 	void LoadSlicedGraphic(sf::Texture* tex);
 
+	sf::Vector2f GetVelocity() const { return velocity; }
+	sf::Vector2f GetTarget(float delta) const { return GetPosition() + velocity * delta; }
 	Collider* GetCollider() { return collider; }
 
 	virtual void Kill() { alive = false; }
@@ -35,6 +37,8 @@ public:
 protected:
 	Collider* collider = nullptr;
 	Graphic* graphic = nullptr;
+
+	sf::Vector2f velocity = sf::Vector2f();
 
 private:
 	bool alive = true;

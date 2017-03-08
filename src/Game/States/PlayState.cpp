@@ -85,20 +85,24 @@ void PlayState::Update(float delta)
 		{
 			if (ball->IsMoving())
 			{
-				Collide(ball, paddle);
-				State::Collide(ball, gameArea);
-				State::Collide(ball, stage);
+				sf::Vector2f targetPosition = ball->GetTarget(delta);
+				sf::Vector2f newTarget = Collide(ball, gameArea);
+
+				if (newTarget != targetPosition)
+					ball->SetPosition(newTarget);
+				else
+					ball->SetPosition(targetPosition);
 			}
 		}
 
 		// Collide all treats and remove ones that have gone offscreen
-		Treat* treat = nullptr;
+		/*Treat* treat = nullptr;
 		for (size_t i = 0; i < treats.size();)
 		{
 			treat = treats[i];
 			State::Collide(treat, gameArea);
 			bool hitPaddle = false;
-			if (State::Collide(treat, paddle))
+			if (Collide(treat, paddle))
 			{
 				treat->AddAward(this);
 				hitPaddle = true;
@@ -109,14 +113,14 @@ void PlayState::Update(float delta)
 				delete treat;
 			}
 			else i++;
-		}
+		}*/
 
 		// Check for balls that have gone offscreen
 		Ball* ball = nullptr;
 		for (size_t i = 0; i < balls.size();)
 		{
 			ball = balls[i];
-			if (ball->GetPosition().y > GetGame()->GetSize().y + ball->GetRadius())
+			if (ball->GetPosition().y > GetGame()->GetSize().y + ball->GetCollider()->GetBounds().height)
 			{
 				Remove(ball);
 				delete ball;
@@ -235,11 +239,6 @@ void PlayState::Remove(GameObject* object)
 	}
 }
 
-bool PlayState::Collide(Ball* a, Paddle* b)
-{
-	return Collision::PaddleCollide(static_cast<CircleCollider*>(a->GetCollider()), static_cast<AABBCollider*>(b->GetCollider()));
-}
-
 void PlayState::AddPoints(int points)
 {
 	this->points += points;
@@ -288,11 +287,11 @@ void PlayState::ResetLife()
 	ui->SetLives(lives);
 
 	Ball* ball = new Ball(sf::Vector2f(100.0f, 300.0f));
-	ball->SetPosition(paddle->GetPosition().x + (Random::Float(paddle->GetSize().x / 2.0f) - paddle->GetSize().x / 4.0f), 0.0f);
+	//ball->SetPosition(paddle->GetPosition().x + (Random::Float(paddle->GetSize().x / 2.0f) - paddle->GetSize().x / 4.0f), 0.0f);
 	Add(ball);
 
 	paddle->SetMagnetic(false);
-	paddle->AttachBall(ball);
+	//paddle->AttachBall(ball);
 }
 
 void PlayState::ClearTreats()

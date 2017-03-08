@@ -4,6 +4,6 @@
 
 sf::FloatRect AABBCollider::GetBounds()
 {
-	sf::Vector2f pos = GetGameObject()->GetPosition() + GetOffset();
+	sf::Vector2f pos = GetPosition();
 	return sf::FloatRect(pos.x, pos.y, getSize().x, getSize().y);
 }

@@ -19,13 +19,10 @@ public:
 
 	void Draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
-		states.transform.translate(GetOffset());
-		if (GetGameObject())
-			states.transform.translate(GetGameObject()->GetPosition());
+		states.transform.translate(GetPosition());
 		target.draw(*this, states);
 	}
 
 	virtual sf::FloatRect GetBounds();
-
 	ColliderType GetType() { return ColliderType::AABB; }
 };

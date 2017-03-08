@@ -3,24 +3,20 @@
 #include <iostream>
 
 #include "Util/Math.hpp"
-#include "Collision/CircleCollider.hpp"
+#include "Collision/AABBCollider.hpp"
 #include "Engine/G.hpp"
 
+const float Ball::SIZE = 12.0f;
+
 Ball::Ball(sf::Vector2f pos)
-	: GameObject(pos), velocityVec(), velocity(400.0f), angle(0.5f)
+	: GameObject(pos), velocityMag(100.0f), angle(0.0f)
 {
-	collider = new CircleCollider(this, sf::Vector2f(-6.0f, -6.0f), 6.0f);
+	collider = new AABBCollider(this, sf::Vector2f(-Ball::SIZE / 2.0f, -Ball::SIZE / 2.0f), sf::Vector2f(Ball::SIZE, Ball::SIZE));
 
 	LoadGraphic(G::GetAssetManager()->GetTexture("ball.png"));
-	graphic->setPosition(-6.0f, -6.0f);
+	graphic->setPosition(-Ball::SIZE / 2.0f, -Ball::SIZE / 2.0f);
 
 	SetAngle(angle);
-}
-
-void Ball::Update(float delta)
-{
-	if (moving)
-		Move(velocityVec * delta);
 }
 
 void Ball::Separate(sf::Vector2f separation)
@@ -29,26 +25,21 @@ void Ball::Separate(sf::Vector2f separation)
 
 	// Shortest axis reflection
 	if (fabsf(separation.y) >= fabsf(separation.x))
-		velocityVec.y *= -1.0f;
+		velocity.y *= -1.0f;
 	else
-		velocityVec.x *= -1.0f;
-	SetAngle(atan2f(velocityVec.y, velocityVec.x));
+		velocity.x *= -1.0f;
+	SetAngle(atan2f(velocity.y, velocity.x));
 }
 
 void Ball::SetAngle(float angle)
 {
 	this->angle = angle;
 	sf::Vector2f dir = sf::Vector2f(cosf(angle), sinf(angle));
-	velocityVec = dir * velocity;
+	velocity = dir * velocityMag;
 }
 
 void Ball::SetVelocity(float velocity)
 {
-	this->velocity = velocity;
-	velocityVec = sf::Vector2f(cosf(angle), sinf(angle)) * velocity;
-}
-
-float Ball::GetRadius()
-{
-	return static_cast<CircleCollider*>(collider)->getRadius();
+	this->velocityMag = velocity;
+	this->velocity = sf::Vector2f(cosf(angle), sinf(angle)) * velocity;
 }

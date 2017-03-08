@@ -70,7 +70,7 @@ void State::Remove(GameObject* object)
 	}
 }
 
-bool State::Collide(GameObject* a, GameObject* b)
+sf::Vector2f State::Collide(GameObject* a, GameObject* b)
 {
 	return Collision::Collide(a->GetCollider(), b->GetCollider());
 }

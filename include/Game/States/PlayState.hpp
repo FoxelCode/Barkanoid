@@ -25,7 +25,6 @@ public:
 
 	void Add(GameObject* object);
 	void Remove(GameObject* object);
-	bool Collide(Ball* a, Paddle* b);
 
 	void AddPoints(int points);
 	void SetPoints(int points);

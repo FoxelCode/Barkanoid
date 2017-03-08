@@ -6,7 +6,6 @@
 enum ColliderType
 {
 	AABB,
-	Circle,
 	List
 };
 
@@ -23,6 +22,7 @@ public:
 	virtual ColliderType GetType() { return ColliderType::AABB; }
 	virtual sf::FloatRect GetBounds();
 	GameObject* GetGameObject() const { return gameObject; }
+	sf::Vector2f GetPosition() const;
 	sf::Vector2f GetOffset() const { return offset; }
 
 	void SetOffset(sf::Vector2f offset) { this->offset = offset; }
