@@ -33,6 +33,12 @@ void GameObject::DrawCollider(sf::RenderTarget& target, sf::RenderStates states)
 
 void GameObject::Update(float delta)
 {
+	Move(velocity * delta);
+}
+
+void GameObject::Collided(GameObject* other, sf::Vector2f separationVelocity)
+{
+	Move(separationVelocity);
 }
 
 void GameObject::LoadGraphic(sf::Texture* tex)

@@ -19,8 +19,8 @@ public:
 	virtual void DrawCollider(sf::RenderTarget& target, sf::RenderStates states) const;
 	virtual void Update(float delta);
 
-	virtual void Separate(sf::Vector2f separation) { Move(separation); }
-	virtual void Collided(GameObject* other) {};
+	virtual void Collided(GameObject* other) {}
+	virtual void Collided(GameObject* other, sf::Vector2f separationVelocity);
 
 	void LoadGraphic(sf::Texture* tex);
 	void LoadSlicedGraphic(sf::Texture* tex);

@@ -89,37 +89,18 @@ void PlayState::Update(float delta)
 		{
 			if (ball->IsMoving())
 			{
-				sf::Vector2f targetMovement = ball->GetVelocity() * delta;
-
-				sf::Vector2f newMovement = Collide(ball, paddle);
-				if (newMovement != targetMovement)
-				{
-					ball->Move(newMovement);
-					continue;
-				}
-				newMovement = Collide(ball, gameArea);
-				if (newMovement != targetMovement)
-				{
-					ball->Move(newMovement);
-					continue;
-				}
-				newMovement = Collide(ball, stage);
-				if (newMovement != targetMovement)
-				{
-					ball->Move(newMovement);
-					continue;
-				}
-
-				ball->Move(targetMovement);
+				if (Collide(ball, paddle)) continue;
+				if (Collide(ball, gameArea)) continue;
+				if (Collide(ball, stage)) continue;
 			}
 		}
 
 		// Collide all treats and remove ones that have gone offscreen
-		/*Treat* treat = nullptr;
+		Treat* treat = nullptr;
 		for (size_t i = 0; i < treats.size();)
 		{
 			treat = treats[i];
-			State::Collide(treat, gameArea);
+			Collide(treat, gameArea);
 			bool hitPaddle = false;
 			if (Collide(treat, paddle))
 			{
@@ -132,7 +113,7 @@ void PlayState::Update(float delta)
 				delete treat;
 			}
 			else i++;
-		}*/
+		}
 
 		// Check for balls that have gone offscreen
 		Ball* ball = nullptr;
@@ -306,11 +287,12 @@ void PlayState::ResetLife()
 	ui->SetLives(lives);
 
 	Ball* ball = new Ball(sf::Vector2f(100.0f, 300.0f));
-	//ball->SetPosition(paddle->GetPosition().x + (Random::Float(paddle->GetSize().x / 2.0f) - paddle->GetSize().x / 4.0f), 0.0f);
+	ball->SetPosition(paddle->GetPosition().x + (Random::Float(paddle->GetSize().x / 2.0f) - paddle->GetSize().x / 4.0f), 0.0f);
+	ball->SetVelocity(ballSpeed);
 	Add(ball);
 
 	paddle->SetMagnetic(false);
-	//paddle->AttachBall(ball);
+	paddle->AttachBall(ball);
 }
 
 void PlayState::ClearTreats()

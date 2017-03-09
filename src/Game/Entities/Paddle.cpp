@@ -74,7 +74,7 @@ void Paddle::AttachBall(Ball* ball)
 	attachedBalls.push_back(std::make_pair(ball, ball->GetPosition().x - GetPosition().x));
 	ball->SetAngle((float)PIELLO_DARKNESS_MY_OLD_FRIEND / 2.0f);
 	ball->SetMoving(false);
-	ball->SetPosition(ball->GetPosition().x, GetPosition().y - size.y / 2.0f - ball->GetCollider()->GetBounds().width / 2.0f);
+	ball->SetPosition(ball->GetPosition().x, GetPosition().y - size.y / 2.0f - ball->GetCollider()->GetBounds().width / 2.0f - 10.0f);
 }
 
 void Paddle::AddWidth(float width)

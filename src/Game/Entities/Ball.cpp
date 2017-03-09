@@ -5,11 +5,12 @@
 #include "Util/Math.hpp"
 #include "Collision/AABBCollider.hpp"
 #include "Engine/G.hpp"
+#include "Game/Entities/Paddle.hpp"
 
 const float Ball::SIZE = 12.0f;
 
 Ball::Ball(sf::Vector2f pos)
-	: GameObject(pos), velocityMag(100.0f), angle(0.5f)
+	: GameObject(pos), velocityMag(400.0f), angle(0.5f)
 {
 	collider = new AABBCollider(this, sf::Vector2f(-Ball::SIZE / 2.0f, -Ball::SIZE / 2.0f), sf::Vector2f(Ball::SIZE, Ball::SIZE));
 
@@ -19,16 +20,20 @@ Ball::Ball(sf::Vector2f pos)
 	SetAngle(angle);
 }
 
-void Ball::Separate(sf::Vector2f separation)
+void Ball::Update(float delta)
 {
-	GameObject::Separate(separation);
+	if (moving)
+		GameObject::Update(delta);
+}
 
-	// Shortest axis reflection
-	if (fabsf(separation.y) >= fabsf(separation.x))
-		velocity.y *= -1.0f;
-	else
-		velocity.x *= -1.0f;
-	SetAngle(atan2f(velocity.y, velocity.x));
+void Ball::Collided(GameObject* other, sf::Vector2f separationVelocity)
+{
+	if (dynamic_cast<Paddle*>(other))
+	{
+		sf::Vector2f delta = GetPosition() - other->GetPosition();
+		SetAngle(atan2f(delta.y, delta.x));
+	}
+	GameObject::Collided(other, Math::magnitude(separationVelocity) * Math::normalise(velocity));
 }
 
 void Ball::SetAngle(float angle)

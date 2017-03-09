@@ -8,44 +8,39 @@
 
 float Collision::delta = 1.0f;
 
-sf::Vector2f Collision::Collide(Collider* a, Collider* b)
+bool Collision::Collide(Collider* a, Collider* b)
 {
-	sf::FloatRect aBounds = a->GetBounds();
-	sf::FloatRect bBounds = b->GetBounds();
-	sf::Vector2f targetMovement = a->GetGameObject()->GetVelocity() * delta;
-
-	sf::Vector2f newMovement = sf::Vector2f();
 	if (b->GetType() == ColliderType::List)
 	{
 		ListCollider* bList = static_cast<ListCollider*>(b);
 		for each (Collider* collider in bList->GetColliders())
 		{
-			newMovement = Collide(a, collider);
-			if (newMovement != targetMovement)
-				return newMovement;
+			if (Collide(a, collider))
+				return true;
 		}
 	}
 
 	if (a->GetType() == ColliderType::AABB && b->GetType() == ColliderType::AABB)
 	{
-		sf::Vector2f newPos = AABBToAABB(static_cast<AABBCollider*>(a), static_cast<AABBCollider*>(b));
-		return newPos;
+		return AABBToAABB(static_cast<AABBCollider*>(a), static_cast<AABBCollider*>(b));
 	}
-	return targetMovement;
+	return false;
 }
 
-sf::Vector2f Collision::AABBToAABB(AABBCollider* a, AABBCollider* b)
+bool Collision::AABBToAABB(AABBCollider* a, AABBCollider* b)
 {
-	sf::Vector2f targetMovement = a->GetGameObject()->GetVelocity() * delta;
-
 	// Broadphase
 	sf::FloatRect broadphaseRect = GetSweepBroadphaseRect(a);
 	if (!broadphaseRect.intersects(b->GetBounds()))
-		return targetMovement;
+		return false;
 
 	// Sweep collision
 	sf::Vector2f normal;
 	float collisionTime = SweepAABB(a, b, normal);
+
+	// Sweep didn't find a collision
+	if (collisionTime >= 1.0f)
+		return false;
 
 	// Collision response ( reflection )
 
@@ -59,13 +54,13 @@ sf::Vector2f Collision::AABBToAABB(AABBCollider* a, AABBCollider* b)
 
 	// Use remaining velocity to reflect
 	float remainingTime = 1.0 - collisionTime;
-	sf::Vector2f deflectMovement = newVelocity * delta * remainingTime;
+	sf::Vector2f reflection = newVelocity * delta * remainingTime;
 
 	// Notify both objects of the collision
-	a->GetGameObject()->Collided(b->GetGameObject());
+	a->GetGameObject()->Collided(b->GetGameObject(), reflection);
 	b->GetGameObject()->Collided(a->GetGameObject());
 
-	return targetMovement * collisionTime + deflectMovement;
+	return true;
 }
 
 sf::FloatRect Collision::GetSweepBroadphaseRect(AABBCollider* a)
@@ -93,6 +88,7 @@ float Collision::SweepAABB(AABBCollider* a, AABBCollider* b, sf::Vector2f& norma
 	bBounds.top = b->GetPosition().y;
 	sf::Vector2f aVel = a->GetGameObject()->GetVelocity() * delta;
 
+	// Calculate entry and exit distances for both axes
 	float xInvEntry, yInvEntry;
 	float xInvExit, yInvExit;
 
@@ -118,6 +114,7 @@ float Collision::SweepAABB(AABBCollider* a, AABBCollider* b, sf::Vector2f& norma
 		yInvExit = bBounds.top - (aBounds.top + aBounds.height);
 	}
 
+	// Calculate entry and exit times for both axes
 	float xEntry, yEntry;
 	float xExit, yExit;
 
@@ -143,9 +140,11 @@ float Collision::SweepAABB(AABBCollider* a, AABBCollider* b, sf::Vector2f& norma
 		yExit = yInvExit / aVel.y;
 	}
 
+	// Find the latest entry time and earliest exit time
 	float entryTime = std::max(xEntry, yEntry);
 	float exitTime = std::min(xExit, yExit);
 
+	// Check if there was no collision
 	if (entryTime > exitTime || xEntry < 0.0f && yEntry < 0.0f
 		|| xEntry > 1.0f || yEntry > 1.0f)
 	{
@@ -153,6 +152,7 @@ float Collision::SweepAABB(AABBCollider* a, AABBCollider* b, sf::Vector2f& norma
 		return 1.0f;
 	}
 
+	// There was a collision, set the separation normal
 	if (xEntry > yEntry)
 	{
 		if (xInvEntry < 0.0f)

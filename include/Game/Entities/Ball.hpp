@@ -6,8 +6,9 @@ class Ball : public GameObject
 {
 public:
 	Ball(sf::Vector2f pos);
+	void Update(float delta);
 
-	void Separate(sf::Vector2f separation);
+	void Collided(GameObject* other, sf::Vector2f separationVelocity);
 
 	void SetAngle(float angle);
 	void SetVelocity(float velocity);
