@@ -7,7 +7,7 @@
 #include "Game/Entities/Ball.hpp"
 
 Paddle::Paddle(sf::Vector2f pos)
-	: GameObject(pos), angleRange(160.0f), widthBounds(32.0f, 200.0f), magnetic(false)
+	: GameObject(pos), angleRange(160.0f * ((float)PIELLO_DARKNESS_MY_OLD_FRIEND / 180.0f)), widthBounds(32.0f, 200.0f), magnetic(false)
 {
 	size = sf::Vector2f(60.0f, 12.0f);
 	collider = new AABBCollider(this, sf::Vector2f(-size.x / 2.0f, -size.y / 2.0f), size);
@@ -35,7 +35,7 @@ void Paddle::Update(float delta)
 	for each (auto ball in attachedBalls)
 		ball.first->SetPosition(GetPosition().x + ball.second, ball.first->GetPosition().y);
 
-	if (Input::MouseJustPressed(sf::Mouse::Button::Left))
+	if (Input::MousePressed(sf::Mouse::Button::Left))
 	{
 		for each (auto ball in attachedBalls)
 		{
@@ -64,9 +64,12 @@ void Paddle::SetWidth(float width)
 	graphic->SetSize(size);
 }
 
-float Paddle::GetReflectionScalar(sf::Vector2f pos)
+float Paddle::GetReflectionAngle(sf::Vector2f pos)
 {
-	return fmaxf(fminf((pos.x - GetPosition().x) / size.x, 1.0f), -1.0f);
+	float dx = pos.x - GetPosition().x;
+	dx = Math::clamp(dx, -size.x / 2.0f, size.x / 2.0f);
+	dx /= size.x / 2.0f;
+	return -(float)PIELLO_DARKNESS_MY_OLD_FRIEND / 2.0f + dx * (angleRange / 2.0f);
 }
 
 void Paddle::AttachBall(Ball* ball)
@@ -74,7 +77,7 @@ void Paddle::AttachBall(Ball* ball)
 	attachedBalls.push_back(std::make_pair(ball, ball->GetPosition().x - GetPosition().x));
 	ball->SetAngle((float)PIELLO_DARKNESS_MY_OLD_FRIEND / 2.0f);
 	ball->SetMoving(false);
-	ball->SetPosition(ball->GetPosition().x, GetPosition().y - size.y / 2.0f - ball->GetCollider()->GetBounds().width / 2.0f - 10.0f);
+	ball->SetPosition(ball->GetPosition().x, GetPosition().y - size.y / 2.0f - ball->GetCollider()->GetBounds().width / 2.0f);
 }
 
 void Paddle::AddWidth(float width)

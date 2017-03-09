@@ -29,7 +29,7 @@ bool Collision::Collide(Collider* a, Collider* b)
 
 bool Collision::AABBToAABB(AABBCollider* a, AABBCollider* b)
 {
-	// Broadphase
+	// Sweep broadphase
 	sf::FloatRect broadphaseRect = GetSweepBroadphaseRect(a);
 	if (!broadphaseRect.intersects(b->GetBounds()))
 		return false;
@@ -65,9 +65,7 @@ bool Collision::AABBToAABB(AABBCollider* a, AABBCollider* b)
 
 sf::FloatRect Collision::GetSweepBroadphaseRect(AABBCollider* a)
 {
-	sf::FloatRect bounds = a->getGlobalBounds();
-	bounds.left = a->GetPosition().x;
-	bounds.top = a->GetPosition().y;
+	sf::FloatRect bounds = a->GetBounds();
 	sf::Vector2f vel = a->GetGameObject()->GetVelocity() * delta;
 
 	sf::FloatRect rect;
@@ -80,12 +78,8 @@ sf::FloatRect Collision::GetSweepBroadphaseRect(AABBCollider* a)
 
 float Collision::SweepAABB(AABBCollider* a, AABBCollider* b, sf::Vector2f& normal)
 {
-	sf::FloatRect aBounds = a->getGlobalBounds();
-	aBounds.left = a->GetPosition().x;
-	aBounds.top = a->GetPosition().y;
-	sf::FloatRect bBounds = b->getGlobalBounds();
-	bBounds.left = b->GetPosition().x;
-	bBounds.top = b->GetPosition().y;
+	sf::FloatRect aBounds = a->GetBounds();
+	sf::FloatRect bBounds = b->GetBounds();
 	sf::Vector2f aVel = a->GetGameObject()->GetVelocity() * delta;
 
 	// Calculate entry and exit distances for both axes
@@ -112,6 +106,36 @@ float Collision::SweepAABB(AABBCollider* a, AABBCollider* b, sf::Vector2f& norma
 	{
 		yInvEntry = (bBounds.top + bBounds.height) - aBounds.top;
 		yInvExit = bBounds.top - (aBounds.top + aBounds.height);
+	}
+
+	// Do a regular AABB collision if the colliders are already colliding
+	if (Math::sign(xInvEntry) != Math::sign(xInvExit) && Math::sign(yInvEntry) != Math::sign(yInvExit))
+	{
+		// Calculate the shortest separations along the axes
+		sf::Vector2f separation;
+		if (fabsf(xInvEntry) < fabsf(xInvExit))
+			separation.x = xInvEntry;
+		else
+			separation.x = xInvExit;
+		if (fabsf(yInvEntry) < fabsf(yInvExit))
+			separation.y = yInvEntry;
+		else
+			separation.y = yInvExit;
+
+		// Negate the larger axis of separation
+		if (fabsf(separation.x) < fabsf(separation.y))
+			separation.y = 0.0f;
+		else
+			separation.x = 0.0f;
+
+		// Separate the first collider
+		a->GetGameObject()->Move(separation);
+
+		// Set reflection normal
+		normal = Math::normalise(separation);
+
+		// Return 0 to reflect with all available velocity
+		return 0.0f;
 	}
 
 	// Calculate entry and exit times for both axes

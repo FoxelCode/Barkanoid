@@ -19,8 +19,7 @@ public:
 	void SetHorizontalRange(sf::Vector2f range) { horizontalRange = range; }
 	void SetMagnetic(bool magnetic) { this->magnetic = magnetic; }
 	sf::Vector2f GetSize() const { return size; }
-	float GetReflectionScalar(sf::Vector2f pos);
-	float GetAngleRange() { return angleRange * ((float)PIELLO_DARKNESS_MY_OLD_FRIEND / 180.0f); }
+	float GetReflectionAngle(sf::Vector2f pos);
 
 	void AttachBall(Ball* ball);
 	void AddWidth(float width);

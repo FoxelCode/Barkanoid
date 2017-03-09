@@ -30,8 +30,7 @@ void Ball::Collided(GameObject* other, sf::Vector2f separationVelocity)
 {
 	if (dynamic_cast<Paddle*>(other))
 	{
-		sf::Vector2f delta = GetPosition() - other->GetPosition();
-		SetAngle(atan2f(delta.y, delta.x));
+		SetAngle(reinterpret_cast<Paddle*>(other)->GetReflectionAngle(GetPosition()));
 	}
 	GameObject::Collided(other, Math::magnitude(separationVelocity) * Math::normalise(velocity));
 }
