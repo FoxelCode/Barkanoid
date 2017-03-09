@@ -2,9 +2,9 @@
 
 std::vector<Tween::TweenInstance> Tween::tweens;
 
-void Tween::Start(Ease::Type type, float start, float end, float duration, TweenUpdate update, TweenComplete complete, float delay)
+void Tween::Start(Ease::Type easeType, float start, float end, float duration, TweenUpdate update, TweenComplete complete, Tween::Type tweenType, float delay)
 {
-	TweenInstance tween(type, start, end, duration, update, complete, delay);
+	TweenInstance tween(easeType, start, end, duration, update, complete, tweenType, delay);
 	tweens.push_back(tween);
 }
 
