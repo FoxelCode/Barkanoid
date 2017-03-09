@@ -27,6 +27,8 @@ public:
 	void LoadButtonGraphic(sf::Texture* tex, sf::Vector2f frameSize, sf::Vector2f border);
 	void CenterText();
 
+	void SetActive(bool active);
+
 	ButtonState GetState() { return state; }
 	sf::Text* GetText() { return &text; }
 
@@ -47,6 +49,8 @@ private:
 		Callback(ButtonStringCallback stringCallback) : stringCallback(stringCallback) {}
 		~Callback() {}
 	};
+
+	bool active;
 
 	CallbackType callbackType;
 	Callback callback;

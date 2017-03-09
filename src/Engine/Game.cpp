@@ -7,6 +7,7 @@
 #include "Game/Palette.hpp"
 #include "Engine/Input.hpp"
 #include "Engine/State.hpp"
+#include "Util/Tween.hpp"
 
 #include <vector>
 #include <cfloat>
@@ -59,6 +60,7 @@ void Game::Update(float delta)
 	if (!paused || allowStep)
 		state->Update(delta);
 
+	Tween::UpdateTweens(delta);
 	Input::Update();
 
 	if (newState != nullptr)
@@ -76,6 +78,7 @@ void Game::SwitchState(State* newState)
 {
 	ASSERT(newState != nullptr);
 	this->newState = newState;
+	Tween::StopAll();
 }
 
 void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const

@@ -3,6 +3,7 @@
 #include "Engine/Game.hpp"
 #include "Engine/G.hpp"
 #include "Game/States/LevelSelectState.hpp"
+#include "Util/Tween.hpp"
 
 MenuState::MenuState()
 {
@@ -24,6 +25,9 @@ void MenuState::Init()
 	startButton->GetText()->setCharacterSize(48);
 	startButton->CenterText();
 	Add(startButton);
+
+	Tween::Start(Ease::Type::QuartOut, -startButton->GetCollider()->GetBounds().width / 2.0f, GetGame()->GetSize().x / 2.0f, 1.0f,
+		[this](float v) { startButton->SetPosition(v, startButton->GetPosition().y); } );
 }
 
 void MenuState::StartButtonPressed()

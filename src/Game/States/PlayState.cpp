@@ -7,7 +7,7 @@
 #include "Game/States/LevelSelectState.hpp"
 
 PlayState::PlayState(std::string levelName)
-	: State(), lives(2), levelName(levelName), ballSpeedIncrement(0.0f), ballSpeedBounds(300.0f, 800.0f),
+	: State(), lives(2), levelName(levelName), ballSpeedIncrement(1.0f), ballSpeedBounds(300.0f, 800.0f),
 	  ballSplitAngle((float)PIELLO_DARKNESS_MY_OLD_FRIEND / 4.0f)
 {
 }

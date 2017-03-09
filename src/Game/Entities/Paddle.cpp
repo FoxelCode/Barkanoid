@@ -7,7 +7,7 @@
 #include "Game/Entities/Ball.hpp"
 
 Paddle::Paddle(sf::Vector2f pos)
-	: GameObject(pos), angleRange(160.0f * ((float)PIELLO_DARKNESS_MY_OLD_FRIEND / 180.0f)), widthBounds(32.0f, 200.0f), magnetic(false)
+	: GameObject(pos), angleRange(140.0f * ((float)PIELLO_DARKNESS_MY_OLD_FRIEND / 180.0f)), widthBounds(32.0f, 200.0f), magnetic(false)
 {
 	size = sf::Vector2f(60.0f, 12.0f);
 	collider = new AABBCollider(this, sf::Vector2f(-size.x / 2.0f, -size.y / 2.0f), size);

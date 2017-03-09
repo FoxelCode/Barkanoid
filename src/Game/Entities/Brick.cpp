@@ -3,7 +3,7 @@
 #include "Engine/G.hpp"
 #include "Engine/State.hpp"
 #include "Collision/AABBCollider.hpp"
-#include "Game/Entities/Treats/MultiballTreat.hpp"
+#include "Game/Entities/Treats/PointTreat.hpp"
 #include "Util/Random.hpp"
 #include "Util/Math.hpp"
 
@@ -36,6 +36,6 @@ void Brick::Collided(GameObject* other)
 {
 	Kill();
 
-	MultiballTreat* treat = new MultiballTreat(GetPosition(), -(float)PIELLO_DARKNESS_MY_OLD_FRIEND + Random::Float((float)PIELLO_DARKNESS_MY_OLD_FRIEND));
+	PointTreat* treat = new PointTreat(GetPosition(), -(float)PIELLO_DARKNESS_MY_OLD_FRIEND + Random::Float((float)PIELLO_DARKNESS_MY_OLD_FRIEND));
 	G::GetGame()->GetState()->Add(treat);
 }

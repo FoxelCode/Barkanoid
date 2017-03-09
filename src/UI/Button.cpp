@@ -25,39 +25,42 @@ Button::~Button()
 
 void Button::Update(float delta)
 {
-	bool hovering = Math::contains(sf::Vector2f(Input::GetMousePosition()), collider->GetBounds());
-
-	if (hovering && Input::MouseJustPressed(sf::Mouse::Left))
+	if (active)
 	{
-		pressed = true;
-	}
+		bool hovering = Math::contains(sf::Vector2f(Input::GetMousePosition()), collider->GetBounds());
 
-	if (Input::MouseJustReleased(sf::Mouse::Left))
-	{
-		if (hovering && pressed)
+		if (hovering && Input::MouseJustPressed(sf::Mouse::Left))
 		{
-			switch (callbackType)
-			{
-			case Button::Void:
-				callback.callback();
-				break;
-			case Button::String:
-				callback.stringCallback(text.getString());
-				break;
-			}
+			pressed = true;
 		}
-		pressed = false;
-	}
 
-	if (hovering)
-	{
-		if (pressed)
-			SetState(ButtonState::Pressed);
+		if (Input::MouseJustReleased(sf::Mouse::Left))
+		{
+			if (hovering && pressed)
+			{
+				switch (callbackType)
+				{
+				case Button::Void:
+					callback.callback();
+					break;
+				case Button::String:
+					callback.stringCallback(text.getString());
+					break;
+				}
+			}
+			pressed = false;
+		}
+
+		if (hovering)
+		{
+			if (pressed)
+				SetState(ButtonState::Pressed);
+			else
+				SetState(ButtonState::Hovered);
+		}
 		else
-			SetState(ButtonState::Hovered);
+			SetState(ButtonState::Neutral);
 	}
-	else
-		SetState(ButtonState::Neutral);
 }
 
 void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -81,6 +84,13 @@ void Button::CenterText()
 	// No idea why the vertical centering works with height * 1.5 but somehow it does
 	// So if it breaks at some point it's probably this
 	text.setPosition(-text.getGlobalBounds().width / 2.0f, -text.getGlobalBounds().height * 1.5f);
+}
+
+void Button::SetActive(bool active)
+{
+	this->active = active;
+	if (!active)
+		SetState(ButtonState::Neutral);
 }
 
 void Button::SetState(ButtonState state)
