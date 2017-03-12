@@ -80,7 +80,6 @@ void Game::SwitchState(State* newState)
 {
 	ASSERT(newState != nullptr);
 	this->newState = newState;
-	Tween::StopAll();
 }
 
 void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -92,6 +91,7 @@ void Game::ActuallySwitchState()
 {
 	if (state != nullptr)
 		delete state;
+	Tween::StopAll();
 	state = newState;
 	newState = nullptr;
 	state->SetGame(this);

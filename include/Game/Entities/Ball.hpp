@@ -1,11 +1,13 @@
 #pragma once
 
 #include "Engine/GameObject.hpp"
+#include "Util/Tween.hpp"
 
 class Ball : public GameObject
 {
 public:
 	Ball(sf::Vector2f pos);
+	~Ball();
 	void Update(float delta);
 
 	void Collided(GameObject* other, sf::Vector2f separationVelocity);
@@ -21,6 +23,7 @@ public:
 private:
 	float velocityMag;
 	float angle;
+	Tween::TweenInstance* tween;
 
 	bool moving = true;
 };

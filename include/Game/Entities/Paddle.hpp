@@ -10,6 +10,7 @@ class Paddle : public GameObject
 {
 public:
 	Paddle(sf::Vector2f pos);
+	~Paddle();
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	void Update(float delta);
 
@@ -30,6 +31,7 @@ private:
 	sf::Vector2f widthBounds;
 	sf::Vector2f horizontalRange;
 	float angleRange;
+	Tween::TweenInstance* tween;
 	
 	bool magnetic;
 	std::vector<std::pair<Ball*, float>> attachedBalls;

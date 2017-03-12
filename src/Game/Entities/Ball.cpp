@@ -15,9 +15,24 @@ Ball::Ball(sf::Vector2f pos)
 {
 	collider = new AABBCollider(this, sf::Vector2f(-Ball::SIZE / 2.0f, -Ball::SIZE / 2.0f), sf::Vector2f(Ball::SIZE, Ball::SIZE));
 
+	tween = new Tween::TweenInstance(Ease::Type::QuadOut, 1.0f, 0.7f, 0.1f,
+		[this](float v) { graphic->setScale(sf::Vector2f(v, v)); }, nullptr, Tween::Type::Boomerang, 0.0f);
+	tween->Finish();
+	Tween::Run(tween);
+
 	LoadGraphic(G::GetAssetManager()->GetTexture("ball.png"), Graphic::Alignment::Center);
 
 	SetAngle(angle);
+}
+
+Ball::~Ball()
+{
+	if (tween != nullptr)
+	{
+		Tween::RemoveTween(tween);
+		delete tween;
+		tween = nullptr;
+	}
 }
 
 void Ball::Update(float delta)
@@ -32,8 +47,7 @@ void Ball::Collided(GameObject* other, sf::Vector2f separationVelocity)
 		SetAngle(reinterpret_cast<Paddle*>(other)->GetReflectionAngle(GetPosition()));
 	else
 		SetAngle(atan2f(separationVelocity.y, separationVelocity.x));
-	Tween::Start(Ease::Type::QuadOut, 1.0f, 0.7f, 0.1f,
-		[this](float v) { graphic->setScale(sf::Vector2f(v, v)); }, nullptr, Tween::Type::Boomerang);
+	tween->Reset();
 	GameObject::Collided(other, Math::magnitude(separationVelocity) * Math::normalise(velocity));
 }
 

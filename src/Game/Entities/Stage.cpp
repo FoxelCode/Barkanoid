@@ -91,7 +91,7 @@ void Stage::Load(std::string stageData)
 		LOG_WARNING("No \"bgColour\" found, assuming 0");
 
 	// Get level size
-	size = sf::Vector2u(maxArea.x / Brick::brickSize.x, maxArea.y / Brick::brickSize.y);
+	size = sf::Vector2u((unsigned)(maxArea.x / Brick::brickSize.x), (unsigned)(maxArea.y / Brick::brickSize.y));
 	if (stageJson.find("size") != stageJson.end())
 	{
 		json sizeJson = stageJson["size"];

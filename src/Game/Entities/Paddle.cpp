@@ -13,9 +13,24 @@ Paddle::Paddle(sf::Vector2f pos)
 	size = sf::Vector2f(60.0f, 12.0f);
 	collider = new AABBCollider(this, sf::Vector2f(-size.x / 2.0f, -size.y / 2.0f), size);
 
+	tween = new Tween::TweenInstance(Ease::Type::QuadOut, 0.0f, 1.0f, 0.2f,
+		[this](float v) { graphic->setScale(1.0f + v * 0.3f, 1.0f - v * 0.6f); }, nullptr, Tween::Type::Boomerang);
+	tween->Finish();
+	Tween::Run(tween);
+
 	LoadSlicedGraphic(G::GetAssetManager()->GetTexture("paddle.png"));
 	static_cast<SlicedGraphic*>(graphic)->SetBorder(sf::Vector2f(12, 0));
 	SetWidth(size.x);
+}
+
+Paddle::~Paddle()
+{
+	if (tween != nullptr)
+	{
+		Tween::RemoveTween(tween);
+		delete tween;
+		tween = nullptr;
+	}
 }
 
 void Paddle::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -50,8 +65,7 @@ void Paddle::Collided(GameObject* other)
 {
 	if (dynamic_cast<Ball*>(other))
 	{
-		Tween::Start(Ease::Type::QuadOut, 0.0f, 1.0f, 0.2f,
-			[this](float v) { graphic->setScale(1.0f + v * 0.3f, 1.0f - v * 0.6f); }, nullptr, Tween::Type::Boomerang);
+		tween->Reset();
 		if (magnetic)
 			AttachBall(reinterpret_cast<Ball*>(other));
 	}

@@ -53,7 +53,7 @@ bool Collision::AABBToAABB(AABBCollider* a, AABBCollider* b)
 	a->GetGameObject()->SetVelocity(newVelocity);
 
 	// Use remaining velocity to reflect
-	float remainingTime = 1.0 - collisionTime;
+	float remainingTime = 1.0f - collisionTime;
 	sf::Vector2f reflection = newVelocity * delta * remainingTime;
 
 	// Notify both objects of the collision

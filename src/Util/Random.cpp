@@ -4,7 +4,7 @@
 
 void Random::Seed()
 {
-	srand(time(NULL));
+	srand((unsigned)time(NULL));
 }
 
 float Random::Float(float max)
