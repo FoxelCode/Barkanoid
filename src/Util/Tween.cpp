@@ -84,6 +84,15 @@ void Tween::UpdateTween(TweenInstance& tween, float delta)
 
 		if (tween.time >= (tween.duration + tween.delay))
 		{
+			switch (tween.tweenType)
+			{
+			case Type::OneShot:
+				tween.update(tween.start + tween.change);
+				break;
+			case Type::Boomerang:
+				tween.update(tween.start);
+				break;
+			}
 			if (tween.complete != nullptr)
 				tween.complete();
 			tween.done = true;

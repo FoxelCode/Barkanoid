@@ -22,8 +22,8 @@ public:
 	virtual void Collided(GameObject* other) {}
 	virtual void Collided(GameObject* other, sf::Vector2f separationVelocity);
 
-	void LoadGraphic(sf::Texture* tex, Graphic::Alignment align = Graphic::Alignment::TopLeft);
-	void LoadSlicedGraphic(sf::Texture* tex, Graphic::Alignment align = Graphic::Alignment::TopLeft);
+	virtual void LoadGraphic(sf::Texture* tex, Graphic::Alignment align = Graphic::Alignment::TopLeft);
+	virtual void LoadSlicedGraphic(sf::Texture* tex, Graphic::Alignment align = Graphic::Alignment::TopLeft);
 
 	void SetVelocity(sf::Vector2f vel) { velocity = vel; }
 

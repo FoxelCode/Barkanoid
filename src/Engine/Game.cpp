@@ -41,6 +41,7 @@ Game::~Game()
 		delete state;
 		state = nullptr;
 	}
+	Tween::StopAll();
 }
 
 void Game::Update(float delta)

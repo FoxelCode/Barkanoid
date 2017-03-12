@@ -3,24 +3,25 @@
 #include <functional>
 #include <SFML/Graphics/Text.hpp>
 
-#include "Engine/GameObject.hpp"
+#include "UI/UIObject.hpp"
+#include "UI/Alignment.hpp"
 
 typedef std::function<void()> ButtonCallback;
 typedef std::function<void(std::string)> ButtonStringCallback;
 
-enum ButtonState
-{
-	Neutral,
-	Hovered,
-	Pressed
-};
-
-class Button : public GameObject
+class Button : public UIObject
 {
 public:
-	Button(sf::Vector2f pos, sf::Vector2f size, ButtonCallback callback);
-	Button(sf::Vector2f pos, sf::Vector2f size, ButtonStringCallback callback);
-	~Button();
+	enum State
+	{
+		Neutral,
+		Hovered,
+		Pressed
+	};
+
+	Button(sf::Vector2f pos, sf::Vector2f size, ButtonCallback callback, Alignment align = Alignment());
+	Button(sf::Vector2f pos, sf::Vector2f size, ButtonStringCallback callback, Alignment align = Alignment());
+	~Button() {}
 	virtual void Update(float delta);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
@@ -29,13 +30,12 @@ public:
 
 	void SetActive(bool active);
 
-	ButtonState GetState() { return state; }
+	State GetState() { return state; }
 	sf::Text* GetText() { return &text; }
 
-protected:
-	void SetState(ButtonState state);
-
 private:
+	void SetState(State state);
+
 	enum CallbackType
 	{
 		Void,
@@ -54,9 +54,8 @@ private:
 
 	CallbackType callbackType;
 	Callback callback;
-	ButtonState state = ButtonState::Neutral;
-	bool pressed = false;
+	State state;
+	bool pressed;
 
-	sf::Vector2f size;
 	sf::Text text;
 };

@@ -8,12 +8,12 @@ UI::UI(sf::Vector2u size)
 	livesPos = sf::Vector2f(24.0f + lifeWidth, size.y - 20.0f);
 
 	timer.setPosition(size.x - 100.0f, 8.0f);
-	timer.setFont(*G::GetAssetManager()->GetFont("standur.ttf"));
+	timer.setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));
 	timer.setFillColor(sf::Color::White);
 	timer.setString("0:00");
 
 	points.setPosition(8.0f, 8.0f);
-	points.setFont(*G::GetAssetManager()->GetFont("standur.ttf"));
+	points.setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));
 	points.setFillColor(sf::Color::White);
 	points.setString("0");
 }

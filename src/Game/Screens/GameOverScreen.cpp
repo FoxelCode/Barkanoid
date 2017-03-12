@@ -8,7 +8,7 @@ GameOverScreen::GameOverScreen(sf::Vector2u size, std::function<void()> backToSe
 	dimmer.setSize(sf::Vector2f(size));
 	dimmer.setFillColor(sf::Color(0, 0, 0, 127));
 
-	sf::Font* font = G::GetAssetManager()->GetFont("standur.ttf");
+	sf::Font* font = G::GetAssetManager()->GetFont("OneTrickPony.otf");
 
 	banner.setFont(*font);
 	banner.setFillColor(sf::Color::White);
@@ -17,18 +17,18 @@ GameOverScreen::GameOverScreen(sf::Vector2u size, std::function<void()> backToSe
 	banner.setPosition(size.x / 2.0f - banner.getGlobalBounds().width / 2.0f, size.y / 2.0f - 120.0f);
 
 	backToSelectButton = new Button(sf::Vector2f(size.x / 2.0f, size.y / 2.0f), sf::Vector2f(300.0f, 50.0f),
-		(ButtonCallback)std::bind(&GameOverScreen::BackToSelectClicked, this));
+		(ButtonCallback)std::bind(&GameOverScreen::BackToSelectClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
 	backToSelectButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
-	backToSelectButton->GetText()->setFont(*G::GetAssetManager()->GetFont("standur.ttf"));
+	backToSelectButton->GetText()->setFont(*font);
 	backToSelectButton->GetText()->setFillColor(sf::Color::Black);
 	backToSelectButton->GetText()->setString("Back to level select");
 	backToSelectButton->GetText()->setCharacterSize(32);
 	backToSelectButton->CenterText();
 
-	retryLevelButton = new Button(sf::Vector2f(size.x / 2.0f, size.y / 2.0f + 40.0f), sf::Vector2f(300.0f, 50.0f),
-		(ButtonCallback)std::bind(&GameOverScreen::RetryLevelClicked, this));
+	retryLevelButton = new Button(sf::Vector2f(size.x / 2.0f, size.y / 2.0f + 60.0f), sf::Vector2f(300.0f, 50.0f),
+		(ButtonCallback)std::bind(&GameOverScreen::RetryLevelClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
 	retryLevelButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
-	retryLevelButton->GetText()->setFont(*G::GetAssetManager()->GetFont("standur.ttf"));
+	retryLevelButton->GetText()->setFont(*font);
 	retryLevelButton->GetText()->setFillColor(sf::Color::Black);
 	retryLevelButton->GetText()->setString("Retry level");
 	retryLevelButton->GetText()->setCharacterSize(32);

@@ -8,7 +8,7 @@ StageCompleteScreen::StageCompleteScreen(sf::Vector2u size, std::string stageNam
 	dimmer.setSize(sf::Vector2f(size));
 	dimmer.setFillColor(sf::Color(0, 0, 0, 127));
 
-	sf::Font* font = G::GetAssetManager()->GetFont("standur.ttf");
+	sf::Font* font = G::GetAssetManager()->GetFont("OneTrickPony.otf");
 
 	banner.setFont(*font);
 	banner.setFillColor(sf::Color::White);
@@ -39,6 +39,6 @@ void StageCompleteScreen::draw(sf::RenderTarget& target, sf::RenderStates states
 
 void StageCompleteScreen::Update(float delta)
 {
-	if (Input::MouseJustPressed(sf::Mouse::Left))
+	if (Input::MouseJustReleased(sf::Mouse::Left))
 		completeCallback();
 }

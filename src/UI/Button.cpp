@@ -5,21 +5,13 @@
 #include "Util/Math.hpp"
 #include "Collision/AABBCollider.hpp"
 
-Button::Button(sf::Vector2f pos, sf::Vector2f size, ButtonCallback callback)
-	: size(size), callbackType(CallbackType::Void), callback(callback)
+Button::Button(sf::Vector2f pos, sf::Vector2f size, ButtonCallback callback, Alignment align)
+	: UIObject(pos, size, align), callbackType(CallbackType::Void), callback(callback), state(State::Neutral), pressed(false)
 {
-	SetPosition(pos);
-	collider = new AABBCollider(this, -size / 2.0f, size);
 }
 
-Button::Button(sf::Vector2f pos, sf::Vector2f size, ButtonStringCallback callback)
-	: size(size), callbackType(CallbackType::String), callback(callback)
-{
-	SetPosition(pos);
-	collider = new AABBCollider(this, -size / 2.0f, size);
-}
-
-Button::~Button()
+Button::Button(sf::Vector2f pos, sf::Vector2f size, ButtonStringCallback callback, Alignment align)
+	: UIObject(pos, size, align), callbackType(CallbackType::String), callback(callback), state(State::Neutral), pressed(false)
 {
 }
 
@@ -54,12 +46,12 @@ void Button::Update(float delta)
 		if (hovering)
 		{
 			if (pressed)
-				SetState(ButtonState::Pressed);
+				SetState(State::Pressed);
 			else
-				SetState(ButtonState::Hovered);
+				SetState(State::Hovered);
 		}
 		else
-			SetState(ButtonState::Neutral);
+			SetState(State::Neutral);
 	}
 }
 
@@ -72,7 +64,7 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void Button::LoadButtonGraphic(sf::Texture* tex, sf::Vector2f frameSize, sf::Vector2f border)
 {
-	LoadSlicedGraphic(tex, Graphic::Alignment::Center);
+	LoadSlicedGraphic(tex);
 	graphic->SetFrameSize(frameSize);
 	graphic->SetSize(size);
 	static_cast<SlicedGraphic*>(graphic)->SetBorder(border);
@@ -80,19 +72,18 @@ void Button::LoadButtonGraphic(sf::Texture* tex, sf::Vector2f frameSize, sf::Vec
 
 void Button::CenterText()
 {
-	// No idea why the vertical centering works with height * 1.5 but somehow it does
-	// So if it breaks at some point it's probably this
-	text.setPosition(-text.getGlobalBounds().width / 2.0f, -text.getGlobalBounds().height * 1.5f);
+	sf::Vector2f textPos = sf::Vector2f(size.x / 2.0f - text.getGlobalBounds().width / 2.0f, 0.0f) + GetOffset();
+	text.setPosition(textPos);
 }
 
 void Button::SetActive(bool active)
 {
 	this->active = active;
 	if (!active)
-		SetState(ButtonState::Neutral);
+		SetState(State::Neutral);
 }
 
-void Button::SetState(ButtonState state)
+void Button::SetState(State state)
 {
 	this->state = state;
 	if (graphic != nullptr)
