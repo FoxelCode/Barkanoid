@@ -72,10 +72,9 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void Button::LoadButtonGraphic(sf::Texture* tex, sf::Vector2f frameSize, sf::Vector2f border)
 {
-	LoadSlicedGraphic(tex);
+	LoadSlicedGraphic(tex, Graphic::Alignment::Center);
 	graphic->SetFrameSize(frameSize);
 	graphic->SetSize(size);
-	graphic->setPosition(-size / 2.0f);
 	static_cast<SlicedGraphic*>(graphic)->SetBorder(border);
 }
 

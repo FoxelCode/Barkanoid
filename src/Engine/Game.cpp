@@ -58,9 +58,11 @@ void Game::Update(float delta)
 #endif
 
 	if (!paused || allowStep)
+	{
 		state->Update(delta);
+		Tween::UpdateTweens(delta);
+	}
 
-	Tween::UpdateTweens(delta);
 	Input::Update();
 
 	if (newState != nullptr)

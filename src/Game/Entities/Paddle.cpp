@@ -5,6 +5,7 @@
 #include "Engine/Input.hpp"
 #include "Graphics/SlicedGraphic.hpp"
 #include "Game/Entities/Ball.hpp"
+#include "Util/Tween.hpp"
 
 Paddle::Paddle(sf::Vector2f pos)
 	: GameObject(pos), angleRange(140.0f * ((float)PIELLO_DARKNESS_MY_OLD_FRIEND / 180.0f)), widthBounds(32.0f, 200.0f), magnetic(false)
@@ -47,9 +48,12 @@ void Paddle::Update(float delta)
 
 void Paddle::Collided(GameObject* other)
 {
-	if (magnetic && dynamic_cast<Ball*>(other))
+	if (dynamic_cast<Ball*>(other))
 	{
-		AttachBall(reinterpret_cast<Ball*>(other));
+		Tween::Start(Ease::Type::QuadOut, 0.0f, 1.0f, 0.2f,
+			[this](float v) { graphic->setScale(1.0f + v * 0.3f, 1.0f - v * 0.6f); }, nullptr, Tween::Type::Boomerang);
+		if (magnetic)
+			AttachBall(reinterpret_cast<Ball*>(other));
 	}
 }
 
@@ -60,7 +64,6 @@ void Paddle::SetWidth(float width)
 	coll->SetOffset(sf::Vector2f(-size.x / 2.0f, -size.y / 2.0f));
 	coll->setSize(size);
 
-	graphic->setPosition(-size / 2.0f);
 	graphic->SetSize(size);
 }
 

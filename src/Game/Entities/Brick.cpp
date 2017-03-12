@@ -14,11 +14,11 @@ const sf::Vector2u Brick::brickSize = sf::Vector2u(32, 16);
 Brick::Brick(sf::Vector2f pos, sf::Color colour, int variant)
 	: GameObject(pos)
 {
-	collider = new AABBCollider(this, sf::Vector2f(), sf::Vector2f(Brick::brickSize));
+	collider = new AABBCollider(this, sf::Vector2f(), sf::Vector2f(brickSize));
 
 	LoadGraphic(G::GetAssetManager()->GetTexture("brick_base.png"));
 	graphic->SetColour(colour);
-	sf::Vector2f fSize = sf::Vector2f(Brick::brickSize);
+	sf::Vector2f fSize = sf::Vector2f(brickSize);
 	graphic->SetFrameSize(fSize);
 	graphic->SetFrame(variant);
 	highlight.setTexture(*G::GetAssetManager()->GetTexture("brick_high.png"));

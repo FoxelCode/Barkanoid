@@ -1,6 +1,7 @@
 #include "Graphics/SlicedGraphic.hpp"
 
-SlicedGraphic::SlicedGraphic()
+SlicedGraphic::SlicedGraphic(Alignment align)
+	: Graphic(align)
 {
 }
 
@@ -12,6 +13,10 @@ void SlicedGraphic::SetBorder(sf::Vector2f border)
 
 void SlicedGraphic::UpdateVertices()
 {
+	sf::Vector2f offset;
+	if (align == Alignment::TopLeft)
+		offset = size / 2.0f;
+
 	// Slice on both axes
 	if (border.x != 0 && border.y != 0)
 	{
@@ -31,7 +36,7 @@ void SlicedGraphic::UpdateVertices()
 		{
 			for (int x = 0; x < 4; x++)
 			{
-				vertPositions[y * 4 + x] = sf::Vector2f(vertPosX[x], vertPosY[y]);
+				vertPositions[y * 4 + x] = sf::Vector2f(vertPosX[x], vertPosY[y]) + offset;
 				vertUVs[y * 4 + x] = sf::Vector2f(vertUVX[x], vertUVY[y]);
 			}
 		}

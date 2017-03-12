@@ -4,14 +4,15 @@
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
-Graphic::Graphic()
-	: colour(255, 255, 255, 255)
+Graphic::Graphic(Graphic::Alignment align)
+	: colour(255, 255, 255, 255), align(align)
 {
 }
 
 void Graphic::SetSize(sf::Vector2f size)
 {
 	this->size = size;
+	setOrigin(size / 2.0f);
 	UpdateVertices();
 }
 
@@ -58,10 +59,14 @@ void Graphic::UpdateVertices()
 {
 	vertices = sf::VertexArray(sf::Quads, 4);
 
-	vertices[0].position = sf::Vector2f(0, 0);
-	vertices[1].position = sf::Vector2f(size.x, 0);
-	vertices[2].position = sf::Vector2f(size.x, size.y);
-	vertices[3].position = sf::Vector2f(0, size.y);
+	sf::Vector2f offset;
+	if (align == Alignment::TopLeft)
+		offset = size / 2.0f;
+
+	vertices[0].position = sf::Vector2f(0, 0) + offset;
+	vertices[1].position = sf::Vector2f(size.x, 0) + offset;
+	vertices[2].position = sf::Vector2f(size.x, size.y) + offset;
+	vertices[3].position = sf::Vector2f(0, size.y) + offset;
 
 	if (texture->isRepeated())
 	{

@@ -7,7 +7,13 @@
 class Graphic : public sf::Drawable, public sf::Transformable
 {
 public:
-	Graphic();
+	enum Alignment
+	{
+		TopLeft,
+		Center
+	};
+
+	Graphic(Alignment align = Alignment::TopLeft);
 
 	void SetSize(sf::Vector2f size);
 	void SetTexture(sf::Texture* tex);
@@ -21,6 +27,7 @@ protected:
 	
 	virtual void UpdateVertices();
 
+	Alignment align;
 	sf::Vector2f size;
 	sf::VertexArray vertices;
 	sf::Texture* texture;

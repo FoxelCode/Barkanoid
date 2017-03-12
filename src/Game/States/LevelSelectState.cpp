@@ -94,7 +94,7 @@ void LevelSelectState::Init()
 
 		Tween::Start(Ease::Type::QuartOut, buttonPos.x, (float)stageSize.x / 2.0f, 0.7f,
 			[levelButton](float v) { levelButton->SetPosition(v, levelButton->GetPosition().y); },
-			nullptr, i * 0.1f);
+			nullptr, Tween::OneShot, i * 0.1f);
 
 		i++;
 	}

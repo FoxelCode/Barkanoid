@@ -41,15 +41,15 @@ void GameObject::Collided(GameObject* other, sf::Vector2f separationVelocity)
 	Move(separationVelocity);
 }
 
-void GameObject::LoadGraphic(sf::Texture* tex)
+void GameObject::LoadGraphic(sf::Texture* tex, Graphic::Alignment align)
 {
-	graphic = new Graphic();
+	graphic = new Graphic(align);
 	graphic->SetTexture(tex);
 }
 
-void GameObject::LoadSlicedGraphic(sf::Texture* tex)
+void GameObject::LoadSlicedGraphic(sf::Texture* tex, Graphic::Alignment align)
 {
-	graphic = new SlicedGraphic();
+	graphic = new SlicedGraphic(align);
 	graphic->SetTexture(tex);
 }
 

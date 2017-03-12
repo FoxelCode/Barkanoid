@@ -5,7 +5,7 @@
 class SlicedGraphic : public Graphic
 {
 public:
-	SlicedGraphic();
+	SlicedGraphic(Alignment align = Alignment::TopLeft);
 
 	void SetBorder(sf::Vector2f border);
 

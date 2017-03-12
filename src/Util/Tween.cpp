@@ -28,23 +28,26 @@ void Tween::StopAll()
 void Tween::UpdateTween(TweenInstance& tween, float delta)
 {
 	tween.time += delta;
+
 	if (tween.time >= tween.delay)
 	{
 		float value;
-		switch (tween.easeType)
+		switch (tween.tweenType)
 		{
-		case Ease::Type::Linear:
-			value = Ease::LinearTween(tween.time - tween.delay, tween.start, tween.change, tween.duration);
+		case Type::OneShot:
+			value = Ease::easeFunctions[tween.easeType](tween.time - tween.delay, tween.start, tween.change, tween.duration);
 			break;
-		case Ease::Type::QuadOut:
-			value = Ease::QuadOutTween(tween.time - tween.delay, tween.start, tween.change, tween.duration);
-			break;
-		case Ease::Type::QuartOut:
-			value = Ease::QuartOutTween(tween.time - tween.delay, tween.start, tween.change, tween.duration);
+
+		case Type::Boomerang:
+			if (tween.time - tween.delay <= tween.duration / 2.0f)
+				value = Ease::easeFunctions[tween.easeType](tween.time - tween.delay, tween.start, tween.change, tween.duration / 2.0f);
+			else
+				value = Ease::easeFunctions[tween.easeType](tween.duration / 2.0f - ((tween.time - tween.duration / 2.0f) - tween.delay), tween.start, tween.change, tween.duration / 2.0f);
 			break;
 		}
 		tween.update(value);
 	}
+
 	if (tween.time >= (tween.duration + tween.delay))
 	{
 		if (tween.complete != nullptr)
