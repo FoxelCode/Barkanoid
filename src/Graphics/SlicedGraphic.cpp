@@ -70,7 +70,7 @@ void SlicedGraphic::UpdateVertices()
 		{
 			for (int x = 0; x < 4; x++)
 			{
-				vertPositions[y * 4 + x] = sf::Vector2f(vertPosX[x], vertPosY[y]);
+				vertPositions[y * 4 + x] = sf::Vector2f(vertPosX[x], vertPosY[y]) + offset;
 				vertUVs[y * 4 + x] = sf::Vector2f(vertUVX[x], vertUVY[y]);
 			}
 		}
@@ -104,7 +104,7 @@ void SlicedGraphic::UpdateVertices()
 		{
 			for (int x = 0; x < 2; x++)
 			{
-				vertPositions[y * 2 + x] = sf::Vector2f(vertPosX[x], vertPosY[y]);
+				vertPositions[y * 2 + x] = sf::Vector2f(vertPosX[x], vertPosY[y]) + offset;
 				vertUVs[y * 2 + x] = sf::Vector2f(vertUVX[x], vertUVY[y]);
 			}
 		}
