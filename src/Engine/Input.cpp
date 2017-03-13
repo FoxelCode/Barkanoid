@@ -10,6 +10,7 @@ std::set<sf::Keyboard::Key> Input::keysJustReleased;
 std::set<sf::Mouse::Button> Input::mouseJustPressed;
 std::set<sf::Mouse::Button> Input::mousePressed;
 std::set<sf::Mouse::Button> Input::mouseJustReleased;
+std::string Input::textEntered;
 
 sf::Vector2i Input::mousePosition = sf::Vector2i();
 
@@ -25,11 +26,10 @@ void Input::Update()
 	keysJustReleased.clear();
 	mouseJustPressed.clear();
 	mouseJustReleased.clear();
+	textEntered.clear();
 
 	if (window)
-	{
 		mousePosition = sf::Mouse::getPosition(*window);
-	}
 }
 
 void Input::HandleEvent(sf::Event evt)
@@ -37,27 +37,33 @@ void Input::HandleEvent(sf::Event evt)
 	switch (evt.type)
 	{
 	case sf::Event::KeyPressed:
-		KeyPressed(evt.key.code);
+		EventKeyPressed(evt.key.code);
 		break;
 	case sf::Event::KeyReleased:
-		KeyReleased(evt.key.code);
+		EventKeyReleased(evt.key.code);
 		break;
 	case sf::Event::MouseButtonPressed:
-		MouseButtonPressed(evt.mouseButton.button);
+		EventMouseButtonPressed(evt.mouseButton.button);
 		break;
 	case sf::Event::MouseButtonReleased:
-		MouseButtonReleased(evt.mouseButton.button);
+		EventMouseButtonReleased(evt.mouseButton.button);
+		break;
+	case sf::Event::TextEntered:
+		EventTextEntered(evt.text.unicode);
+		break;
+	default:
+		LOG_WARNING(std::to_string(evt.type) + " is not a valid event type for Input to handle");
 		break;
 	}
 }
 
-void Input::KeyPressed(sf::Keyboard::Key key)
+void Input::EventKeyPressed(sf::Keyboard::Key key)
 {
 	keysJustPressed.insert(key);
 	keysPressed.insert(key);
 }
 
-void Input::KeyReleased(sf::Keyboard::Key key)
+void Input::EventKeyReleased(sf::Keyboard::Key key)
 {
 	auto removeIt = keysPressed.find(key);
 	if (removeIt != keysPressed.end())
@@ -65,18 +71,23 @@ void Input::KeyReleased(sf::Keyboard::Key key)
 	keysJustReleased.insert(key);
 }
 
-void Input::MouseButtonPressed(sf::Mouse::Button button)
+void Input::EventMouseButtonPressed(sf::Mouse::Button button)
 {
 	mouseJustPressed.insert(button);
 	mousePressed.insert(button);
 }
 
-void Input::MouseButtonReleased(sf::Mouse::Button button)
+void Input::EventMouseButtonReleased(sf::Mouse::Button button)
 {
 	auto removeIt = mousePressed.find(button);
 	if (removeIt != mousePressed.end())
 		mousePressed.erase(removeIt);
 	mouseJustReleased.insert(button);
+}
+
+void Input::EventTextEntered(sf::Uint32 charCode)
+{
+	textEntered += (char)charCode;
 }
 
 bool Input::JustPressed(sf::Keyboard::Key key)

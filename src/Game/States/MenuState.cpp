@@ -4,6 +4,7 @@
 #include "Engine/G.hpp"
 #include "Game/States/LevelSelectState.hpp"
 #include "Util/Tween.hpp"
+#include "UI/TextField.hpp"
 
 MenuState::MenuState()
 {
@@ -29,6 +30,13 @@ void MenuState::Init()
 
 	Tween::Start(Ease::Type::QuartOut, -startButton->GetCollider()->GetBounds().width / 2.0f, GetGame()->GetSize().x / 2.0f, 1.0f,
 		[this](float v) { startButton->SetPosition(v, startButton->GetPosition().y); } );
+
+	TextField* textField = new TextField(sf::Vector2f(100.0f, 100.0f), sf::Vector2f(200.0f, 60.0f));
+	textField->LoadTextFieldGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
+	textField->GetText()->setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));
+	textField->GetText()->setFillColor(sf::Color::Black);
+	textField->CenterText();
+	Add(textField);
 }
 
 void MenuState::StartButtonPressed()

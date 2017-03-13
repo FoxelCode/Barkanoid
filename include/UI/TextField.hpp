@@ -2,9 +2,9 @@
 
 #include <SFML/Graphics/Text.hpp>
 
-#include "Engine/GameObject.hpp"
+#include "UI/UIObject.hpp"
 
-class TextField : public GameObject
+class TextField : public UIObject
 {
 public:
 	enum State
@@ -13,16 +13,20 @@ public:
 		Focused
 	};
 
-	TextField(sf::Vector2f pos, sf::Vector2f size);
+	TextField(sf::Vector2f pos, sf::Vector2f size, Alignment align = Alignment());
 	~TextField() {}
 	virtual void Update(float delta);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
+	void LoadTextFieldGraphic(sf::Texture* tex, sf::Vector2f frameSize, sf::Vector2f border);
+	void CenterText();
+
 	sf::Text* GetText() { return &text; }
 
 private:
-	State state;
+	void SetState(State state);
+	void TextEntered(std::string str);
 
-	sf::Vector2f size;
+	State state;
 	sf::Text text;
 };

@@ -10,10 +10,6 @@ public:
 	static void SetWindow(sf::Window* window);
 	static void Update();
 	static void HandleEvent(sf::Event evt);
-	static void KeyPressed(sf::Keyboard::Key key);
-	static void KeyReleased(sf::Keyboard::Key key);
-	static void MouseButtonPressed(sf::Mouse::Button button);
-	static void MouseButtonReleased(sf::Mouse::Button button);
 
 	static bool JustPressed(sf::Keyboard::Key key);
 	static bool Pressed(sf::Keyboard::Key key);
@@ -24,7 +20,15 @@ public:
 
 	static sf::Vector2i GetMousePosition() { return mousePosition; }
 
+	static std::string GetTextEntered() { return textEntered; }
+
 private:
+	static void EventKeyPressed(sf::Keyboard::Key key);
+	static void EventKeyReleased(sf::Keyboard::Key key);
+	static void EventMouseButtonPressed(sf::Mouse::Button button);
+	static void EventMouseButtonReleased(sf::Mouse::Button button);
+	static void EventTextEntered(sf::Uint32 charCode);
+
 	static sf::Window* window;
 
 	static std::set<sf::Keyboard::Key> keysJustPressed;
@@ -35,4 +39,6 @@ private:
 	static std::set<sf::Mouse::Button> mouseJustPressed;
 	static std::set<sf::Mouse::Button> mousePressed;
 	static std::set<sf::Mouse::Button> mouseJustReleased;
+
+	static std::string textEntered;
 };

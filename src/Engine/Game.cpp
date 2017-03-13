@@ -73,7 +73,8 @@ void Game::Update(float delta)
 void Game::HandleEvent(sf::Event evt)
 {
 	if (evt.type == sf::Event::KeyPressed || evt.type == sf::Event::KeyReleased
-		|| evt.type == sf::Event::MouseButtonPressed || evt.type == sf::Event::MouseButtonReleased)
+		|| evt.type == sf::Event::MouseButtonPressed || evt.type == sf::Event::MouseButtonReleased
+		|| evt.type == sf::Event::TextEntered)
 		Input::HandleEvent(evt);
 }
 
