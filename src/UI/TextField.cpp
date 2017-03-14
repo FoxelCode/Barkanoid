@@ -5,8 +5,9 @@
 #include "Util/Math.hpp"
 
 TextField::TextField(sf::Vector2f pos, sf::Vector2f size, Alignment align)
-	: UIObject(pos, size, align), state(State::OutOfFocus)
+	: UIObject(pos, size, align), state(State::OutOfFocus), cursor(sf::Vector2f(1.0f, size.y)), cursorBlinkTime(0.5f), cursorBlinkTimer(0.0f), cursorVisible(true)
 {
+	cursor.setFillColor(sf::Color::Black);
 }
 
 void TextField::Update(float delta)
@@ -27,6 +28,13 @@ void TextField::Update(float delta)
 		if (!textEntered.empty())
 			TextEntered(textEntered);
 
+		cursorBlinkTimer += delta;
+		if (cursorBlinkTimer >= cursorBlinkTime)
+		{
+			cursorBlinkTimer -= cursorBlinkTime;
+			cursorVisible = !cursorVisible;
+		}
+
 		if (!hovering && Input::MouseJustReleased(sf::Mouse::Left))
 			SetState(State::OutOfFocus);
 		break;
@@ -38,6 +46,8 @@ void TextField::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	UIObject::draw(target, states);
 	states.transform.translate(GetPosition());
 	target.draw(text, states);
+	if (state == State::Focused && cursorVisible)
+		target.draw(cursor, states);
 }
 
 void TextField::LoadTextFieldGraphic(sf::Texture* tex, sf::Vector2f frameSize, sf::Vector2f border)
@@ -48,7 +58,7 @@ void TextField::LoadTextFieldGraphic(sf::Texture* tex, sf::Vector2f frameSize, s
 	static_cast<SlicedGraphic*>(graphic)->SetBorder(border);
 }
 
-void TextField::CenterText()
+void TextField::UpdateLayout()
 {
 	bool textEmpty = text.getString().isEmpty();
 	if (textEmpty)
@@ -61,8 +71,11 @@ void TextField::CenterText()
 void TextField::SetState(State state)
 {
 	this->state = state;
-	if (graphic != nullptr)
-		graphic->SetFrame((int)state);
+	if (state == State::Focused)
+	{
+		cursorBlinkTimer = 0.0f;
+		cursorVisible = true;
+	}
 }
 
 void TextField::TextEntered(std::string str)
@@ -81,4 +94,7 @@ void TextField::TextEntered(std::string str)
 		}
 	}
 	text.setString(textStr);
+	cursor.setPosition(GetOffset() + sf::Vector2f(text.getGlobalBounds().width, 0.0f));
+	cursorBlinkTimer = 0.0f;
+	cursorVisible = true;
 }

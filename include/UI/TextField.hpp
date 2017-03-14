@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 #include "UI/UIObject.hpp"
 
@@ -29,4 +30,9 @@ private:
 
 	State state;
 	sf::Text text;
+
+	sf::RectangleShape cursor;
+	const float cursorBlinkTime;
+	float cursorBlinkTimer;
+	bool cursorVisible;
 };
