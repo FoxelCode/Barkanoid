@@ -35,6 +35,8 @@ public:
 	bool IsAlive() const { return alive; }
 	void SetActive(bool v) { active = v; }
 	bool IsActive() const { return active; }
+	void SetVisible(bool v) { visible = v; }
+	bool IsVisible() const { return visible; }
 
 protected:
 	Collider* collider = nullptr;
@@ -45,4 +47,5 @@ protected:
 private:
 	bool alive = true;
 	bool active = true;
+	bool visible = true;
 };

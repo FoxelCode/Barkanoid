@@ -18,9 +18,12 @@ GameObject::~GameObject()
 
 void GameObject::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform.translate(GetPosition());
-	if (graphic != nullptr)
-		target.draw(*graphic, states);
+	if (visible)
+	{
+		states.transform.translate(GetPosition());
+		if (graphic != nullptr)
+			target.draw(*graphic, states);
+	}
 }
 
 void GameObject::DrawCollider(sf::RenderTarget& target, sf::RenderStates states) const
