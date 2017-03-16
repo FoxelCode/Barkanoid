@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/GameObject.hpp"
-#include "Brick.hpp"
+#include "Bricks/Brick.hpp"
 
 class Stage : public GameObject
 {
@@ -19,7 +19,7 @@ public:
 
 private:
 	void InitBricks();
-	void CreateBricks(int* variants, int* colours);
+	void CreateBricks(int* variants);
 	void AddBrick(Brick* brick, sf::Vector2u pos);
 	void RemoveBrick(sf::Vector2u pos);
 

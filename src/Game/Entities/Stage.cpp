@@ -7,7 +7,7 @@ using json = nlohmann::json;
 
 #include "Collision/ListCollider.hpp"
 #include "Engine/G.hpp"
-#include "Util/Log.hpp"
+#include "Game/Entities/Bricks/RegularBrick.hpp"
 
 Stage::Stage(sf::Vector2f pos, sf::Vector2f maxArea)
 	: GameObject(pos), originPos(pos), maxArea(maxArea), bgColour(Palette::Black)
@@ -162,45 +162,6 @@ void Stage::Load(std::string stageData)
 		return;
 	}
 
-	// Get colour data
-	int* colourData = new int[size.y * size.x];
-	if (stageJson.find("brickVariants") != stageJson.end())
-	{
-		json colourJson = stageJson["brickColours"];
-		if (colourJson.is_array())
-		{
-			size_t colourCount = colourJson.size();
-			if (colourCount != size.x * size.y)
-			{
-				LOG_ERROR("brickColours has " + std::to_string(colourCount) + " values (should be " + std::to_string(size.x * size.y) + ")");
-				return;
-			}
-			for (size_t y = 0; y < size.y; y++)
-			{
-				for (size_t x = 0; x < size.x; x++)
-				{
-					if (!colourJson.at(y * size.x + x).is_number_unsigned())
-					{
-						LOG_WARNING("brickColours[" + std::to_string(x) + ", " + std::to_string(y) + "] should be an unsigned integer, assuming 0");
-						colourData[y * size.x + x] = 0;
-						continue;
-					}
-					colourData[y * size.x + x] = colourJson.at(y * size.x + x).get<unsigned>();
-				}
-			}
-		}
-		else
-		{
-			LOG_ERROR("brickColours should be an array");
-			return;
-		}
-	}
-	else
-	{
-		LOG_ERROR("No \"brickColours\" found");
-		return;
-	}
-
 	// Initialise the brick 2D vector with the correct size
 	InitBricks();
 
@@ -208,17 +169,12 @@ void Stage::Load(std::string stageData)
 	brickCount = 0;
 
 	// Create the bricks according to JSON data
-	CreateBricks(variantData, colourData);
+	CreateBricks(variantData);
 
 	if (variantData != nullptr)
 	{
 		delete[] variantData;
 		variantData = nullptr;
-	}
-	if (colourData != nullptr)
-	{
-		delete[] colourData;
-		colourData = nullptr;
 	}
 }
 
@@ -234,14 +190,14 @@ void Stage::InitBricks()
 	}
 }
 
-void Stage::CreateBricks(int* variants, int* colours)
+void Stage::CreateBricks(int* variants)
 {
 	for (size_t y = 0; y < size.y; y++)
 	{
 		for (size_t x = 0; x < size.x; x++)
 		{
 			if (variants[y * size.x + x] > 0)
-				AddBrick(new Brick(sf::Vector2f(x * 32.0f, y * 16.0f), Palette::Colours[colours[y * size.x + x]], variants[y * size.x + x] - 1), sf::Vector2u(x, y));
+				AddBrick(new RegularBrick(sf::Vector2f(x * 32.0f, y * 16.0f), variants[y * size.x + x] - 1), sf::Vector2u(x, y));
 		}
 	}
 }

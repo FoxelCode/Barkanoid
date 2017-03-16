@@ -41,7 +41,7 @@ void Paddle::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void Paddle::Update(float delta)
 {
-	sf::Vector2f mouseDelta = sf::Vector2f(Input::GetMouseDelta().x, 0.0f);
+	sf::Vector2f mouseDelta = sf::Vector2f((float)Input::GetMouseDelta().x, 0.0f);
 	Move(mouseDelta);
 	float paddleX = Math::clamp(GetPosition().x, horizontalRange.x + size.x / 2.0f, horizontalRange.y - size.x / 2.0f);
 	SetPosition(paddleX, GetPosition().y);
