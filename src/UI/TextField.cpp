@@ -58,7 +58,7 @@ void TextField::LoadTextFieldGraphic(sf::Texture* tex, sf::Vector2f frameSize, s
 	static_cast<SlicedGraphic*>(graphic)->SetBorder(border);
 }
 
-void TextField::UpdateLayout()
+void TextField::CenterText()
 {
 	bool textEmpty = text.getString().isEmpty();
 	if (textEmpty)

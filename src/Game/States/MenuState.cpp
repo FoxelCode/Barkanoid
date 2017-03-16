@@ -35,7 +35,7 @@ void MenuState::Init()
 	textField->LoadTextFieldGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
 	textField->GetText()->setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));
 	textField->GetText()->setFillColor(sf::Color::Black);
-	textField->UpdateLayout();
+	textField->CenterText();
 	Add(textField);
 }
 

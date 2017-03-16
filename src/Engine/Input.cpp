@@ -12,7 +12,8 @@ std::set<sf::Mouse::Button> Input::mousePressed;
 std::set<sf::Mouse::Button> Input::mouseJustReleased;
 std::string Input::textEntered;
 
-sf::Vector2i Input::mousePosition = sf::Vector2i();
+sf::Vector2i Input::mousePosition;
+sf::Vector2i Input::mouseDelta;
 
 void Input::SetWindow(sf::Window* window)
 {
@@ -29,7 +30,11 @@ void Input::Update()
 	textEntered.clear();
 
 	if (window)
-		mousePosition = sf::Mouse::getPosition(*window);
+	{
+		sf::Vector2i newMousePosition = sf::Mouse::getPosition(*window);
+		mouseDelta = newMousePosition - mousePosition;
+		mousePosition = newMousePosition;
+	}
 }
 
 void Input::HandleEvent(sf::Event evt)

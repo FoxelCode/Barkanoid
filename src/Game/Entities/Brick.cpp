@@ -27,8 +27,8 @@ Brick::Brick(sf::Vector2f pos, sf::Color colour, int variant)
 
 void Brick::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	GameObject::draw(target, states);
 	states.transform.translate(GetPosition());
-	target.draw(*graphic, states);
 	target.draw(highlight, states);
 }
 

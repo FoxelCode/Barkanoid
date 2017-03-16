@@ -18,7 +18,7 @@ Paddle::Paddle(sf::Vector2f pos)
 	tween->Finish();
 	Tween::Run(tween);
 
-	LoadSlicedGraphic(G::GetAssetManager()->GetTexture("paddle.png"));
+	LoadSlicedGraphic(G::GetAssetManager()->GetTexture("paddle.png"), Graphic::Alignment::Center);
 	static_cast<SlicedGraphic*>(graphic)->SetBorder(sf::Vector2f(12, 0));
 	SetWidth(size.x);
 }
@@ -41,9 +41,7 @@ void Paddle::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void Paddle::Update(float delta)
 {
-	sf::Vector2f mousePos = sf::Vector2f((float)Input::GetMousePosition().x, GetPosition().y);
-	sf::Vector2f mouseDelta = mousePos - GetPosition();
-
+	sf::Vector2f mouseDelta = sf::Vector2f(Input::GetMouseDelta().x, 0.0f);
 	Move(mouseDelta);
 	float paddleX = Math::clamp(GetPosition().x, horizontalRange.x + size.x / 2.0f, horizontalRange.y - size.x / 2.0f);
 	SetPosition(paddleX, GetPosition().y);

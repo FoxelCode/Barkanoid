@@ -19,6 +19,7 @@ public:
 	static bool MouseJustReleased(sf::Mouse::Button button);
 
 	static sf::Vector2i GetMousePosition() { return mousePosition; }
+	static sf::Vector2i GetMouseDelta() { return mouseDelta; }
 
 	static std::string GetTextEntered() { return textEntered; }
 
@@ -36,6 +37,7 @@ private:
 	static std::set<sf::Keyboard::Key> keysJustReleased;
 
 	static sf::Vector2i mousePosition;
+	static sf::Vector2i mouseDelta;
 	static std::set<sf::Mouse::Button> mouseJustPressed;
 	static std::set<sf::Mouse::Button> mousePressed;
 	static std::set<sf::Mouse::Button> mouseJustReleased;
