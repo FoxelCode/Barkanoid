@@ -159,6 +159,9 @@
     <ClInclude Include="include\Game\Entities\Bricks\RegularBrick.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Game\Entities\Bricks\SolidBrick.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Collision\AABBCollider.cpp">
@@ -288,6 +291,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\Entities\Bricks\RegularBrick.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Entities\Bricks\SolidBrick.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

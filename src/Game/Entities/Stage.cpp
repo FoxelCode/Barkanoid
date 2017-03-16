@@ -8,6 +8,7 @@ using json = nlohmann::json;
 #include "Collision/ListCollider.hpp"
 #include "Engine/G.hpp"
 #include "Game/Entities/Bricks/RegularBrick.hpp"
+#include "Game/Entities/Bricks/SolidBrick.hpp"
 
 Stage::Stage(sf::Vector2f pos, sf::Vector2f maxArea)
 	: GameObject(pos), originPos(pos), maxArea(maxArea), bgColour(Palette::Black)
@@ -196,7 +197,10 @@ void Stage::CreateBricks(int* variants)
 	{
 		for (size_t x = 0; x < size.x; x++)
 		{
-			if (variants[y * size.x + x] > 0)
+			int brickIndex = variants[y * size.x + x];
+			if (brickIndex == SolidBrick::id)
+				AddBrick(new SolidBrick(sf::Vector2f(x * 32.0f, y * 16.0f)), sf::Vector2u(x, y));
+			else if (brickIndex > 0)
 				AddBrick(new RegularBrick(sf::Vector2f(x * 32.0f, y * 16.0f), variants[y * size.x + x] - 1), sf::Vector2u(x, y));
 		}
 	}
