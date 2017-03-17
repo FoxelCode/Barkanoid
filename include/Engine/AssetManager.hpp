@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <vector>
 
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Font.hpp>
@@ -11,7 +12,7 @@ public:
 	~AssetManager();
 	sf::Texture* GetTexture(std::string filename);
 	sf::Font* GetFont(std::string filename);
-	std::string GetLevels();
+	std::vector<std::string> GetLevels();
 	std::string GetLevel(std::string levelName);
 	std::string GetStage(std::string levelName, std::string stageName);
 

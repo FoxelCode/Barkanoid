@@ -1,6 +1,7 @@
 #include "Engine/AssetManager.hpp"
 
 #include <fstream>
+#include <dirent.h>
 
 AssetManager::~AssetManager()
 {
@@ -22,7 +23,7 @@ sf::Texture* AssetManager::GetTexture(std::string filename)
 	if (it != textures.end())
 		return it->second;
 	sf::Texture* tex = new sf::Texture();
-	tex->loadFromFile("res\\graphics\\" + filename);
+	tex->loadFromFile("res/graphics/" + filename);
 	textures.insert(std::pair<std::string, sf::Texture*>(filename, tex));
 	return tex;
 }
@@ -33,14 +34,31 @@ sf::Font* AssetManager::GetFont(std::string filename)
 	if (it != fonts.end())
 		return it->second;
 	sf::Font* fnt = new sf::Font();
-	fnt->loadFromFile("res\\fonts\\" + filename);
+	fnt->loadFromFile("res/fonts/" + filename);
 	fonts.insert(std::pair<std::string, sf::Font*>(filename, fnt));
 	return fnt;
 }
 
-std::string AssetManager::GetLevels()
+std::vector<std::string> AssetManager::GetLevels()
 {
-	return ReadFile("res/levels/levels.json");
+	std::vector<std::string> folders;
+
+	DIR* dir = opendir("res/levels/");
+	struct dirent* entry = readdir(dir);
+	while (entry != NULL)
+	{
+		if (entry->d_type == DT_DIR)
+		{
+			// Ignore the folder itself and its parent
+			std::string folderName = entry->d_name;
+			if (folderName != "." && folderName != "..")
+				folders.push_back(folderName);
+		}
+		entry = readdir(dir);
+	}
+	closedir(dir);
+
+	return folders;
 }
 
 std::string AssetManager::GetLevel(std::string levelName)

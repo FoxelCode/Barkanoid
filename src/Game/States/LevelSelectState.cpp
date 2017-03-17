@@ -9,70 +9,33 @@ using json = nlohmann::json;
 
 void LevelSelectState::Init()
 {
-	std::string levelsData = G::GetAssetManager()->GetLevels();
-	if (levelsData == "")
-	{
-		LOG_ERROR("Trying to load LevelSelect with no data in levels.json");
-		return;
-	}
-	json levelSelectJson = json::parse(levelsData.c_str());
+	// Get level folders
+	std::vector<std::string> levelFolders = G::GetAssetManager()->GetLevels();
 
-	// Get level datas from JSON
-	if (levelSelectJson.find("levels") != levelSelectJson.end())
+	// Get visual names for all levels
+	for each (std::string levelFolder in levelFolders)
 	{
-		json levelsJson = levelSelectJson["levels"];
-		if (levelsJson.is_array())
+		std::string levelJsonStr = G::GetAssetManager()->GetLevel(levelFolder);
+		if (levelJsonStr == "")
 		{
-			for (size_t i = 0; i < levelsJson.size(); i++)
-			{
-				json levelJson = levelsJson[i];
-				std::string levelName = "placeholder, pls replace";
-				std::string levelFolder = "";
-				if (levelJson.find("name") != levelJson.end())
-				{
-					if (levelJson["name"].is_string())
-					{
-						levelName = levelJson["name"].get<std::string>();
-					}
-					else
-					{
-						LOG_WARNING("\"name\" should be a string");
-					}
-				}
-				else
-				{
-					LOG_WARNING("No \"name\" found in levels[" + std::to_string(i) + "]");
-				}
-				if (levelJson.find("folder") != levelJson.end())
-				{
-					if (levelJson["folder"].is_string())
-					{
-						levelFolder = levelJson["folder"].get<std::string>();
-					}
-					else
-					{
-						LOG_ERROR("\"folder\" should be a string");
-						continue;
-					}
-				}
-				else
-				{
-					LOG_ERROR("No \"folder\" found in levels[" + std::to_string(i) + "]");
-					continue;
-				}
-				levelDatas.insert(std::make_pair(levelName, levelFolder));
-			}
+			LOG_WARNING("No level data found");
+			continue;
+		}
+
+		json levelJson = json::parse(levelJsonStr.c_str());
+
+		std::string levelVisualName = levelFolder;
+		if (levelJson.find("name") != levelJson.end())
+		{
+			if (levelJson["name"].is_string())
+				levelVisualName = levelJson["name"].get<std::string>();
+			else
+				LOG_WARNING("\"name\" should be a string, assuming " + levelFolder);
 		}
 		else
-		{
-			LOG_ERROR("\"levels\" should be an array");
-			return;
-		}
-	}
-	else
-	{
-		LOG_ERROR("No \"levels\" found");
-		return;
+			LOG_WARNING("No \"name\" found, assuming " + levelFolder);
+
+		levelDatas.insert(std::make_pair(levelVisualName, levelFolder));
 	}
 
 	// Create buttons according to level datas
