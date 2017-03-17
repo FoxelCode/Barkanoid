@@ -1,12 +1,8 @@
 {
     "bgColour": 2,
-    "size": { "width":1, "height":1 },
+    "size": { "width":2, "height":1 },
     "brickVariants":
     [
-        1
-    ],
-    "brickColours":
-    [
-        12
+        1, 115
     ]
 }

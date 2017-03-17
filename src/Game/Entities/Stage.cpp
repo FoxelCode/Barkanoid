@@ -223,6 +223,10 @@ void Stage::AddBrick(Brick* brick, sf::Vector2u pos)
 	bricks[pos.y][pos.x] = brick;
 	brick->SetParent(this);
 	static_cast<ListCollider*>(collider)->AddCollider(brick->GetCollider());
+
+	// Don't count solid bricks towards the brickCount, as they can't be destroyed at all
+	if (dynamic_cast<SolidBrick*>(brick))
+		return;
 	brickCount++;
 }
 
