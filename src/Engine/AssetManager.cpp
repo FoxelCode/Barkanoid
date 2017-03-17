@@ -22,7 +22,7 @@ sf::Texture* AssetManager::GetTexture(std::string filename)
 	if (it != textures.end())
 		return it->second;
 	sf::Texture* tex = new sf::Texture();
-	tex->loadFromFile("res\\gfx\\" + filename);
+	tex->loadFromFile("res\\graphics\\" + filename);
 	textures.insert(std::pair<std::string, sf::Texture*>(filename, tex));
 	return tex;
 }
@@ -33,25 +33,25 @@ sf::Font* AssetManager::GetFont(std::string filename)
 	if (it != fonts.end())
 		return it->second;
 	sf::Font* fnt = new sf::Font();
-	fnt->loadFromFile("res\\fnt\\" + filename);
+	fnt->loadFromFile("res\\fonts\\" + filename);
 	fonts.insert(std::pair<std::string, sf::Font*>(filename, fnt));
 	return fnt;
 }
 
 std::string AssetManager::GetLevels()
 {
-	return ReadFile("res/lvl/levels.json");
+	return ReadFile("res/levels/levels.json");
 }
 
 std::string AssetManager::GetLevel(std::string levelName)
 {
-	std::string path = "res/lvl/" + levelName + "/level.json";
+	std::string path = "res/levels/" + levelName + "/level.json";
 	return ReadFile(path);
 }
 
 std::string AssetManager::GetStage(std::string levelName, std::string stageName)
 {
-	std::string path = "res/lvl/" + levelName + "/" + stageName + ".json";
+	std::string path = "res/levels/" + levelName + "/" + stageName + ".json";
 	return ReadFile(path);
 }
 
