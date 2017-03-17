@@ -21,4 +21,7 @@ private:
 
 	std::map<std::string, sf::Texture*> textures;
 	std::map<std::string, sf::Font*> fonts;
+
+	static const std::string levelFileExtension;
+	static const std::string stageFileExtension;
 };

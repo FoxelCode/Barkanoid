@@ -3,6 +3,9 @@
 #include <fstream>
 #include <dirent.h>
 
+const std::string AssetManager::levelFileExtension = "owo";
+const std::string AssetManager::stageFileExtension = "uwu";
+
 AssetManager::~AssetManager()
 {
 	for each (std::pair<std::string, sf::Texture*> texPair in textures)
@@ -63,13 +66,13 @@ std::vector<std::string> AssetManager::GetLevels()
 
 std::string AssetManager::GetLevel(std::string levelName)
 {
-	std::string path = "res/levels/" + levelName + "/level.json";
+	std::string path = "res/levels/" + levelName + "/level." + levelFileExtension;
 	return ReadFile(path);
 }
 
 std::string AssetManager::GetStage(std::string levelName, std::string stageName)
 {
-	std::string path = "res/levels/" + levelName + "/" + stageName + ".json";
+	std::string path = "res/levels/" + levelName + "/" + stageName + "." + stageFileExtension;
 	return ReadFile(path);
 }
 
@@ -88,8 +91,9 @@ std::string AssetManager::ReadFile(std::string path)
 	while (!inFile.eof())
 	{
 		std::getline(inFile, line);
-		output += line;
+		output += line + "\n";
 	}
+	output.pop_back();
 	inFile.close();
 	return output;
 }

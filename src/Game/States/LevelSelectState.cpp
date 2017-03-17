@@ -6,6 +6,7 @@ using json = nlohmann::json;
 #include "Engine/G.hpp"
 #include "Game/States/PlayState.hpp"
 #include "Util/Tween.hpp"
+#include "Util/StringUtil.hpp"
 
 void LevelSelectState::Init()
 {
@@ -15,27 +16,16 @@ void LevelSelectState::Init()
 	// Get visual names for all levels
 	for each (std::string levelFolder in levelFolders)
 	{
-		std::string levelJsonStr = G::GetAssetManager()->GetLevel(levelFolder);
-		if (levelJsonStr == "")
+		std::string levelName = "mmm yes this is good name";
+		std::string levelString = G::GetAssetManager()->GetLevel(levelFolder);
+		if (levelString == "")
 		{
 			LOG_WARNING("No level data found");
 			continue;
 		}
+		levelName = StringUtil::Split(levelString)[0];
 
-		json levelJson = json::parse(levelJsonStr.c_str());
-
-		std::string levelVisualName = levelFolder;
-		if (levelJson.find("name") != levelJson.end())
-		{
-			if (levelJson["name"].is_string())
-				levelVisualName = levelJson["name"].get<std::string>();
-			else
-				LOG_WARNING("\"name\" should be a string, assuming " + levelFolder);
-		}
-		else
-			LOG_WARNING("No \"name\" found, assuming " + levelFolder);
-
-		levelDatas.insert(std::make_pair(levelVisualName, levelFolder));
+		levelDatas.insert(std::make_pair(levelName, levelFolder));
 	}
 
 	// Create buttons according to level datas

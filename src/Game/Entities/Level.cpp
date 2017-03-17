@@ -3,6 +3,8 @@
 #include "JSON/json.hpp"
 using json = nlohmann::json;
 
+#include "Util/StringUtil.hpp"
+
 Level::Level(std::string levelData)
 	: currentStage(-1)
 {
@@ -11,34 +13,16 @@ Level::Level(std::string levelData)
 		LOG_ERROR("Trying to load Level with no data");
 		return;
 	}
-	json levelJson = json::parse(levelData.c_str());
+	
+	// Separate level data into lines
+	std::vector<std::string> dataLines = StringUtil::Split(levelData);
 
-	if (levelJson.find("stages") != levelJson.end())
-	{
-		json stagesJson = levelJson["stages"];
-		if (stagesJson.is_array())
-		{
-			for (size_t i = 0; i < stagesJson.size(); i++)
-			{
-				if (!stagesJson[i].is_string())
-				{
-					LOG_ERROR("stages[" + std::to_string(i) + "] should be a string");
-					continue;
-				}
-				stageNames.push_back(stagesJson[i].get<std::string>());
-			}
-		}
-		else
-		{
-			LOG_ERROR("\"stages\" should be an array");
-			return;
-		}
-	}
-	else
-	{
-		LOG_ERROR("No \"stages\" found");
-		return;
-	}
+	// First line is the level name
+	levelName = dataLines[0];
+
+	// The rest of the lines are stage names
+	for (size_t i = 1; i < dataLines.size(); i++)
+		stageNames.push_back(dataLines[i]);
 }
 
 std::string Level::GetNextStage()
