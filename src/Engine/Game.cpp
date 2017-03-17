@@ -4,7 +4,6 @@
 #include "Util/Random.hpp"
 #include "Collision/Collision.hpp"
 #include "Engine/G.hpp"
-#include "Game/Palette.hpp"
 #include "Engine/Input.hpp"
 #include "Engine/State.hpp"
 #include "Util/Tween.hpp"

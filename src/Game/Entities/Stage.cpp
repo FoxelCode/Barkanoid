@@ -13,7 +13,7 @@ using json = nlohmann::json;
 #include "Game/Entities/Bricks/ExplosiveBrick.hpp"
 
 Stage::Stage(sf::Vector2f pos, sf::Vector2f maxArea)
-	: GameObject(pos), originPos(pos), maxArea(maxArea), bgColour(Palette::Black)
+	: GameObject(pos), originPos(pos), maxArea(maxArea), bgColour(sf::Color::Black)
 {
 	collider = new ListCollider(this);
 }
@@ -81,17 +81,6 @@ void Stage::Load(std::string stageData)
 		return;
 	}
 	json stageJson = json::parse(stageData.c_str());
-
-	// Get BG colour if one is given
-	if (stageJson.find("bgColour") != stageJson.end())
-	{
-		if (stageJson["bgColour"].is_number_unsigned())
-			bgColour = Palette::Colours[stageJson["bgColour"].get<unsigned>()];
-		else
-			LOG_WARNING("\"bgColour\" should be an unsigned integer, assuming 0");
-	}
-	else
-		LOG_WARNING("No \"bgColour\" found, assuming 0");
 
 	// Get level size
 	size = sf::Vector2u((unsigned)(maxArea.x / Brick::brickSize.x), (unsigned)(maxArea.y / Brick::brickSize.y));
