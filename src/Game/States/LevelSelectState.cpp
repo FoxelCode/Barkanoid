@@ -76,14 +76,13 @@ void LevelSelectState::Init()
 	}
 
 	// Create buttons according to level datas
-	using namespace std::placeholders;
 	sf::Vector2u stageSize = GetGame()->GetSize();
 	int i = 0;
 	for (auto it = levelDatas.begin(); it != levelDatas.end(); it++)
 	{
 		sf::Vector2f buttonPos = sf::Vector2f(-(float)stageSize.x / 2.0f, i * 66.0f);
 		sf::Vector2f buttonSize = sf::Vector2f((float)stageSize.x, 60.0f);
-		Button* levelButton = new Button(buttonPos, buttonSize, (ButtonStringCallback)std::bind(&LevelSelectState::LevelButtonPressed, this, _1),
+		Button* levelButton = new Button(buttonPos, buttonSize, (ButtonStringCallback)std::bind(&LevelSelectState::LevelButtonPressed, this, std::placeholders::_1),
 			Alignment(HorizontalAlign::Middle, VerticalAlign::Top));
 		levelButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
 		levelButton->GetText()->setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));

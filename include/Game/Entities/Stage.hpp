@@ -23,6 +23,8 @@ private:
 	void AddBrick(Brick* brick, sf::Vector2u pos);
 	void RemoveBrick(sf::Vector2u pos);
 
+	void Explode(Brick* brick);
+
 	std::vector<std::vector<Brick*>> bricks;
 	size_t brickCount;
 	sf::Vector2f originPos;

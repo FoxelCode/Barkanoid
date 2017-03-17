@@ -10,6 +10,7 @@ using json = nlohmann::json;
 #include "Game/Entities/Bricks/RegularBrick.hpp"
 #include "Game/Entities/Bricks/SolidBrick.hpp"
 #include "Game/Entities/Bricks/InvisibleBrick.hpp"
+#include "Game/Entities/Bricks/ExplosiveBrick.hpp"
 
 Stage::Stage(sf::Vector2f pos, sf::Vector2f maxArea)
 	: GameObject(pos), originPos(pos), maxArea(maxArea), bgColour(Palette::Black)
@@ -199,10 +200,16 @@ void Stage::CreateBricks(int* variants)
 		for (size_t x = 0; x < size.x; x++)
 		{
 			int brickIndex = variants[y * size.x + x];
-			if (brickIndex == SolidBrick::id)
-				AddBrick(new SolidBrick(sf::Vector2f(x * 32.0f, y * 16.0f)), sf::Vector2u(x, y));
-			else if (brickIndex == InvisibleBrick::id)
-				AddBrick(new InvisibleBrick(sf::Vector2f(x * 32.0f, y * 16.0f)), sf::Vector2u(x, y));
+			// Special bricks are denoted with lower case ascii characters, starting with 'a'
+			if (brickIndex >= 'a')
+			{
+				if (brickIndex == SolidBrick::id)
+					AddBrick(new SolidBrick(sf::Vector2f(x * 32.0f, y * 16.0f)), sf::Vector2u(x, y));
+				else if (brickIndex == InvisibleBrick::id)
+					AddBrick(new InvisibleBrick(sf::Vector2f(x * 32.0f, y * 16.0f)), sf::Vector2u(x, y));
+				else if (brickIndex == ExplosiveBrick::id)
+					AddBrick(new ExplosiveBrick(sf::Vector2f(x * 32.0f, y * 16.0f), std::bind(&Stage::Explode, this, std::placeholders::_1)), sf::Vector2u(x, y));
+			}
 			else if (brickIndex > 0)
 				AddBrick(new RegularBrick(sf::Vector2f(x * 32.0f, y * 16.0f), variants[y * size.x + x] - 1), sf::Vector2u(x, y));
 		}
@@ -221,10 +228,49 @@ void Stage::AddBrick(Brick* brick, sf::Vector2u pos)
 
 void Stage::RemoveBrick(sf::Vector2u pos)
 {
-	bricks[pos.y][pos.x]->SetParent(nullptr);
-	static_cast<ListCollider*>(collider)->RemoveCollider(bricks[pos.y][pos.x]->GetCollider());
 	if (bricks[pos.y][pos.x] != nullptr)
+	{
+		bricks[pos.y][pos.x]->SetParent(nullptr);
+		static_cast<ListCollider*>(collider)->RemoveCollider(bricks[pos.y][pos.x]->GetCollider());
 		delete bricks[pos.y][pos.x];
-	bricks[pos.y][pos.x] = nullptr;
-	brickCount--;
+		bricks[pos.y][pos.x] = nullptr;
+		brickCount--;
+	}
+}
+
+void Stage::Explode(Brick* brick)
+{
+	bool found = false;
+	sf::Vector2i index;
+	for (size_t y = 0; y < size.y; y++)
+	{
+		for (size_t x = 0; x < size.x; x++)
+		{
+			if (bricks[y][x] == brick)
+			{
+				found = true;
+				index = sf::Vector2i(x, y);
+				break;
+			}
+		}
+		if (found) break;
+	}
+	if (!found)
+	{
+		LOG_ERROR("Trying to explode a brick that doesn't exist");
+		return;
+	}
+
+	for (size_t y = 0; y < size.y; y++)
+	{
+		for (size_t x = 0; x < size.x; x++)
+		{
+			if (x >= (index.x - 1) && x <= (index.x + 1)
+				&& y >= (index.y - 1) && y <= (index.y + 1))
+			{
+				if (bricks[y][x] != nullptr && bricks[y][x]->IsAlive())
+					bricks[y][x]->Kill();
+			}
+		}
+	}
 }
