@@ -13,15 +13,15 @@ public:
 	sf::Texture* GetTexture(std::string filename);
 	sf::Font* GetFont(std::string filename);
 	std::vector<std::string> GetLevels();
-	std::string GetLevel(std::string levelName);
-	std::string GetStage(std::string levelName, std::string stageName);
+	const std::string& GetLevel(std::string levelName);
+	std::vector<std::string> GetStage(std::string levelName, std::string stageName);
 
 private:
 	std::string ReadFile(std::string path);
 
 	std::map<std::string, sf::Texture*> textures;
 	std::map<std::string, sf::Font*> fonts;
+	std::map<std::string, const std::string> levels;
 
 	static const std::string levelFileExtension;
-	static const std::string stageFileExtension;
 };

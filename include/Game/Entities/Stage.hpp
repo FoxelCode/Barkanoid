@@ -12,14 +12,13 @@ public:
 
 	void RemoveDead();
 	void Clear();
-	void Load(std::string stageData);
+	void Load(std::vector<std::string> stageData);
 
 	sf::Color GetBGColour() { return bgColour; }
 	size_t GetBrickCount() { return brickCount; }
 
 private:
-	void InitBricks();
-	void CreateBricks(int* variants);
+	void CreateBrick(int variant, sf::Vector2u pos);
 	void AddBrick(Brick* brick, sf::Vector2u pos);
 	void RemoveBrick(sf::Vector2u pos);
 

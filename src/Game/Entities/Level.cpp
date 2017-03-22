@@ -20,9 +20,13 @@ Level::Level(std::string levelData)
 	// First line is the level name
 	levelName = dataLines[0];
 
-	// The rest of the lines are stage names
+	// The rest of the lines (until the first empty line) are stage names
 	for (size_t i = 1; i < dataLines.size(); i++)
+	{
+		if (StringUtil::IsWhitespace(dataLines[i]))
+			break;
 		stageNames.push_back(dataLines[i]);
+	}
 }
 
 std::string Level::GetNextStage()

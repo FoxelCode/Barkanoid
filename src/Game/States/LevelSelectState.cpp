@@ -10,14 +10,14 @@ using json = nlohmann::json;
 
 void LevelSelectState::Init()
 {
-	// Get level folders
-	std::vector<std::string> levelFolders = G::GetAssetManager()->GetLevels();
+	// Get level files
+	std::vector<std::string> levelFiles = G::GetAssetManager()->GetLevels();
 
 	// Get visual names for all levels
-	for each (std::string levelFolder in levelFolders)
+	for each (std::string levelFile in levelFiles)
 	{
 		std::string levelName = "mmm yes this is good name";
-		std::string levelString = G::GetAssetManager()->GetLevel(levelFolder);
+		std::string levelString = G::GetAssetManager()->GetLevel(levelFile);
 		if (levelString == "")
 		{
 			LOG_WARNING("No level data found");
@@ -25,7 +25,7 @@ void LevelSelectState::Init()
 		}
 		levelName = StringUtil::Split(levelString)[0];
 
-		levelDatas.insert(std::make_pair(levelName, levelFolder));
+		levelDatas.insert(std::make_pair(levelName, levelFile));
 	}
 
 	// Create buttons according to level datas

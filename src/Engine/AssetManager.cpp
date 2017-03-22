@@ -3,21 +3,19 @@
 #include <fstream>
 #include <dirent.h>
 
+#include "Util/StringUtil.hpp"
+
 const std::string AssetManager::levelFileExtension = "owo";
-const std::string AssetManager::stageFileExtension = "uwu";
 
 AssetManager::~AssetManager()
 {
-	for each (std::pair<std::string, sf::Texture*> texPair in textures)
-	{
+	for (std::pair<std::string, sf::Texture*> texPair : textures)
 		delete texPair.second;
-	}
 	textures.clear();
-	for each (std::pair<std::string, sf::Font*> fntPair in fonts)
-	{
+	for (std::pair<std::string, sf::Font*> fntPair : fonts)
 		delete fntPair.second;
-	}
 	fonts.clear();
+	levels.clear();
 }
 
 sf::Texture* AssetManager::GetTexture(std::string filename)
@@ -50,7 +48,7 @@ std::vector<std::string> AssetManager::GetLevels()
 	struct dirent* entry = readdir(dir);
 	while (entry != NULL)
 	{
-		if (entry->d_type == DT_DIR)
+		if (entry->d_type == DT_REG)
 		{
 			// Ignore the folder itself and its parent
 			std::string folderName = entry->d_name;
@@ -64,16 +62,33 @@ std::vector<std::string> AssetManager::GetLevels()
 	return folders;
 }
 
-std::string AssetManager::GetLevel(std::string levelName)
+const std::string& AssetManager::GetLevel(std::string levelName)
 {
-	std::string path = "res/levels/" + levelName + "/level." + levelFileExtension;
-	return ReadFile(path);
+	levelName = StringUtil::StripFileExtension(levelName);
+	auto it = levels.find(levelName);
+	if (it != levels.end())
+		return it->second;
+	std::string path = "res/levels/" + levelName + "." + levelFileExtension;
+	std::string levelData = ReadFile(path);
+	auto newIt = levels.insert(std::pair<std::string, const std::string>(levelName, levelData));
+	return (*newIt.first).first;
 }
 
-std::string AssetManager::GetStage(std::string levelName, std::string stageName)
+std::vector<std::string> AssetManager::GetStage(std::string levelName, std::string stageName)
 {
-	std::string path = "res/levels/" + levelName + "/" + stageName + "." + stageFileExtension;
-	return ReadFile(path);
+	// Get the level data and break it up into clusters
+	std::string data = GetLevel(levelName);
+	std::vector<std::vector<std::string>> dataClusters = StringUtil::MakeClusters(StringUtil::Split(data));
+
+	// Search the clusters for the correct stage name
+	// Start at 1 because the first cluster should just be the stage list
+	for (size_t i = 1; i < dataClusters.size(); i++)
+	{
+		// If the first line of the cluster matches the stage name, we want that
+		if (dataClusters[i][0] == stageName)
+			return dataClusters[i];
+	}
+	return std::vector<std::string>();
 }
 
 std::string AssetManager::ReadFile(std::string path)
