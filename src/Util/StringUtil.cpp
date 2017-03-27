@@ -38,15 +38,21 @@ std::vector<std::vector<std::string>> StringUtil::MakeClusters(std::vector<std::
 std::vector<int> StringUtil::MakeIndices(std::string str)
 {
 	std::vector<int> indices;
+	// Split the string into parts divided by spaces
 	std::vector<std::string> parts = Split(str, " ");
+	// Discard parts that are just whitespace
+	DiscardWhitespace(parts);
+
 	for (std::string part : parts)
 	{
 		int val = -1;
+		// Try to cast the part into an integer
 		try
 		{
 			val = std::stoi(part);
 			indices.push_back(val);
 		}
+		// If the casting failed, it's probably a character
 		catch (std::invalid_argument i)
 		{
 			if (part.length() == 1)
@@ -69,13 +75,19 @@ void StringUtil::DiscardWhitespace(std::vector<std::string>& vec)
 	for (auto it = vec.begin(); it != vec.end(); )
 	{
 		bool isWhitespace = true;
-		for (char c : (*it))
+		// Empty strings count as whitespace
+		if ((*it).empty())
+			isWhitespace = true;
+		else
 		{
-			// If one of the characters in the string isn't whitespace, we can keep that string
-			if (whitespace.find(c) == whitespace.end())
+			for (char c : (*it))
 			{
-				isWhitespace = false;
-				break;
+				// If one of the characters in the string isn't whitespace, we can keep that string
+				if (whitespace.find(c) == whitespace.end())
+				{
+					isWhitespace = false;
+					break;
+				}
 			}
 		}
 		// Remove line if it consists only of whitespace

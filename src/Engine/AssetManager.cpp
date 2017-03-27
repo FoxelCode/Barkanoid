@@ -71,7 +71,7 @@ const std::string& AssetManager::GetLevel(std::string levelName)
 	std::string path = "res/levels/" + levelName + "." + levelFileExtension;
 	std::string levelData = ReadFile(path);
 	auto newIt = levels.insert(std::pair<std::string, const std::string>(levelName, levelData));
-	return (*newIt.first).first;
+	return (*newIt.first).second;
 }
 
 std::vector<std::string> AssetManager::GetStage(std::string levelName, std::string stageName)

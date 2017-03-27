@@ -8,11 +8,11 @@ Buhnuhnuh
 s s 0 1 1 2 2 2 2 1 1 0 s s
 e e e e e e 0 0 e e e e e e
 i i i i i i e e i i i i i i
-1 2 1 0 0 i i i i 0 0 1 2 1
+1 2 1 0 0 i 0 0 i 0 0 1 2 1
 
 Smok wed
 1 2 1 2 1 2 1 2
- e i 0 0 0 i e
+i i 0 0 0 0 i i
 2 2 0 2 2 0 2 2
 1 0 1 0 1 0 1 0
- i i i i i i i
+i i i i i i i i

@@ -253,15 +253,27 @@ void PlayState::SetPoints(int points)
 
 void PlayState::NextStage()
 {
-	std::string stageName = level->GetNextStage();
-	// Return to level select if there are no stages left in the level
-	if (stageName == "")
+	std::string stageName;
+	std::vector<std::string> stageData;
+	do
 	{
-		BackToLevelSelect();
-		return;
-	}
+		stageName = level->GetNextStage();
+		// Return to level select if there are no stages left in the level
+		if (stageName == "")
+		{
+			BackToLevelSelect();
+			return;
+		}
 
-	stage->Load(G::GetAssetManager()->GetStage(levelName, stageName));
+		// Get the stage data
+		stageData = G::GetAssetManager()->GetStage(levelName, stageName);
+		if (stageData.empty())
+			LOG_WARNING("No stage found with name \"" + stageName + "\" or no data found for it");
+	}
+	// Keep iterating through stage names until a valid one is found
+	while (stageData.empty());
+
+	stage->Load(stageData);
 	bgColour = stage->GetBGColour();
 	SetMouseCaptured(true);
 
@@ -291,6 +303,7 @@ void PlayState::ResetLife()
 	ball->SetVelocity(ballSpeed);
 	Add(ball);
 
+	paddle->Reset();
 	paddle->SetMagnetic(false);
 	paddle->AttachBall(ball);
 }

@@ -18,7 +18,9 @@ public:
 	size_t GetBrickCount() { return brickCount; }
 
 private:
-	void CreateBrick(int variant, sf::Vector2u pos);
+	void InitialiseBricks(const std::vector<std::vector<int>>& brickVariants);
+	void CreateRow(size_t rowIndex, const std::vector<int>& rowVariants);
+	Brick* CreateBrick(int variant);
 	void AddBrick(Brick* brick, sf::Vector2u pos);
 	void RemoveBrick(sf::Vector2u pos);
 
@@ -28,6 +30,6 @@ private:
 	size_t brickCount;
 	sf::Vector2f originPos;
 	sf::Vector2f maxArea;
-	sf::Vector2u size;
+	size_t rowCount;
 	sf::Color bgColour;
 };
