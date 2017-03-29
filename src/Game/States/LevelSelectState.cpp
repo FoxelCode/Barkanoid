@@ -7,6 +7,7 @@ using json = nlohmann::json;
 #include "Game/States/PlayState.hpp"
 #include "Util/Tween.hpp"
 #include "Util/StringUtil.hpp"
+#include "UI/VerticalScrollArea.hpp"
 
 const float LevelSelectState::buttonHeight = 60.0f;
 const float LevelSelectState::buttonSpacing = 6.0f;
@@ -32,15 +33,20 @@ void LevelSelectState::Init()
 		levelDatas.insert(std::make_pair(levelName, levelFile));
 	}
 
-	// Create buttons according to level datas
 	sf::Vector2u stageSize = GetGame()->GetSize();
+
+	// Create scroll area for level buttons
+	VerticalScrollArea* scrollArea = new VerticalScrollArea(sf::Vector2f(), sf::Vector2f(stageSize));
+	Add(scrollArea);
+
+	// Create buttons according to level datas
 	int i = 0;
 	for (auto it = levelDatas.begin(); it != levelDatas.end(); it++)
 	{
-		sf::Vector2f buttonPos = sf::Vector2f(-(float)stageSize.x / 2.0f, i * (buttonHeight + buttonSpacing));
+		sf::Vector2f buttonPos = sf::Vector2f(-(float)stageSize.x, 0.0f);
 		sf::Vector2f buttonSize = sf::Vector2f((float)stageSize.x, buttonHeight);
 		Button* levelButton = new Button(buttonPos, buttonSize, (ButtonStringCallback)std::bind(&LevelSelectState::LevelButtonPressed, this, std::placeholders::_1),
-			Alignment(HorizontalAlign::Middle, VerticalAlign::Top));
+			Alignment(HorizontalAlign::Left, VerticalAlign::Top));
 		levelButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
 		levelButton->GetText()->setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));
 		levelButton->GetText()->setFillColor(sf::Color::Black);
@@ -48,8 +54,11 @@ void LevelSelectState::Init()
 		levelButton->GetText()->setCharacterSize(40);
 		levelButton->CenterText();
 		Add(levelButton);
+		scrollArea->AddChild(levelButton);
+		// Fix the X position of the button since adding it to the scroll area changes its position
+		levelButton->SetPosition(buttonPos.x, levelButton->GetPosition().y);
 
-		Tween::Start(Ease::Type::QuartOut, buttonPos.x, (float)stageSize.x / 2.0f, 0.7f,
+		Tween::Start(Ease::Type::QuartOut, buttonPos.x, 0.0f, 0.7f,
 			[levelButton](float v) { levelButton->SetPosition(v, levelButton->GetPosition().y); },
 			nullptr, Tween::OneShot, i * 0.1f);
 

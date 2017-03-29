@@ -14,6 +14,7 @@ std::string Input::textEntered;
 
 sf::Vector2i Input::mousePosition;
 sf::Vector2i Input::mouseDelta;
+float Input::mouseScrollDelta = 0.0f;
 
 void Input::SetWindow(sf::Window* window)
 {
@@ -27,6 +28,7 @@ void Input::Update()
 	keysJustReleased.clear();
 	mouseJustPressed.clear();
 	mouseJustReleased.clear();
+	mouseScrollDelta = 0.0f;
 	textEntered.clear();
 
 	if (window)
@@ -55,6 +57,9 @@ void Input::HandleEvent(sf::Event evt)
 		break;
 	case sf::Event::TextEntered:
 		EventTextEntered(evt.text.unicode);
+		break;
+	case sf::Event::MouseWheelScrolled:
+		EventMouseScrollMoved(evt.mouseWheelScroll.delta);
 		break;
 	default:
 		LOG_WARNING(std::to_string(evt.type) + " is not a valid event type for Input to handle");
@@ -88,6 +93,11 @@ void Input::EventMouseButtonReleased(sf::Mouse::Button button)
 	if (removeIt != mousePressed.end())
 		mousePressed.erase(removeIt);
 	mouseJustReleased.insert(button);
+}
+
+void Input::EventMouseScrollMoved(float delta)
+{
+	mouseScrollDelta = delta;
 }
 
 void Input::EventTextEntered(sf::Uint32 charCode)

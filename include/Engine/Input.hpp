@@ -20,6 +20,7 @@ public:
 
 	static sf::Vector2i GetMousePosition() { return mousePosition; }
 	static sf::Vector2i GetMouseDelta() { return mouseDelta; }
+	static float GetMouseScrollDelta() { return mouseScrollDelta; }
 
 	static std::string GetTextEntered() { return textEntered; }
 
@@ -28,6 +29,7 @@ private:
 	static void EventKeyReleased(sf::Keyboard::Key key);
 	static void EventMouseButtonPressed(sf::Mouse::Button button);
 	static void EventMouseButtonReleased(sf::Mouse::Button button);
+	static void EventMouseScrollMoved(float delta);
 	static void EventTextEntered(sf::Uint32 charCode);
 
 	static sf::Window* window;
@@ -38,6 +40,7 @@ private:
 
 	static sf::Vector2i mousePosition;
 	static sf::Vector2i mouseDelta;
+	static float mouseScrollDelta;
 	static std::set<sf::Mouse::Button> mouseJustPressed;
 	static std::set<sf::Mouse::Button> mousePressed;
 	static std::set<sf::Mouse::Button> mouseJustReleased;

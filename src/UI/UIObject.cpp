@@ -20,7 +20,7 @@ void UIObject::LoadSlicedGraphic(sf::Texture* tex)
 	graphic->setPosition(GetOffset());
 }
 
-sf::Vector2f UIObject::GetOffset()
+sf::Vector2f UIObject::GetOffset() const
 {
 	sf::Vector2f offset;
 	switch (align.horizontal)
