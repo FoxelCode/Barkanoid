@@ -88,6 +88,7 @@ std::vector<std::string> AssetManager::GetStage(std::string levelName, std::stri
 		if (dataClusters[i][0] == stageName)
 			return dataClusters[i];
 	}
+	LOG_ERROR("No stage found with name \"" + stageName + "\" in level \"" + levelName + "\"");
 	return std::vector<std::string>();
 }
 

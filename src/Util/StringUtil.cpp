@@ -102,16 +102,8 @@ void StringUtil::DiscardWhitespace(std::vector<std::string>& vec)
 
 std::string StringUtil::StripFileExtension(std::string str)
 {
-	size_t dotIndex = -1;
-	for (auto it = str.rbegin(); it != str.rend(); it++)
-	{
-		if ((*it) == '.')
-		{
-			dotIndex = str.size() - std::distance(str.rbegin(), it);
-			break;
-		}
-	}
-	if (dotIndex != -1)
-		return str.substr(0, dotIndex - 1);
+	size_t lastDotIndex = str.find_last_of('.');
+	if (std::string::npos != lastDotIndex)
+		str = str.substr(0, lastDotIndex);
 	return str;
 }

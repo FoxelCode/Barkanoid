@@ -12,5 +12,9 @@ public:
 private:
 	void LevelButtonPressed(std::string buttonText);
 
+	static const float buttonHeight;
+	static const float buttonSpacing;
+	static const float editButtonWidth;
+
 	std::map<std::string, std::string> levelDatas;
 };

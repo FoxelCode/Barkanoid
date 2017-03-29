@@ -8,6 +8,10 @@ using json = nlohmann::json;
 #include "Util/Tween.hpp"
 #include "Util/StringUtil.hpp"
 
+const float LevelSelectState::buttonHeight = 60.0f;
+const float LevelSelectState::buttonSpacing = 6.0f;
+const float LevelSelectState::editButtonWidth = 40.0f;
+
 void LevelSelectState::Init()
 {
 	// Get level files
@@ -33,8 +37,8 @@ void LevelSelectState::Init()
 	int i = 0;
 	for (auto it = levelDatas.begin(); it != levelDatas.end(); it++)
 	{
-		sf::Vector2f buttonPos = sf::Vector2f(-(float)stageSize.x / 2.0f, i * 66.0f);
-		sf::Vector2f buttonSize = sf::Vector2f((float)stageSize.x, 60.0f);
+		sf::Vector2f buttonPos = sf::Vector2f(-(float)stageSize.x / 2.0f, i * (buttonHeight + buttonSpacing));
+		sf::Vector2f buttonSize = sf::Vector2f((float)stageSize.x, buttonHeight);
 		Button* levelButton = new Button(buttonPos, buttonSize, (ButtonStringCallback)std::bind(&LevelSelectState::LevelButtonPressed, this, std::placeholders::_1),
 			Alignment(HorizontalAlign::Middle, VerticalAlign::Top));
 		levelButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
