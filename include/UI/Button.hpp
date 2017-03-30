@@ -26,9 +26,12 @@ public:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	void LoadButtonGraphic(sf::Texture* tex, sf::Vector2f frameSize, sf::Vector2f border);
-	void CenterText();
+	void UpdateLayout();
 
-	void SetActive(bool active);
+	virtual void SetActive(bool active);
+	virtual void SetSize(sf::Vector2f size);
+	void SetTextYSpacing(float spacing);
+	void SetAutoHeight(bool autoHeight);
 
 	State GetState() { return state; }
 	sf::Text* GetText() { return &text; }
@@ -50,12 +53,13 @@ private:
 		~Callback() {}
 	};
 
-	bool active;
-
 	CallbackType callbackType;
 	Callback callback;
 	State state;
 	bool pressed;
 
 	sf::Text text;
+
+	float textYSpacing;
+	bool autoHeight;
 };

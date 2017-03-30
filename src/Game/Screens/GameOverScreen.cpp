@@ -23,7 +23,7 @@ GameOverScreen::GameOverScreen(sf::Vector2u size, std::function<void()> backToSe
 	backToSelectButton->GetText()->setFillColor(sf::Color::Black);
 	backToSelectButton->GetText()->setString("Back to level select");
 	backToSelectButton->GetText()->setCharacterSize(32);
-	backToSelectButton->CenterText();
+	backToSelectButton->UpdateLayout();
 
 	retryLevelButton = new Button(sf::Vector2f(size.x / 2.0f, size.y / 2.0f + 60.0f), sf::Vector2f(300.0f, 50.0f),
 		(ButtonCallback)std::bind(&GameOverScreen::RetryLevelClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
@@ -32,7 +32,7 @@ GameOverScreen::GameOverScreen(sf::Vector2u size, std::function<void()> backToSe
 	retryLevelButton->GetText()->setFillColor(sf::Color::Black);
 	retryLevelButton->GetText()->setString("Retry level");
 	retryLevelButton->GetText()->setCharacterSize(32);
-	retryLevelButton->CenterText();
+	retryLevelButton->UpdateLayout();
 }
 
 GameOverScreen::~GameOverScreen()

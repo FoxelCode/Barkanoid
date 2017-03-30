@@ -52,7 +52,7 @@ void LevelSelectState::Init()
 		levelButton->GetText()->setFillColor(sf::Color::Black);
 		levelButton->GetText()->setString((*it).first);
 		levelButton->GetText()->setCharacterSize(40);
-		levelButton->CenterText();
+		levelButton->UpdateLayout();
 		Add(levelButton);
 		scrollArea->AddChild(levelButton);
 		// Fix the X position of the button since adding it to the scroll area changes its position

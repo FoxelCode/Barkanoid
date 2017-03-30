@@ -55,21 +55,3 @@ void GameObject::LoadSlicedGraphic(sf::Texture* tex, Graphic::Alignment align)
 	graphic = new SlicedGraphic(align);
 	graphic->SetTexture(tex);
 }
-
-//void GameObject::SetTexture(sf::Texture* tex, float textureScale)
-//{
-//	this->texture = tex;
-//	sprite.setTexture(*tex);
-//	this->textureScale = textureScale;
-//	sprite.setScale(textureScale, textureScale);
-//}
-//
-//void GameObject::SetTextureRect(sf::IntRect rect)
-//{
-//	sprite.setTextureRect(rect);
-//}
-//
-//void GameObject::SetFrame(int frame)
-//{
-//	SetTextureRect(sf::IntRect(frame * frameSize.x, 0, frameSize.x, frameSize.y));
-//}

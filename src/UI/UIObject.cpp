@@ -20,6 +20,12 @@ void UIObject::LoadSlicedGraphic(sf::Texture* tex)
 	graphic->setPosition(GetOffset());
 }
 
+void UIObject::SetSize(sf::Vector2f size)
+{
+	this->size = size;
+	UpdateSize();
+}
+
 sf::Vector2f UIObject::GetOffset() const
 {
 	sf::Vector2f offset;
@@ -46,4 +52,12 @@ sf::Vector2f UIObject::GetOffset() const
 		break;
 	}
 	return offset;
+}
+
+void UIObject::UpdateSize()
+{
+	static_cast<AABBCollider*>(collider)->setSize(size);
+	static_cast<AABBCollider*>(collider)->SetOffset(GetOffset());
+	graphic->setPosition(GetOffset());
+	graphic->SetSize(size);
 }

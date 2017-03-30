@@ -12,10 +12,14 @@ public:
 	void LoadGraphic(sf::Texture* tex);
 	void LoadSlicedGraphic(sf::Texture* tex);
 
+	virtual void SetSize(sf::Vector2f size);
+
 	sf::Vector2f GetOffset() const;
 	sf::Vector2f GetSize() { return size; }
 
 protected:
+	void UpdateSize();
+
 	Alignment align;
 	sf::Vector2f size;
 };

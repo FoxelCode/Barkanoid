@@ -19,6 +19,16 @@ std::vector<std::string> StringUtil::Split(std::string str, std::string delimite
 	return output;
 }
 
+std::string StringUtil::TrimWhitespace(std::string str)
+{
+	size_t firstNotSpace = str.find_first_not_of(' ');
+	// If there's no non-space characters, return an empty string
+	if (std::string::npos == firstNotSpace)
+		return std::string();
+	size_t lastNotSpace = str.find_last_not_of(' ');
+	return str.substr(firstNotSpace, (lastNotSpace - firstNotSpace + 1));
+}
+
 std::vector<std::vector<std::string>> StringUtil::MakeClusters(std::vector<std::string> data)
 {
 	std::vector<std::vector<std::string>> clusters;
@@ -98,6 +108,18 @@ void StringUtil::DiscardWhitespace(std::vector<std::string>& vec)
 		}
 		it++;
 	}
+}
+
+size_t StringUtil::CountLines(const std::string& str)
+{
+	size_t lineCount = 1;
+	size_t newLineIndex = str.find_first_of('\n');
+	while (std::string::npos != newLineIndex)
+	{
+		lineCount++;
+		newLineIndex = str.find_first_of('\n', newLineIndex + 1);
+	}
+	return lineCount;
 }
 
 std::string StringUtil::StripFileExtension(std::string str)

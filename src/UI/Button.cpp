@@ -3,21 +3,22 @@
 #include "Graphics/SlicedGraphic.hpp"
 #include "Engine/Input.hpp"
 #include "Util/Math.hpp"
+#include "Util/StringUtil.hpp"
 #include "Collision/AABBCollider.hpp"
 
 Button::Button(sf::Vector2f pos, sf::Vector2f size, ButtonCallback callback, Alignment align)
-	: UIObject(pos, size, align), callbackType(CallbackType::Void), callback(callback), state(State::Neutral), pressed(false)
+	: UIObject(pos, size, align), callbackType(CallbackType::Void), callback(callback), state(State::Neutral), pressed(false), textYSpacing(10.0f), autoHeight(false)
 {
 }
 
 Button::Button(sf::Vector2f pos, sf::Vector2f size, ButtonStringCallback callback, Alignment align)
-	: UIObject(pos, size, align), callbackType(CallbackType::String), callback(callback), state(State::Neutral), pressed(false)
+	: UIObject(pos, size, align), callbackType(CallbackType::String), callback(callback), state(State::Neutral), pressed(false), textYSpacing(10.0f), autoHeight(false)
 {
 }
 
 void Button::Update(float delta)
 {
-	if (active)
+	if (IsActive())
 	{
 		bool hovering = Math::contains(sf::Vector2f(Input::GetMousePosition()), collider->GetBounds());
 
@@ -70,17 +71,47 @@ void Button::LoadButtonGraphic(sf::Texture* tex, sf::Vector2f frameSize, sf::Vec
 	static_cast<SlicedGraphic*>(graphic)->SetBorder(border);
 }
 
-void Button::CenterText()
+void Button::UpdateLayout()
 {
-	sf::Vector2f textPos = sf::Vector2f(size.x / 2.0f - text.getGlobalBounds().width / 2.0f, 0.0f) + GetOffset();
+	size_t lineCount = StringUtil::CountLines(text.getString());
+	if (autoHeight)
+	{
+		size.y = text.getGlobalBounds().height + textYSpacing * 2.0f;
+		UIObject::UpdateSize();
+	}
+
+	// Center the text horizontally
+	// Try to center the text vertically, but keep it at least textYSpacing from the top
+	sf::Vector2f textPos = sf::Vector2f(size.x / 2.0f - text.getGlobalBounds().width / 2.0f,
+		-text.getLocalBounds().top + Math::max(textYSpacing, size.y / 2.0f - text.getGlobalBounds().height / 2.0f)) + GetOffset();
 	text.setPosition(textPos);
 }
 
 void Button::SetActive(bool active)
 {
-	this->active = active;
+	UIObject::SetActive(active);
 	if (!active)
 		SetState(State::Neutral);
+}
+
+void Button::SetSize(sf::Vector2f size)
+{
+	this->size = size;
+	UpdateLayout();
+	UIObject::UpdateSize();
+}
+
+void Button::SetTextYSpacing(float spacing)
+{
+	this->textYSpacing = spacing;
+	SetSize(size);
+}
+
+void Button::SetAutoHeight(bool autoHeight)
+{
+	this->autoHeight = autoHeight;
+	if (autoHeight)
+		UpdateLayout();
 }
 
 void Button::SetState(State state)

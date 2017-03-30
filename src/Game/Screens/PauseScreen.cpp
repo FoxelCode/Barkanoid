@@ -24,7 +24,7 @@ PauseScreen::PauseScreen(sf::Vector2u size, std::function<void()> continueCallba
 	continueButton->GetText()->setFillColor(sf::Color::Black);
 	continueButton->GetText()->setString("Continue");
 	continueButton->GetText()->setCharacterSize(32);
-	continueButton->CenterText();
+	continueButton->UpdateLayout();
 
 	backToSelectButton = new Button(sf::Vector2f(size.x / 2.0f, size.y / 2.0f + 30.0f), sf::Vector2f(300.0f, 50.0f),
 		(ButtonCallback)std::bind(&PauseScreen::BackToSelectClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
@@ -33,7 +33,7 @@ PauseScreen::PauseScreen(sf::Vector2u size, std::function<void()> continueCallba
 	backToSelectButton->GetText()->setFillColor(sf::Color::Black);
 	backToSelectButton->GetText()->setString("Back to level select");
 	backToSelectButton->GetText()->setCharacterSize(32);
-	backToSelectButton->CenterText();
+	backToSelectButton->UpdateLayout();
 
 	retryLevelButton = new Button(sf::Vector2f(size.x / 2.0f, size.y / 2.0f + 80.0f), sf::Vector2f(300.0f, 50.0f),
 		(ButtonCallback)std::bind(&PauseScreen::RetryLevelClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
@@ -42,7 +42,7 @@ PauseScreen::PauseScreen(sf::Vector2u size, std::function<void()> continueCallba
 	retryLevelButton->GetText()->setFillColor(sf::Color::Black);
 	retryLevelButton->GetText()->setString("Retry level");
 	retryLevelButton->GetText()->setCharacterSize(32);
-	retryLevelButton->CenterText();
+	retryLevelButton->UpdateLayout();
 }
 
 PauseScreen::~PauseScreen()
