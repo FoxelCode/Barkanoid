@@ -15,6 +15,7 @@ public:
 	void SetTextAlignment(Alignment align);
 	void SetAutoHeight(bool autoHeight);
 
+	std::string GetText() { return text; }
 	sf::Text* GetFirstLine() { return lines[0]; }
 
 private:

@@ -20,28 +20,28 @@ PauseScreen::PauseScreen(sf::Vector2u size, std::function<void()> continueCallba
 	continueButton = new Button(sf::Vector2f(size.x / 2.0f, size.y / 2.0f - 20.0f), sf::Vector2f(300.0f, 50.0f),
 		(ButtonCallback)std::bind(&PauseScreen::ContinueClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
 	continueButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
-	continueButton->GetText()->setFont(*font);
-	continueButton->GetText()->setFillColor(sf::Color::Black);
-	continueButton->GetText()->setString("Continue");
-	continueButton->GetText()->setCharacterSize(32);
+	continueButton->GetText()->GetFirstLine()->setFont(*font);
+	continueButton->GetText()->GetFirstLine()->setFillColor(sf::Color::Black);
+	continueButton->GetText()->GetFirstLine()->setCharacterSize(32);
+	continueButton->GetText()->SetText("Continue");
 	continueButton->UpdateLayout();
 
 	backToSelectButton = new Button(sf::Vector2f(size.x / 2.0f, size.y / 2.0f + 30.0f), sf::Vector2f(300.0f, 50.0f),
 		(ButtonCallback)std::bind(&PauseScreen::BackToSelectClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
 	backToSelectButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
-	backToSelectButton->GetText()->setFont(*font);
-	backToSelectButton->GetText()->setFillColor(sf::Color::Black);
-	backToSelectButton->GetText()->setString("Back to level select");
-	backToSelectButton->GetText()->setCharacterSize(32);
+	backToSelectButton->GetText()->GetFirstLine()->setFont(*font);
+	backToSelectButton->GetText()->GetFirstLine()->setFillColor(sf::Color::Black);
+	backToSelectButton->GetText()->GetFirstLine()->setCharacterSize(32);
+	backToSelectButton->GetText()->SetText("Back to level select");
 	backToSelectButton->UpdateLayout();
 
 	retryLevelButton = new Button(sf::Vector2f(size.x / 2.0f, size.y / 2.0f + 80.0f), sf::Vector2f(300.0f, 50.0f),
 		(ButtonCallback)std::bind(&PauseScreen::RetryLevelClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
 	retryLevelButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
-	retryLevelButton->GetText()->setFont(*font);
-	retryLevelButton->GetText()->setFillColor(sf::Color::Black);
-	retryLevelButton->GetText()->setString("Retry level");
-	retryLevelButton->GetText()->setCharacterSize(32);
+	retryLevelButton->GetText()->GetFirstLine()->setFont(*font);
+	retryLevelButton->GetText()->GetFirstLine()->setFillColor(sf::Color::Black);
+	retryLevelButton->GetText()->GetFirstLine()->setCharacterSize(32);
+	retryLevelButton->GetText()->SetText("Retry level");
 	retryLevelButton->UpdateLayout();
 }
 

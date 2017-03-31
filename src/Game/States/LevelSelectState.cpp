@@ -44,14 +44,16 @@ void LevelSelectState::Init()
 	for (auto it = levelDatas.begin(); it != levelDatas.end(); it++)
 	{
 		sf::Vector2f buttonPos = sf::Vector2f(-(float)stageSize.x, 0.0f);
-		sf::Vector2f buttonSize = sf::Vector2f((float)stageSize.x, buttonHeight);
+		sf::Vector2f buttonSize = sf::Vector2f((float)stageSize.x / 2.0f, buttonHeight);
 		Button* levelButton = new Button(buttonPos, buttonSize, (ButtonStringCallback)std::bind(&LevelSelectState::LevelButtonPressed, this, std::placeholders::_1),
 			Alignment(HorizontalAlign::Left, VerticalAlign::Top));
 		levelButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
-		levelButton->GetText()->setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));
-		levelButton->GetText()->setFillColor(sf::Color::Black);
-		levelButton->GetText()->setString((*it).first);
-		levelButton->GetText()->setCharacterSize(40);
+		levelButton->GetText()->GetFirstLine()->setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));
+		levelButton->GetText()->GetFirstLine()->setFillColor(sf::Color::Black);
+		levelButton->GetText()->GetFirstLine()->setCharacterSize(40);
+		levelButton->GetText()->SetAutoHeight(true);
+		levelButton->SetAutoHeight(true);
+		levelButton->GetText()->SetText((*it).first);
 		levelButton->UpdateLayout();
 		Add(levelButton);
 		scrollArea->AddChild(levelButton);

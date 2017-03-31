@@ -1,10 +1,10 @@
 #pragma once
 
 #include <functional>
-#include <SFML/Graphics/Text.hpp>
 
 #include "UI/UIObject.hpp"
 #include "UI/Alignment.hpp"
+#include "UI/MultilineText.hpp"
 
 typedef std::function<void()> ButtonCallback;
 typedef std::function<void(std::string)> ButtonStringCallback;
@@ -21,7 +21,7 @@ public:
 
 	Button(sf::Vector2f pos, sf::Vector2f size, ButtonCallback callback, Alignment align = Alignment());
 	Button(sf::Vector2f pos, sf::Vector2f size, ButtonStringCallback callback, Alignment align = Alignment());
-	~Button() {}
+	~Button();
 	virtual void Update(float delta);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
@@ -30,11 +30,11 @@ public:
 
 	virtual void SetActive(bool active);
 	virtual void SetSize(sf::Vector2f size);
-	void SetTextYSpacing(float spacing);
+	void SetTextSpacing(sf::Vector2f spacing);
 	void SetAutoHeight(bool autoHeight);
 
 	State GetState() { return state; }
-	sf::Text* GetText() { return &text; }
+	MultilineText* GetText() { return text; }
 
 private:
 	void SetState(State state);
@@ -58,8 +58,8 @@ private:
 	State state;
 	bool pressed;
 
-	sf::Text text;
+	MultilineText* text;
 
-	float textYSpacing;
+	sf::Vector2f textSpacing;
 	bool autoHeight;
 };

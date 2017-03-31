@@ -32,6 +32,8 @@ void MultilineText::draw(sf::RenderTarget& target, sf::RenderStates states) cons
 
 void MultilineText::SetText(std::string text)
 {
+	this->text = text;
+
 	// Font attributes
 	const sf::Font* font = lines[0]->getFont();
 	size_t charSize = lines[0]->getCharacterSize();
@@ -137,6 +139,9 @@ void MultilineText::SetAutoHeight(bool autoHeight)
 
 void MultilineText::UpdateLineLayout()
 {
+	if (lines[0]->getFont() == nullptr)
+		return;
+
 	float lineHeight = lines[0]->getFont()->getLineSpacing(lines[0]->getCharacterSize());
 
 	// If autoHeight is set, set the height of the UIObject to the height of the lines
@@ -144,7 +149,7 @@ void MultilineText::UpdateLineLayout()
 		SetSize(sf::Vector2f(size.x, lines.size() * lineHeight));
 
 	// Set the starting height for the lines depending on vertical alignment
-	float startHeight = 0.0f;
+	float startHeight = -lines[0]->getLocalBounds().top / 2.0f;
 	if (!autoHeight)	// No use aligning vertically if the bounds are exactly the height of the lines
 	{
 		switch (textAlignment.vertical)
@@ -152,10 +157,10 @@ void MultilineText::UpdateLineLayout()
 		case VerticalAlign::Top:
 			break;
 		case VerticalAlign::Center:
-			startHeight = size.y / 2.0f - ((float)lines.size() / 2.0f) * lineHeight;
+			startHeight += size.y / 2.0f - ((float)lines.size() / 2.0f) * lineHeight;
 			break;
 		case VerticalAlign::Bottom:
-			startHeight = size.y - (float)lines.size() * lineHeight;
+			startHeight += size.y - (float)lines.size() * lineHeight;
 			break;
 		}
 	}
@@ -189,6 +194,7 @@ void MultilineText::SetLineText(size_t line, std::string text)
 	{
 		sf::Text* newLine = new sf::Text(text, *lines[0]->getFont(), lines[0]->getCharacterSize());
 		newLine->setPosition(sf::Vector2f(0.0f, line * newLine->getFont()->getLineSpacing(newLine->getCharacterSize())) + GetOffset());
+		newLine->setFillColor(lines[0]->getFillColor());
 		lines.push_back(newLine);
 	}
 

@@ -22,10 +22,10 @@ void MenuState::Init()
 	startButton = new Button(sf::Vector2f(GetGame()->GetSize()) / 2.0f, sf::Vector2f(240.0f, 60.0f), (ButtonCallback)std::bind(&MenuState::StartButtonPressed, this),
 		Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
 	startButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
-	startButton->GetText()->setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));
-	startButton->GetText()->setFillColor(sf::Color::Black);
-	startButton->GetText()->setString("Start Game");
-	startButton->GetText()->setCharacterSize(48);
+	startButton->GetText()->GetFirstLine()->setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));
+	startButton->GetText()->GetFirstLine()->setFillColor(sf::Color::Black);
+	startButton->GetText()->GetFirstLine()->setCharacterSize(48);
+	startButton->GetText()->SetText("Start Game");
 	startButton->UpdateLayout();
 	Add(startButton);
 
