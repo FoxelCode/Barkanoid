@@ -49,7 +49,7 @@ void MultilineText::SetText(std::string text)
 	for (std::string word : words)
 	{
 		wordLength = word.length();
-		for (size_t c = 0; c < wordLength; c++)
+		for (size_t c = 0; c < wordLength; )
 		{
 			// Kerning offset
 			lineLength += font->getKerning(prevChar, word[c], charSize);
@@ -64,8 +64,8 @@ void MultilineText::SetText(std::string text)
 				// If the whole word is wider than the bounds, split the word
 				if (!wordAddedToCurrentLine)
 				{
-					SetLineText(lineIndex, word.substr(0U, (c == 0) ? c : c - 1));
-					word = word.substr(c - 1);
+					SetLineText(lineIndex, word.substr(0U, c));
+					word = word.substr(c);
 				}
 				// Otherwise the current word goes on the next line
 				else
@@ -84,6 +84,9 @@ void MultilineText::SetText(std::string text)
 				wordAddedToCurrentLine = false;
 				lineIndex++;
 			}
+			// If the line didn't go off bounds, move on to the next character
+			else
+				c++;
 		}
 
 		// Add the word to the current line
