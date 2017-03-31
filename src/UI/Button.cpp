@@ -73,7 +73,6 @@ void Button::LoadButtonGraphic(sf::Texture* tex, sf::Vector2f frameSize, sf::Vec
 
 void Button::UpdateLayout()
 {
-	size_t lineCount = StringUtil::CountLines(text.getString());
 	if (autoHeight)
 	{
 		size.y = text.getGlobalBounds().height + textYSpacing * 2.0f;

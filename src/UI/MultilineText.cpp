@@ -3,7 +3,7 @@
 #include "Util/StringUtil.hpp"
 
 MultilineText::MultilineText(sf::Vector2f pos, sf::Vector2f size, Alignment align)
-	: UIObject(pos, size, align)
+	: UIObject(pos, size, align), autoHeight(false)
 {
 	sf::Text* firstLine = new sf::Text();
 	firstLine->setPosition(GetOffset());
@@ -106,6 +106,18 @@ void MultilineText::SetText(std::string text)
 	// Finally, add whatever we have left in the line
 	SetLineText(lineIndex, currentLine);
 
+	// Remove extra lines if there are some
+	while (lines.size() > (lineIndex + 1))
+	{
+		sf::Text* toRemove = lines[lines.size() - 1];
+		if (toRemove != nullptr)
+		{
+			delete toRemove;
+			toRemove = nullptr;
+		}
+		lines.pop_back();
+	}
+
 	// Update the lines with the new text
 	UpdateLineLayout();
 }
@@ -116,22 +128,36 @@ void MultilineText::SetTextAlignment(Alignment align)
 	UpdateLineLayout();
 }
 
+void MultilineText::SetAutoHeight(bool autoHeight)
+{
+	this->autoHeight = autoHeight;
+	if (autoHeight)
+		UpdateLineLayout();
+}
+
 void MultilineText::UpdateLineLayout()
 {
 	float lineHeight = lines[0]->getFont()->getLineSpacing(lines[0]->getCharacterSize());
 
+	// If autoHeight is set, set the height of the UIObject to the height of the lines
+	if (autoHeight)
+		SetSize(sf::Vector2f(size.x, lines.size() * lineHeight));
+
 	// Set the starting height for the lines depending on vertical alignment
 	float startHeight = 0.0f;
-	switch (textAlignment.vertical)
+	if (!autoHeight)	// No use aligning vertically if the bounds are exactly the height of the lines
 	{
-	case VerticalAlign::Top:
-		break;
-	case VerticalAlign::Center:
-		startHeight = size.y / 2.0f - ((float)lines.size() / 2.0f) * lineHeight;
-		break;
-	case VerticalAlign::Bottom:
-		startHeight = size.y - (float)lines.size() * lineHeight;
-		break;
+		switch (textAlignment.vertical)
+		{
+		case VerticalAlign::Top:
+			break;
+		case VerticalAlign::Center:
+			startHeight = size.y / 2.0f - ((float)lines.size() / 2.0f) * lineHeight;
+			break;
+		case VerticalAlign::Bottom:
+			startHeight = size.y - (float)lines.size() * lineHeight;
+			break;
+		}
 	}
 
 	size_t lineCount = lines.size();

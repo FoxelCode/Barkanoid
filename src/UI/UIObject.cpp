@@ -58,6 +58,9 @@ void UIObject::UpdateSize()
 {
 	static_cast<AABBCollider*>(collider)->setSize(size);
 	static_cast<AABBCollider*>(collider)->SetOffset(GetOffset());
-	graphic->setPosition(GetOffset());
-	graphic->SetSize(size);
+	if (graphic)
+	{
+		graphic->setPosition(GetOffset());
+		graphic->SetSize(size);
+	}
 }

@@ -13,6 +13,7 @@ public:
 
 	void SetText(std::string text);
 	void SetTextAlignment(Alignment align);
+	void SetAutoHeight(bool autoHeight);
 
 	sf::Text* GetFirstLine() { return lines[0]; }
 
@@ -22,5 +23,6 @@ private:
 
 	std::string text;
 	Alignment textAlignment;
+	bool autoHeight;
 	std::vector<sf::Text*> lines;
 };
