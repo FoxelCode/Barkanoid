@@ -6,6 +6,7 @@ MultilineText::MultilineText(sf::Vector2f pos, sf::Vector2f size, Alignment alig
 	: UIObject(pos, size, align)
 {
 	sf::Text* firstLine = new sf::Text();
+	firstLine->setPosition(GetOffset());
 	lines.push_back(firstLine);
 }
 
@@ -48,6 +49,10 @@ void MultilineText::SetText(std::string text)
 
 	for (std::string word : words)
 	{
+		// If there's already a word on the current line, take into account the space that should be inserted between the two words
+		if (wordAddedToCurrentLine)
+			lineLength += spaceWidth;
+
 		wordLength = word.length();
 		for (size_t c = 0; c < wordLength; )
 		{
@@ -89,17 +94,66 @@ void MultilineText::SetText(std::string text)
 				c++;
 		}
 
+		// If there's a word already on this line, add a space between it and this new one
+		if (wordAddedToCurrentLine)
+			currentLine += ' ';
+
 		// Add the word to the current line
 		currentLine += word;
 		wordAddedToCurrentLine = true;
-
-		// This and the next word should be divided by a space so add that
-		currentLine += ' ';
-		lineLength += spaceWidth;
 	}
 
 	// Finally, add whatever we have left in the line
 	SetLineText(lineIndex, currentLine);
+
+	// Update the lines with the new text
+	UpdateLineLayout();
+}
+
+void MultilineText::SetTextAlignment(Alignment align)
+{
+	this->textAlignment = align;
+	UpdateLineLayout();
+}
+
+void MultilineText::UpdateLineLayout()
+{
+	float lineHeight = lines[0]->getFont()->getLineSpacing(lines[0]->getCharacterSize());
+
+	// Set the starting height for the lines depending on vertical alignment
+	float startHeight = 0.0f;
+	switch (textAlignment.vertical)
+	{
+	case VerticalAlign::Top:
+		break;
+	case VerticalAlign::Center:
+		startHeight = size.y / 2.0f - ((float)lines.size() / 2.0f) * lineHeight;
+		break;
+	case VerticalAlign::Bottom:
+		startHeight = size.y - (float)lines.size() * lineHeight;
+		break;
+	}
+
+	size_t lineCount = lines.size();
+	for (size_t i = 0; i < lineCount; i++)
+	{
+		sf::Vector2f linePos = sf::Vector2f(0.0f, startHeight + i * lineHeight) + GetOffset();
+
+		// Set the line's X position using horizontal align
+		switch (textAlignment.horizontal)
+		{
+		case HorizontalAlign::Left:
+			break;
+		case HorizontalAlign::Middle:
+			linePos.x += size.x / 2.0f - lines[i]->getGlobalBounds().width / 2.0f;
+			break;
+		case HorizontalAlign::Right:
+			linePos.x += size.x - lines[i]->getGlobalBounds().width;
+			break;
+		}
+
+		lines[i]->setPosition(linePos);
+	}
 }
 
 void MultilineText::SetLineText(size_t line, std::string text)
@@ -108,7 +162,7 @@ void MultilineText::SetLineText(size_t line, std::string text)
 	while (line >= lines.size())
 	{
 		sf::Text* newLine = new sf::Text(text, *lines[0]->getFont(), lines[0]->getCharacterSize());
-		newLine->setPosition(sf::Vector2f(0.0f, line * newLine->getFont()->getLineSpacing(newLine->getCharacterSize())));
+		newLine->setPosition(sf::Vector2f(0.0f, line * newLine->getFont()->getLineSpacing(newLine->getCharacterSize())) + GetOffset());
 		lines.push_back(newLine);
 	}
 

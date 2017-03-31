@@ -31,11 +31,6 @@ void MenuState::Init()
 
 	Tween::Start(Ease::Type::QuartOut, -startButton->GetCollider()->GetBounds().width / 2.0f, GetGame()->GetSize().x / 2.0f, 1.0f,
 		[this](float v) { startButton->SetPosition(v, startButton->GetPosition().y); } );
-
-	MultilineText* text = new MultilineText(sf::Vector2f(50.0f, 50.0f), sf::Vector2f(100.0f, 400.0f));
-	text->GetFirstLine()->setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));
-	text->SetText("Whot mang wha the heckideckidooblesdee u want from here");
-	Add(text);
 }
 
 void MenuState::StartButtonPressed()

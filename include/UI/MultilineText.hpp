@@ -12,12 +12,15 @@ public:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	void SetText(std::string text);
+	void SetTextAlignment(Alignment align);
 
 	sf::Text* GetFirstLine() { return lines[0]; }
 
 private:
+	void UpdateLineLayout();
 	void SetLineText(size_t line, std::string text);
 
 	std::string text;
+	Alignment textAlignment;
 	std::vector<sf::Text*> lines;
 };
