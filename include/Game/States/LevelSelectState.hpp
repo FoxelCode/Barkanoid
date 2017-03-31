@@ -16,5 +16,5 @@ private:
 	static const float buttonSpacing;
 	static const float editButtonWidth;
 
-	std::map<std::string, std::string> levelDatas;
+	std::vector<std::pair<std::string, std::string>> levelDatas;
 };

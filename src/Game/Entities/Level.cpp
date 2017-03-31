@@ -29,6 +29,13 @@ Level::Level(std::string levelData)
 	}
 }
 
+std::string Level::GetStageName()
+{
+	if (currentStage >= 0)
+		return stageNames[currentStage];
+	return "";
+}
+
 std::string Level::GetNextStage()
 {
 	if (currentStage < ((int)stageNames.size() - 1))

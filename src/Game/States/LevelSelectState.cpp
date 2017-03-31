@@ -30,7 +30,7 @@ void LevelSelectState::Init()
 		}
 		levelName = StringUtil::Split(levelString)[0];
 
-		levelDatas.insert(std::make_pair(levelName, levelFile));
+		levelDatas.push_back(std::make_pair(levelName, levelFile));
 	}
 
 	sf::Vector2u stageSize = GetGame()->GetSize();
@@ -44,7 +44,7 @@ void LevelSelectState::Init()
 	for (auto it = levelDatas.begin(); it != levelDatas.end(); it++)
 	{
 		sf::Vector2f buttonPos = sf::Vector2f(-(float)stageSize.x, 0.0f);
-		sf::Vector2f buttonSize = sf::Vector2f((float)stageSize.x / 2.0f, buttonHeight);
+		sf::Vector2f buttonSize = sf::Vector2f((float)stageSize.x, buttonHeight);
 		Button* levelButton = new Button(buttonPos, buttonSize, (ButtonStringCallback)std::bind(&LevelSelectState::LevelButtonPressed, this, std::placeholders::_1),
 			Alignment(HorizontalAlign::Left, VerticalAlign::Top));
 		levelButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
@@ -70,6 +70,16 @@ void LevelSelectState::Init()
 
 void LevelSelectState::LevelButtonPressed(std::string buttonText)
 {
-	PlayState* state = new PlayState(levelDatas[buttonText]);
+	PlayState* state = nullptr;
+	for (const auto& levelData : levelDatas)
+	{
+		if (levelData.first == buttonText)
+			state = new PlayState(levelData.second);
+	}
+	if (state == nullptr)
+	{
+		LOG_ERROR("Couldn't find the levelData for \"" + buttonText + "\", how'd this even happen?");
+		return;
+	}
 	GetGame()->SwitchState(state);
 }

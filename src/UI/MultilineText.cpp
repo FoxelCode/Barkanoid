@@ -149,6 +149,7 @@ void MultilineText::UpdateLineLayout()
 		SetSize(sf::Vector2f(size.x, lines.size() * lineHeight));
 
 	// Set the starting height for the lines depending on vertical alignment
+	// I'm not sure why the value below works, but it seems to center the lines vertically
 	float startHeight = -lines[0]->getLocalBounds().top / 2.0f;
 	if (!autoHeight)	// No use aligning vertically if the bounds are exactly the height of the lines
 	{
