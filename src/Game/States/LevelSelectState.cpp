@@ -8,6 +8,7 @@ using json = nlohmann::json;
 #include "Util/Tween.hpp"
 #include "Util/StringUtil.hpp"
 #include "UI/VerticalScrollArea.hpp"
+#include "UI/LevelEntry.hpp"
 
 const float LevelSelectState::buttonHeight = 60.0f;
 const float LevelSelectState::buttonSpacing = 6.0f;
@@ -43,25 +44,15 @@ void LevelSelectState::Init()
 	int i = 0;
 	for (auto it = levelDatas.begin(); it != levelDatas.end(); it++)
 	{
-		sf::Vector2f buttonPos = sf::Vector2f(-(float)stageSize.x, 0.0f);
-		sf::Vector2f buttonSize = sf::Vector2f((float)stageSize.x, buttonHeight);
-		Button* levelButton = new Button(buttonPos, buttonSize, (ButtonStringCallback)std::bind(&LevelSelectState::LevelButtonPressed, this, std::placeholders::_1),
-			Alignment(HorizontalAlign::Left, VerticalAlign::Top));
-		levelButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
-		levelButton->GetText()->GetFirstLine()->setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));
-		levelButton->GetText()->GetFirstLine()->setFillColor(sf::Color::Black);
-		levelButton->GetText()->GetFirstLine()->setCharacterSize(40);
-		levelButton->GetText()->SetAutoHeight(true);
-		levelButton->SetAutoHeight(true);
-		levelButton->GetText()->SetText((*it).first);
-		levelButton->UpdateLayout();
-		Add(levelButton);
-		scrollArea->AddChild(levelButton);
-		// Fix the X position of the button since adding it to the scroll area changes its position
-		levelButton->SetPosition(buttonPos.x, levelButton->GetPosition().y);
+		Level level = Level(G::GetAssetManager()->GetLevel((*it).second));
 
-		Tween::Start(Ease::Type::QuartOut, buttonPos.x, 0.0f, 0.7f,
-			[levelButton](float v) { levelButton->SetPosition(v, levelButton->GetPosition().y); },
+		LevelEntry* levelEntry = new LevelEntry(level, (ButtonStringCallback)std::bind(&LevelSelectState::LevelButtonPressed, this, std::placeholders::_1), sf::Vector2f(), sf::Vector2f((float)stageSize.x, 0.0f));
+		Add(levelEntry);
+		scrollArea->AddChild(levelEntry);
+		levelEntry->SetPosition(sf::Vector2f(-(float)stageSize.x, levelEntry->GetPosition().y));
+
+		Tween::Start(Ease::Type::QuartOut, levelEntry->GetPosition().x, 0.0f, 0.7f,
+			[levelEntry](float v) { levelEntry->SetPosition(sf::Vector2f(v, levelEntry->GetPosition().y)); },
 			nullptr, Tween::OneShot, i * 0.1f);
 
 		i++;

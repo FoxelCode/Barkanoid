@@ -177,6 +177,9 @@
     <ClInclude Include="include\UI\MultilineText.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\UI\LevelEntry.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Collision\AABBCollider.cpp">
@@ -324,6 +327,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\UI\MultilineText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\LevelEntry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

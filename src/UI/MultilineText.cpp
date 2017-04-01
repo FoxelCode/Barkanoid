@@ -36,6 +36,11 @@ void MultilineText::SetText(std::string text)
 
 	// Font attributes
 	const sf::Font* font = lines[0]->getFont();
+	if (font == nullptr)
+	{
+		LOG_ERROR("Couldn't set text because there's no font");
+		return;
+	}
 	size_t charSize = lines[0]->getCharacterSize();
 	bool bold = (lines[0]->getStyle() & sf::Text::Style::Bold) != 0;
 	float spaceWidth = font->getGlyph(L' ', charSize, bold).advance;
