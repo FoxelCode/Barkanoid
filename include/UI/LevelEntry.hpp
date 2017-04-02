@@ -13,8 +13,6 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	void Update(float delta);
 
-	void SetPosition(sf::Vector2f pos);
-
 private:
 	void PlayButtonPressed();
 

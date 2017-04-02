@@ -20,6 +20,7 @@ LevelEntry::LevelEntry(const Level& level, ButtonStringCallback playButtonCallba
 	sf::Vector2f curElementPos = padding + GetOffset();
 
 	levelName = new MultilineText(curElementPos, sf::Vector2f(size.x - padding.x * 2.0f - playButtonSize.x - playButtonXSpacing, 0.0f));
+	levelName->SetParent(this);
 	levelName->SetAutoHeight(true);
 	levelName->GetFirstLine()->setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));
 	levelName->GetFirstLine()->setCharacterSize(40);
@@ -28,6 +29,7 @@ LevelEntry::LevelEntry(const Level& level, ButtonStringCallback playButtonCallba
 	curElementPos.y += levelName->GetSize().y + levelBottomSpacing;
 
 	playButton = new Button(sf::Vector2f(size.x - padding.x, padding.y) + GetPosition() + GetOffset(), playButtonSize, (ButtonCallback)std::bind(&LevelEntry::PlayButtonPressed, this), Alignment(HorizontalAlign::Right, VerticalAlign::Top));
+	playButton->SetParent(this);
 	playButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
 	playButton->GetText()->GetFirstLine()->setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));
 	playButton->GetText()->GetFirstLine()->setFillColor(sf::Color::Black);
@@ -37,6 +39,7 @@ LevelEntry::LevelEntry(const Level& level, ButtonStringCallback playButtonCallba
 	for (std::string stage : stageNames)
 	{
 		MultilineText* stageName = new MultilineText(curElementPos + sf::Vector2f(stageXOffset, 0.0f), sf::Vector2f(size.x - padding.x * 2.0f - stageXOffset, 0.0f));
+		stageName->SetParent(this);
 		stageName->SetAutoHeight(true);
 		stageName->GetFirstLine()->setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));
 		stageName->GetFirstLine()->setFillColor(sf::Color::Black);
@@ -76,7 +79,6 @@ void LevelEntry::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	UIObject::draw(target, states);
 	target.draw(*playButton, states);
-	states.transform.translate(GetPosition() + GetOffset());
 	target.draw(*levelName, states);
 	for (const MultilineText* stageName : stageNames)
 		target.draw(*stageName, states);
@@ -85,12 +87,6 @@ void LevelEntry::draw(sf::RenderTarget& target, sf::RenderStates states) const
 void LevelEntry::Update(float delta)
 {
 	playButton->Update(delta);
-}
-
-void LevelEntry::SetPosition(sf::Vector2f pos)
-{
-	Transform::SetPosition(pos);
-	playButton->SetPosition(sf::Vector2f(size.x - padding.x, padding.y) + pos + GetOffset());
 }
 
 void LevelEntry::PlayButtonPressed()

@@ -14,8 +14,8 @@ public:
 			return parent->GetPosition() + position;
 		return position;
 	}
-	void SetPosition(float x, float y) { SetPosition(sf::Vector2f(x, y)); }
-	virtual void SetPosition(sf::Vector2f p) { position = p; }
+	void SetPosition(float x, float y) { position.x = x; position.y = y; }
+	void SetPosition(sf::Vector2f p) { position = p; }
 	void Move(float x, float y) { position.x += x; position.y += y; }
 	void Move(sf::Vector2f v) { position += v; }
 
