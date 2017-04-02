@@ -6,6 +6,7 @@
 #include "Game/States/LevelSelectState.hpp"
 #include "Util/Tween.hpp"
 #include "UI/MultilineText.hpp"
+#include "Util/WeightedVector.hpp"
 
 MenuState::MenuState()
 {

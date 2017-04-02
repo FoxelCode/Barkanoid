@@ -7,6 +7,7 @@
 #include "Game/Entities/Paddle.hpp"
 #include "Game/Entities/Level.hpp"
 #include "Game/Entities/Stage.hpp"
+#include "Game/Entities/TreatSpawner.hpp"
 #include "Game/Entities/Treats/Treat.hpp"
 #include "Game/Entities/UI.hpp"
 #include "Game/Screens/PauseScreen.hpp"
@@ -51,6 +52,7 @@ public:
 	void SplitBalls();
 
 	Paddle* GetPaddle() { return paddle; }
+	TreatSpawner& GetTreatSpawner() { return treatSpawner; }
 
 private:
 	GameArea* gameArea = nullptr;
@@ -59,6 +61,7 @@ private:
 	std::string levelName;
 	Level* level = nullptr;
 	Stage* stage = nullptr;
+	TreatSpawner treatSpawner;
 	std::vector<Treat*> treats;
 	UI* ui = nullptr;
 

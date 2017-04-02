@@ -5,9 +5,11 @@
 void Log::Print(std::string msg, std::string source, LogSeverity severity)
 {
 	std::cout << "[" << source << "]";
-	if (severity == LogSeverity::Warning)
-		std::cout << "[Warning] ";
-	else if (severity == LogSeverity::Error)
-		std::cout << "[Error]   ";
+	switch (severity)
+	{
+	case Info:		std::cout << "[Info]    ";		break;
+	case Warning:	std::cout << "[Warning] ";		break;
+	case Error:		std::cout << "[Error]   ";		break;
+	}
 	std::cout << msg << std::endl;
 }

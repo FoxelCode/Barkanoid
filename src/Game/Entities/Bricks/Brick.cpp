@@ -3,7 +3,8 @@
 #include "Engine/G.hpp"
 #include "Engine/State.hpp"
 #include "Collision/AABBCollider.hpp"
-#include "Game/Entities/Treats/PointTreat.hpp"
+#include "Game/States/PlayState.hpp"
+#include "Game/Entities/Treats/Treat.hpp"
 #include "Util/Random.hpp"
 #include "Util/Math.hpp"
 
@@ -24,4 +25,13 @@ Brick::Brick(sf::Vector2f pos, int variant)
 void Brick::Collided(GameObject* other)
 {
 	Kill();
+}
+
+void Brick::Kill()
+{
+	GameObject::Kill();
+
+	Treat* treat = static_cast<PlayState*>(G::GetGame()->GetState())->GetTreatSpawner().GetTreat(-(float)PIELLO_DARKNESS_MY_OLD_FRIEND + Random::Float((float)PIELLO_DARKNESS_MY_OLD_FRIEND));
+	treat->SetPosition(GetPosition());
+	G::GetGame()->GetState()->Add(treat);
 }
