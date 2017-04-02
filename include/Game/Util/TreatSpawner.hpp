@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Util/WeightedVector.hpp"
-#include "Treats/Treat.hpp"
+#include "Game/Entities/Treats/Treat.hpp"
 
 class TreatSpawner
 {

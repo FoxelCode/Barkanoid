@@ -20,6 +20,8 @@ public:
 	void RetryLevelClicked() { retryLevelClicked = true; }
 
 private:
+	static const float buttonSpacing;
+
 	std::function<void()> backToSelectCallback = nullptr;
 	std::function<void()> retryLevelCallback = nullptr;
 	bool backToSelectClicked = false;

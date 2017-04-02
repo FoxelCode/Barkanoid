@@ -2,6 +2,8 @@
 
 #include "Engine/G.hpp"
 
+const float GameOverScreen::buttonSpacing = 10.0f;
+
 GameOverScreen::GameOverScreen(sf::Vector2u size, std::function<void()> backToSelectCallback, std::function<void()> retryLevelCallback)
 	: backToSelectCallback(backToSelectCallback), retryLevelCallback(retryLevelCallback)
 {
@@ -16,7 +18,9 @@ GameOverScreen::GameOverScreen(sf::Vector2u size, std::function<void()> backToSe
 	banner.setCharacterSize(64);
 	banner.setPosition(size.x / 2.0f - banner.getGlobalBounds().width / 2.0f, size.y / 2.0f - 120.0f);
 
-	backToSelectButton = new Button(sf::Vector2f(size.x / 2.0f, size.y / 2.0f), sf::Vector2f(300.0f, 50.0f),
+	float buttonYPos = size.y / 2.0f;
+
+	backToSelectButton = new Button(sf::Vector2f(size.x / 2.0f, buttonYPos), sf::Vector2f(300.0f, 50.0f),
 		(ButtonCallback)std::bind(&GameOverScreen::BackToSelectClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
 	backToSelectButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
 	backToSelectButton->GetText()->GetFirstLine()->setFont(*font);
@@ -24,8 +28,9 @@ GameOverScreen::GameOverScreen(sf::Vector2u size, std::function<void()> backToSe
 	backToSelectButton->GetText()->GetFirstLine()->setCharacterSize(32);
 	backToSelectButton->GetText()->SetText("Back to level select");
 	backToSelectButton->UpdateLayout();
+	buttonYPos += backToSelectButton->GetSize().y + buttonSpacing;
 
-	retryLevelButton = new Button(sf::Vector2f(size.x / 2.0f, size.y / 2.0f + 60.0f), sf::Vector2f(300.0f, 50.0f),
+	retryLevelButton = new Button(sf::Vector2f(size.x / 2.0f, buttonYPos), sf::Vector2f(300.0f, 50.0f),
 		(ButtonCallback)std::bind(&GameOverScreen::RetryLevelClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
 	retryLevelButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
 	retryLevelButton->GetText()->GetFirstLine()->setFont(*font);

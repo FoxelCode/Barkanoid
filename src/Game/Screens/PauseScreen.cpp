@@ -3,6 +3,8 @@
 #include "Engine/G.hpp"
 #include "Engine/Input.hpp"
 
+const float PauseScreen::buttonSpacing = 10.0f;
+
 PauseScreen::PauseScreen(sf::Vector2u size, std::function<void()> continueCallback, std::function<void()> backToSelectCallback, std::function<void()> retryLevelCallback)
 	: continueCallback(continueCallback), backToSelectCallback(backToSelectCallback), retryLevelCallback(retryLevelCallback)
 {
@@ -17,7 +19,9 @@ PauseScreen::PauseScreen(sf::Vector2u size, std::function<void()> continueCallba
 	banner.setCharacterSize(64);
 	banner.setPosition(size.x / 2.0f - banner.getGlobalBounds().width / 2.0f, size.y / 2.0f - 120.0f);
 
-	continueButton = new Button(sf::Vector2f(size.x / 2.0f, size.y / 2.0f - 20.0f), sf::Vector2f(300.0f, 50.0f),
+	float buttonYPos = size.y / 2.0f;
+
+	continueButton = new Button(sf::Vector2f(size.x / 2.0f, buttonYPos), sf::Vector2f(300.0f, 50.0f),
 		(ButtonCallback)std::bind(&PauseScreen::ContinueClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
 	continueButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
 	continueButton->GetText()->GetFirstLine()->setFont(*font);
@@ -25,8 +29,9 @@ PauseScreen::PauseScreen(sf::Vector2u size, std::function<void()> continueCallba
 	continueButton->GetText()->GetFirstLine()->setCharacterSize(32);
 	continueButton->GetText()->SetText("Continue");
 	continueButton->UpdateLayout();
+	buttonYPos += continueButton->GetSize().y + buttonSpacing;
 
-	backToSelectButton = new Button(sf::Vector2f(size.x / 2.0f, size.y / 2.0f + 30.0f), sf::Vector2f(300.0f, 50.0f),
+	backToSelectButton = new Button(sf::Vector2f(size.x / 2.0f, buttonYPos), sf::Vector2f(300.0f, 50.0f),
 		(ButtonCallback)std::bind(&PauseScreen::BackToSelectClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
 	backToSelectButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
 	backToSelectButton->GetText()->GetFirstLine()->setFont(*font);
@@ -34,8 +39,9 @@ PauseScreen::PauseScreen(sf::Vector2u size, std::function<void()> continueCallba
 	backToSelectButton->GetText()->GetFirstLine()->setCharacterSize(32);
 	backToSelectButton->GetText()->SetText("Back to level select");
 	backToSelectButton->UpdateLayout();
+	buttonYPos += backToSelectButton->GetSize().y + buttonSpacing;
 
-	retryLevelButton = new Button(sf::Vector2f(size.x / 2.0f, size.y / 2.0f + 80.0f), sf::Vector2f(300.0f, 50.0f),
+	retryLevelButton = new Button(sf::Vector2f(size.x / 2.0f, buttonYPos), sf::Vector2f(300.0f, 50.0f),
 		(ButtonCallback)std::bind(&PauseScreen::RetryLevelClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
 	retryLevelButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
 	retryLevelButton->GetText()->GetFirstLine()->setFont(*font);

@@ -7,12 +7,12 @@
 #include "Game/Entities/Paddle.hpp"
 #include "Game/Entities/Level.hpp"
 #include "Game/Entities/Stage.hpp"
-#include "Game/Entities/TreatSpawner.hpp"
 #include "Game/Entities/Treats/Treat.hpp"
 #include "Game/Entities/UI.hpp"
 #include "Game/Screens/PauseScreen.hpp"
 #include "Game/Screens/StageCompleteScreen.hpp"
 #include "Game/Screens/GameOverScreen.hpp"
+#include "Game/Util/TreatSpawner.hpp"
 
 class PlayState : public State
 {

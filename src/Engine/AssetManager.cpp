@@ -1,9 +1,9 @@
 #include "Engine/AssetManager.hpp"
 
-#include <fstream>
 #include <dirent.h>
 
 #include "Util/StringUtil.hpp"
+#include "Util/FileIO.hpp"
 
 const std::string AssetManager::levelFileExtension = "owo";
 
@@ -50,8 +50,8 @@ std::vector<std::string> AssetManager::GetLevels()
 	{
 		if (entry->d_type == DT_REG)
 		{
-			// Ignore the folder itself and its parent
 			std::string folderName = entry->d_name;
+			// Ignore the folder itself and its parent folder
 			if (folderName != "." && folderName != "..")
 				folders.push_back(folderName);
 		}
@@ -69,7 +69,7 @@ const std::string& AssetManager::GetLevel(std::string levelName)
 	if (it != levels.end())
 		return it->second;
 	std::string path = "res/levels/" + levelName + "." + levelFileExtension;
-	std::string levelData = ReadFile(path);
+	std::string levelData = FileIO::ReadFile(path);
 	auto newIt = levels.insert(std::pair<std::string, const std::string>(levelName, levelData));
 	return (*newIt.first).second;
 }
@@ -90,26 +90,4 @@ std::vector<std::string> AssetManager::GetStage(std::string levelName, std::stri
 	}
 	LOG_ERROR("No stage found with name \"" + stageName + "\" in level \"" + levelName + "\"");
 	return std::vector<std::string>();
-}
-
-std::string AssetManager::ReadFile(std::string path)
-{
-	std::string output;
-	std::string line;
-	std::ifstream inFile;
-	inFile.open(path);
-	if (!inFile.is_open())
-	{
-		LOG_ERROR("Couldn't open file: " + path);
-		return "";
-	}
-
-	while (!inFile.eof())
-	{
-		std::getline(inFile, line);
-		output += line + "\n";
-	}
-	output.pop_back();
-	inFile.close();
-	return output;
 }

@@ -17,8 +17,6 @@ public:
 	std::vector<std::string> GetStage(std::string levelName, std::string stageName);
 
 private:
-	std::string ReadFile(std::string path);
-
 	std::map<std::string, sf::Texture*> textures;
 	std::map<std::string, sf::Font*> fonts;
 	std::map<std::string, const std::string> levels;

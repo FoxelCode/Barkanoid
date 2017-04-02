@@ -1,4 +1,4 @@
-#include "UI/LevelEntry.hpp"
+#include "Game/UI/LevelEntry.hpp"
 
 #include "Engine/G.hpp"
 #include "Graphics/SlicedGraphic.hpp"

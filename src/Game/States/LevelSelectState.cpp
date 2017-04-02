@@ -8,7 +8,7 @@ using json = nlohmann::json;
 #include "Util/Tween.hpp"
 #include "Util/StringUtil.hpp"
 #include "UI/VerticalScrollArea.hpp"
-#include "UI/LevelEntry.hpp"
+#include "Game/UI/LevelEntry.hpp"
 
 const float LevelSelectState::buttonHeight = 60.0f;
 const float LevelSelectState::buttonSpacing = 6.0f;

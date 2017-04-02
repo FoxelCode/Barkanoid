@@ -1,4 +1,4 @@
-#include "Game/Entities/TreatSpawner.hpp"
+#include "Game/Util/TreatSpawner.hpp"
 
 #include "Game/Entities/Treats/PointTreat.hpp"
 #include "Game/Entities/Treats/PaddleWidthTreat.hpp"
