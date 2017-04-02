@@ -14,7 +14,7 @@ public:
 	static void SetAssetManager(AssetManager* mgr)
 	{
 		ASSERT(G::asset == nullptr);
-		asset = mgr;
+		G::asset = mgr;
 	}
 
 	static Game* GetGame() { return game; }

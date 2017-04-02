@@ -7,7 +7,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Engine/Game.hpp"
+#include "Game/Barkanoid.hpp"
 #include "Game/States/MenuState.hpp"
 
 int main()
@@ -23,7 +23,7 @@ int main()
 	float deltaAccumulator = 0.0f;
 
 	MenuState* initialState = new MenuState();
-	Game game(window, sf::Vector2u(480, 640), initialState, deltaTime);
+	Barkanoid game(window, sf::Vector2u(480, 640), initialState, deltaTime);
 
 	while (window.isOpen())
 	{
