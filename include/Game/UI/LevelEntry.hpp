@@ -17,14 +17,15 @@ private:
 	void PlayButtonPressed();
 
 	static const sf::Vector2f padding;
-	static const sf::Vector2f playButtonSize;
-	static const float playButtonXSpacing;
 	static const float levelBottomSpacing;
-	static const float stageXOffset;
+	static const float stageScoreWidth;
+	static const float stageScoreXSpacing;
 
 	Button* playButton;
 	ButtonStringCallback playButtonCallback;
 
 	MultilineText* levelName;
+	MultilineText* levelScore;
 	std::vector<MultilineText*> stageNames;
+	std::vector<MultilineText*> stageScores;
 };
