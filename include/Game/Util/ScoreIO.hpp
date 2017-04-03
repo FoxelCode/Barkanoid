@@ -8,9 +8,13 @@ public:
 	ScoreIO() {}
 
 	void LoadScores();
+	void WriteScores();
 
 	int GetLevelScore(const std::string& levelName);
 	int GetStageScore(const std::string& levelName, const std::string& stageName);
+
+	bool TrySetLevelScore(const std::string& levelName, int score);
+	bool TrySetStageScore(const std::string& levelName, const std::string& stageName, int score);
 
 private:
 	static const std::string scorePath;

@@ -71,7 +71,8 @@ private:
 	bool waiting = false;
 
 	int lives;
-	int points;
+	int totalPoints;
+	int stagePoints;
 	sf::Time stageTime;
 
 	float ballSpeed;

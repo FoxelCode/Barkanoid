@@ -5,6 +5,7 @@
 #include "Util/Random.hpp"
 #include "Engine/G.hpp"
 #include "Game/States/LevelSelectState.hpp"
+#include "Game/Barkanoid.hpp"
 
 PlayState::PlayState(std::string levelName)
 	: State(), lives(2), levelName(levelName), ballSpeedIncrement(1.0f), ballSpeedBounds(300.0f, 800.0f),
@@ -166,6 +167,9 @@ void PlayState::Update(float delta)
 		// Check if the stage has been completed
 		if (stage->GetBrickCount() <= 0)
 		{
+			// Check if a new highscore for the stage was set
+			dynamic_cast<Barkanoid*>(G::GetGame())->GetScoreIO().TrySetStageScore(level->GetLevelName(), level->GetStageName(), stagePoints);
+
 			stageCompleteScreen = new StageCompleteScreen(GetGame()->GetSize(), level->GetStageName());
 			stageCompleteScreen->SetCallback(std::bind(&PlayState::StageCompleteClicked, this));
 			waiting = true;
@@ -241,14 +245,15 @@ void PlayState::Remove(GameObject* object)
 
 void PlayState::AddPoints(int points)
 {
-	this->points += points;
-	ui->SetPoints(this->points);
+	stagePoints += points;
+	totalPoints += points;
+	ui->SetPoints(totalPoints);
 }
 
 void PlayState::SetPoints(int points)
 {
-	this->points = points;
-	ui->SetPoints(this->points);
+	stagePoints = points;
+	ui->SetPoints(totalPoints);
 }
 
 void PlayState::NextStage()
@@ -261,6 +266,9 @@ void PlayState::NextStage()
 		// Return to level select if there are no stages left in the level
 		if (stageName == "")
 		{
+			// Check if a new highscore for the level was set
+			dynamic_cast<Barkanoid*>(G::GetGame())->GetScoreIO().TrySetLevelScore(level->GetLevelName(), totalPoints);
+
 			BackToLevelSelect();
 			return;
 		}
@@ -289,6 +297,7 @@ void PlayState::NextStage()
 void PlayState::ResetLevel()
 {
 	lives = 2;
+	totalPoints = 0;
 	level->Reset();
 	paddle->Reset();
 	NextStage();

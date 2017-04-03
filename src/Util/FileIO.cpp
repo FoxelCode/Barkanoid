@@ -8,7 +8,7 @@ std::string FileIO::ReadFile(const std::string& path)
 	inFile.open(path);
 	if (!inFile.is_open())
 	{
-		LOG_ERROR("Couldn't open file: " + path);
+		LOG_ERROR("Couldn't open file: " + path + " for reading");
 		return "";
 	}
 
@@ -22,4 +22,18 @@ std::string FileIO::ReadFile(const std::string& path)
 	output.pop_back();
 	inFile.close();
 	return output;
+}
+
+void FileIO::WriteFile(const std::string& path, const std::string& data)
+{
+	std::ofstream outFile;
+	outFile.open(path);
+	if (!outFile.is_open())
+	{
+		LOG_ERROR("Couldn't open file: " + path + " for writing");
+		return;
+	}
+
+	outFile << data;
+	outFile.close();
 }

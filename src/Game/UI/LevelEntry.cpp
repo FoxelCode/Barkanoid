@@ -5,8 +5,8 @@
 #include "Game/Barkanoid.hpp"
 
 const sf::Vector2f LevelEntry::padding = sf::Vector2f(10.0f, 10.0f);
-const float LevelEntry::levelBottomSpacing = 10.0f;
-const float LevelEntry::stageScoreWidth = 160.0f;
+const float LevelEntry::levelBottomSpacing = 8.0f;
+const float LevelEntry::stageScoreWidth = 140.0f;
 const float LevelEntry::stageScoreXSpacing = 16.0f;
 
 LevelEntry::LevelEntry(const Level& level, ButtonStringCallback playButtonCallback, sf::Vector2f pos, sf::Vector2f size, Alignment align)
@@ -34,7 +34,7 @@ LevelEntry::LevelEntry(const Level& level, ButtonStringCallback playButtonCallba
 	levelScore->SetParent(this);
 	levelScore->SetAutoHeight(true);
 	levelScore->GetFirstLine()->setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));
-	levelScore->GetFirstLine()->setCharacterSize(32);
+	levelScore->GetFirstLine()->setCharacterSize(40);
 	levelScore->GetFirstLine()->setFillColor(sf::Color::Black);
 	levelScore->SetTextAlignment(Alignment(HorizontalAlign::Middle, VerticalAlign::Top));
 	int score = scoreIO.GetLevelScore(level.GetLevelName());
@@ -58,7 +58,6 @@ LevelEntry::LevelEntry(const Level& level, ButtonStringCallback playButtonCallba
 		MultilineText* stageScore = new MultilineText(curElementPos + sf::Vector2f(size.x - padding.x * 2.0f, 0.0f),
 			sf::Vector2f(stageScoreWidth, stageName->GetSize().y), Alignment(HorizontalAlign::Right, VerticalAlign::Top));
 		stageScore->SetParent(this);
-		stageScore->SetAutoHeight(true);
 		stageScore->GetFirstLine()->setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));
 		stageScore->GetFirstLine()->setFillColor(sf::Color::Black);
 		stageScore->SetTextAlignment(Alignment(HorizontalAlign::Right, VerticalAlign::Center));

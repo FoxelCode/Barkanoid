@@ -13,6 +13,9 @@ void ScoreIO::LoadScores()
 		std::vector<std::vector<std::string>> scoreClusters = StringUtil::MakeClusters(StringUtil::Split(scoreData));
 		for (const std::vector<std::string>& cluster : scoreClusters)
 		{
+			if (cluster.empty())
+				continue;
+
 			std::string levelName = "";
 			LevelScoreData levelScoreData;
 			bool clusterFailure = false;
@@ -48,6 +51,26 @@ void ScoreIO::LoadScores()
 	}
 }
 
+void ScoreIO::WriteScores()
+{
+	std::string scoreData;
+	for (auto& levelScore : levelScores)
+	{
+		// Insert a newline to separate level clusters
+		if (!scoreData.empty())
+			scoreData += "\n";
+
+		// Add the level's score
+		scoreData += levelScore.first + ": " + std::to_string(levelScore.second.points) + "\n";
+		for (auto& stageScore : levelScore.second.stageScores)
+		{
+			// Add all stage scores
+			scoreData += stageScore.first + ": " + std::to_string(stageScore.second) + "\n";
+		}
+	}
+	FileIO::WriteFile(scorePath, scoreData);
+}
+
 int ScoreIO::GetLevelScore(const std::string& levelName)
 {
 	auto levelIt = levelScores.find(levelName);
@@ -66,6 +89,72 @@ int ScoreIO::GetStageScore(const std::string& levelName, const std::string& stag
 			return (*stageIt).second;
 	}
 	return -1;
+}
+
+bool ScoreIO::TrySetLevelScore(const std::string& levelName, int score)
+{
+	// Check if the level already has score data
+	auto levelIt = levelScores.find(levelName);
+	if (levelIt != levelScores.end())
+	{
+		// If the new score is larger than the one already stored, set the new highscore
+		if (score > (*levelIt).second.points)
+		{
+			(*levelIt).second.points = score;
+			WriteScores();
+			return true;
+		}
+	}
+	else
+	{
+		// If the level doesn't have any recorded score data, create one for it
+		LevelScoreData levelData;
+		levelData.points = score;
+		levelScores.insert(std::make_pair(levelName, levelData));
+		WriteScores();
+		return true;
+	}
+	return false;
+}
+
+bool ScoreIO::TrySetStageScore(const std::string& levelName, const std::string& stageName, int score)
+{
+	// Check if the level the stage belongs to already has score data
+	auto levelIt = levelScores.find(levelName);
+	if (levelIt != levelScores.end())
+	{
+		// Check if the stage itself already has score data
+		auto stageIt = (*levelIt).second.stageScores.find(stageName);
+		if (stageIt != (*levelIt).second.stageScores.end())
+		{
+			// If the new score is larger than the one already stored, set the new highscore
+			if (score > (*stageIt).second)
+			{
+				(*stageIt).second = score;
+				WriteScores();
+				return true;
+			}
+		}
+		else
+		{
+			// If the stage has no score data, create one for it
+			(*levelIt).second.stageScores.insert(std::make_pair(stageName, score));
+			WriteScores();
+			return true;
+		}
+	}
+	else
+	{
+		// If the level the stage belongs to has no score data, create one for it
+		// and set the new highscore for the stage
+		LevelScoreData levelData;
+		levelData.points = -1;
+		levelData.stageScores.insert(std::make_pair(stageName, score));
+		levelScores.insert(std::make_pair(levelName, levelData));
+		WriteScores();
+		return true;
+	}
+	return false;
 }
 
 bool ScoreIO::ParseScore(const std::string& input, std::string& name, int& score)
