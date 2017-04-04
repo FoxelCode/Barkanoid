@@ -55,6 +55,7 @@ void Paddle::Update(float delta)
 		for each (auto ball in attachedBalls)
 		{
 			ball.first->SetMoving(true);
+			ball.first->SetAngle(GetReflectionAngle(ball.first->GetPosition()));
 		}
 		attachedBalls.clear();
 	}
