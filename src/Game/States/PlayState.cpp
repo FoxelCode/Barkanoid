@@ -201,6 +201,10 @@ void PlayState::Update(float delta)
 			waiting = true;
 			SetMouseCaptured(false);
 		}
+
+		// Check for skip stage press
+		if (Input::JustPressed(sf::Keyboard::N))
+			NextStage();
 	}
 	else
 	{

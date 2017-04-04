@@ -5,9 +5,9 @@
 #include "Game/Entities/Treats/MultiballTreat.hpp"
 #include "Game/Entities/Treats/MagneticPaddleTreat.hpp"
 
-const float TreatSpawner::powerupChance = 0.15f;
-const float TreatSpawner::widthDownChance = 0.3f;
-const float TreatSpawner::speedDownChance = 0.3f;
+const float TreatSpawner::powerupChance = 1.0f;
+const float TreatSpawner::widthDownChance = 0.5f;
+const float TreatSpawner::speedDownChance = 0.5f;
 
 TreatSpawner::TreatSpawner()
 {
