@@ -49,6 +49,8 @@ void Ball::Collided(GameObject* other, sf::Vector2f separationVelocity)
 		SetAngle(atan2f(separationVelocity.y, separationVelocity.x));
 	tween->Reset();
 	GameObject::Collided(other, Math::magnitude(separationVelocity) * Math::normalise(velocity));
+
+	G::GetAudioManager()->PlaySound("hit1.wav");
 }
 
 void Ball::SetAngle(float angle)

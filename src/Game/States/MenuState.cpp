@@ -19,6 +19,7 @@ MenuState::~MenuState()
 void MenuState::Init()
 {
 	bgColour = sf::Color::Cyan;
+	G::GetAudioManager()->PlayMusic("Bassa-Island-Game-Loop.ogg", false);
 
 	startButton = new Button(sf::Vector2f(GetGame()->GetSize()) / 2.0f, sf::Vector2f(240.0f, 60.0f), (ButtonCallback)std::bind(&MenuState::StartButtonPressed, this),
 		Alignment(HorizontalAlign::Middle, VerticalAlign::Center));

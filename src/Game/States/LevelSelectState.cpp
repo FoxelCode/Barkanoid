@@ -16,6 +16,9 @@ const float LevelSelectState::editButtonWidth = 40.0f;
 
 void LevelSelectState::Init()
 {
+	// Play some nice tunes
+	G::GetAudioManager()->PlayMusic("Bassa-Island-Game-Loop.ogg", false);
+
 	// Get level files
 	std::vector<std::string> levelFiles = G::GetAssetManager()->GetLevels();
 

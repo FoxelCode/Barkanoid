@@ -10,6 +10,7 @@
 #include "IUpdatable.hpp"
 #include "GameObject.hpp"
 #include "AssetManager.hpp"
+#include "AudioManager.hpp"
 class State;
 
 class Game : public sf::Drawable, IUpdatable
@@ -45,6 +46,8 @@ protected:
 
 private:
 	AssetManager asset;
+	AudioManager audio;
+
 	State* state = nullptr;
 	State* newState = nullptr;
 };

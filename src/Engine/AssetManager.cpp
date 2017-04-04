@@ -51,9 +51,7 @@ std::vector<std::string> AssetManager::GetLevels()
 		if (entry->d_type == DT_REG)
 		{
 			std::string folderName = entry->d_name;
-			// Ignore the folder itself and its parent folder
-			if (folderName != "." && folderName != "..")
-				folders.push_back(folderName);
+			folders.push_back(folderName);
 		}
 		entry = readdir(dir);
 	}

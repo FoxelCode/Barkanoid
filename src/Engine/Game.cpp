@@ -21,6 +21,8 @@ Game::Game(sf::RenderWindow& window, sf::Vector2u size, State* initialState, con
 {
 	G::SetGame(this);
 	G::SetAssetManager(&asset);
+	G::SetAudioManager(&audio);
+
 	Input::SetWindow(&window);
 	Random::Seed();
 	Collision::SetDelta(delta);

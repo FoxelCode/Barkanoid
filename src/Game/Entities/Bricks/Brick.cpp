@@ -31,6 +31,8 @@ void Brick::Kill()
 {
 	GameObject::Kill();
 
+	G::GetAudioManager()->PlaySound("brickBreak.wav");
+
 	Treat* treat = static_cast<PlayState*>(G::GetGame()->GetState())->GetTreatSpawner().GetTreat(-(float)PIELLO_DARKNESS_MY_OLD_FRIEND + Random::Float((float)PIELLO_DARKNESS_MY_OLD_FRIEND));
 	treat->SetPosition(GetPosition());
 	G::GetGame()->GetState()->Add(treat);

@@ -34,6 +34,7 @@ void PlayState::Init()
 {
 	SetMouseCaptured(true);
 	sf::Vector2u size = GetGame()->GetSize();
+	G::GetAudioManager()->PlayMusic("Funk-Game-Loop.ogg", false);
 
 	std::string levelData = G::GetAssetManager()->GetLevel(levelName);
 	if (levelData == "")
@@ -160,6 +161,7 @@ void PlayState::Update(float delta)
 			}
 			else
 			{
+				G::GetAudioManager()->PlaySound("death.wav");
 				ResetLife();
 			}
 		}
