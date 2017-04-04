@@ -9,6 +9,7 @@
 #include "Game/Entities/Stage.hpp"
 #include "Game/Entities/Treats/Treat.hpp"
 #include "Game/Entities/UI.hpp"
+#include "Game/Entities/ParticleEmitter.hpp"
 #include "Game/Screens/PauseScreen.hpp"
 #include "Game/Screens/StageCompleteScreen.hpp"
 #include "Game/Screens/GameOverScreen.hpp"
@@ -63,6 +64,7 @@ private:
 	Stage* stage = nullptr;
 	TreatSpawner treatSpawner;
 	std::vector<Treat*> treats;
+	std::vector<ParticleEmitter*> particleEmitters;
 	UI* ui = nullptr;
 
 	PauseScreen* pauseScreen = nullptr;

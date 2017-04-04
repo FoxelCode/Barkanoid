@@ -1,12 +1,11 @@
 #include "Game/Util/TreatSpawner.hpp"
 
-#include "Game/Entities/Treats/PointTreat.hpp"
 #include "Game/Entities/Treats/PaddleWidthTreat.hpp"
 #include "Game/Entities/Treats/BallSpeedTreat.hpp"
 #include "Game/Entities/Treats/MultiballTreat.hpp"
 #include "Game/Entities/Treats/MagneticPaddleTreat.hpp"
 
-const float TreatSpawner::powerupChance = 0.1f;
+const float TreatSpawner::powerupChance = 0.15f;
 const float TreatSpawner::widthDownChance = 0.3f;
 const float TreatSpawner::speedDownChance = 0.3f;
 
@@ -59,7 +58,5 @@ Treat* TreatSpawner::GetTreat(float launchAngle)
 			return nullptr;
 		}
 	}
-
-	// No powerup spawned, spawn some points instead
-	return new PointTreat(sf::Vector2f(), launchAngle);
+	return nullptr;
 }

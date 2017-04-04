@@ -5,11 +5,13 @@
 const std::string AudioManager::musicPath = "res/music/";
 const std::string AudioManager::soundPath = "res/sound/";
 const size_t AudioManager::maxSoundsPerFile = 8;
+const float AudioManager::musicVolume = 40.0f;
 
 AudioManager::AudioManager()
+	: mute(false)
 {
 	music.setLoop(true);
-	music.setVolume(40.0f);
+	music.setVolume(musicVolume);
 
 	PreloadSounds();
 }
@@ -88,6 +90,8 @@ void AudioManager::PlayMusic(const std::string& fileName, bool reset)
 
 void AudioManager::PlaySound(const std::string& fileName)
 {
+	if (mute) return;
+
 	auto soundBufferIt = soundBuffers.find(fileName);
 	if (soundBufferIt == soundBuffers.end())
 	{
@@ -125,4 +129,30 @@ void AudioManager::PlaySound(const std::string& fileName)
 			(*soundIt).second[0]->play();
 		}
 	}
+}
+
+void AudioManager::SetMute(bool mute)
+{
+	this->mute = mute;
+
+	if (mute)
+	{
+		music.setVolume(0.0f);
+		for (auto& soundPair : sounds)
+		{
+			for (auto& sound : soundPair.second)
+			{
+				sound->stop();
+			}
+		}
+	}
+	else
+	{
+		music.setVolume(musicVolume);
+	}
+}
+
+void AudioManager::ToggleMute()
+{
+	SetMute(!mute);
 }

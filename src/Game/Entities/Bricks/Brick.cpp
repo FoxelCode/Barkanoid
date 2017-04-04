@@ -33,7 +33,16 @@ void Brick::Kill()
 
 	G::GetAudioManager()->PlaySound("brickBreak.wav");
 
+	ParticleEmitter* particles = new ParticleEmitter(GetPosition(), G::GetAssetManager()->GetTexture("pointTreat.png"), 100.0f, 50.0f, 1.0f, 0.5f, 300.0f);
+	particles->Emit((int)(Random::Float(10.0f) + 5.0f));
+	G::GetGame()->GetState()->Add(particles);
+
+	static_cast<PlayState*>(G::GetGame()->GetState())->AddPoints(100);
+
 	Treat* treat = static_cast<PlayState*>(G::GetGame()->GetState())->GetTreatSpawner().GetTreat(-(float)PIELLO_DARKNESS_MY_OLD_FRIEND + Random::Float((float)PIELLO_DARKNESS_MY_OLD_FRIEND));
-	treat->SetPosition(GetPosition());
-	G::GetGame()->GetState()->Add(treat);
+	if (treat != nullptr)
+	{
+		treat->SetPosition(GetPosition());
+		G::GetGame()->GetState()->Add(treat);
+	}
 }

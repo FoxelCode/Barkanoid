@@ -119,13 +119,26 @@ void PlayState::Update(float delta)
 
 		// Check for balls that have gone offscreen
 		Ball* ball = nullptr;
-		for (size_t i = 0; i < balls.size();)
+		for (size_t i = 0; i < balls.size(); )
 		{
 			ball = balls[i];
 			if (ball->GetPosition().y > GetGame()->GetSize().y + ball->GetCollider()->GetBounds().height)
 			{
 				Remove(ball);
 				delete ball;
+			}
+			else i++;
+		}
+
+		// Check for finished particle emitters
+		ParticleEmitter* particleEmitter = nullptr;
+		for (size_t i = 0; i < particleEmitters.size(); )
+		{
+			particleEmitter = particleEmitters[i];
+			if (!particleEmitter->IsAlive())
+			{
+				Remove(particleEmitter);
+				delete particleEmitter;
 			}
 			else i++;
 		}
@@ -209,6 +222,8 @@ void PlayState::Add(GameObject* object)
 		treats.push_back(reinterpret_cast<Treat*>(object));
 	if (dynamic_cast<Ball*>(object))
 		balls.push_back(reinterpret_cast<Ball*>(object));
+	if (dynamic_cast<ParticleEmitter*>(object))
+		particleEmitters.push_back(reinterpret_cast<ParticleEmitter*>(object));
 }
 
 void PlayState::Remove(GameObject* object)
@@ -239,6 +254,17 @@ void PlayState::Remove(GameObject* object)
 			if ((*it) == reinterpret_cast<Ball*>(object))
 			{
 				balls.erase(it);
+				return;
+			}
+		}
+	}
+	if (dynamic_cast<ParticleEmitter*>(object))
+	{
+		for (auto it = particleEmitters.begin(); it != particleEmitters.end(); it++)
+		{
+			if ((*it) == reinterpret_cast<ParticleEmitter*>(object))
+			{
+				particleEmitters.erase(it);
 				return;
 			}
 		}

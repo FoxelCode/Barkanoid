@@ -30,7 +30,8 @@ private:
 	sf::Vector2f size;
 	sf::Vector2f widthBounds;
 	sf::Vector2f horizontalRange;
-	float angleRange;
+	float topAngleRange;
+	float extraAngleRange;
 	Tween::TweenInstance* tween;
 	
 	bool magnetic;

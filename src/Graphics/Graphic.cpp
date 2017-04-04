@@ -35,6 +35,12 @@ void Graphic::SetColour(sf::Color colour)
 		vertices[i].color = colour;
 }
 
+void Graphic::SetAlpha(float alpha)
+{
+	colour.a = (sf::Uint8)alpha;
+	UpdateVertColours();
+}
+
 void Graphic::SetFrameSize(sf::Vector2f frameSize)
 {
 	this->frameSize = frameSize;
@@ -58,7 +64,13 @@ void Graphic::draw(sf::RenderTarget& target, sf::RenderStates states) const
 void Graphic::UpdateVertices()
 {
 	vertices = sf::VertexArray(sf::Quads, 4);
+	UpdateVertPositions();
+	UpdateVertUVs();
+	UpdateVertColours();
+}
 
+void Graphic::UpdateVertPositions()
+{
 	sf::Vector2f offset;
 	if (align == Alignment::TopLeft)
 		offset = size / 2.0f;
@@ -67,7 +79,10 @@ void Graphic::UpdateVertices()
 	vertices[1].position = sf::Vector2f(size.x, 0) + offset;
 	vertices[2].position = sf::Vector2f(size.x, size.y) + offset;
 	vertices[3].position = sf::Vector2f(0, size.y) + offset;
+}
 
+void Graphic::UpdateVertUVs()
+{
 	if (texture->isRepeated())
 	{
 		sf::Vector2f frameAmount = sf::Vector2f(size.x / frameSize.x, size.y / frameSize.y);
@@ -83,7 +98,10 @@ void Graphic::UpdateVertices()
 		vertices[2].texCoords = sf::Vector2f(framePos.x + frameSize.x, framePos.y + frameSize.y);
 		vertices[3].texCoords = sf::Vector2f(framePos.x, framePos.y + frameSize.y);
 	}
+}
 
+void Graphic::UpdateVertColours()
+{
 	vertices[0].color = colour;
 	vertices[1].color = colour;
 	vertices[2].color = colour;

@@ -59,6 +59,9 @@ void Game::Update(float delta)
 		allowStep = true;
 #endif
 
+	if (Input::JustPressed(sf::Keyboard::M))
+		audio.ToggleMute();
+
 	if (!paused || allowStep)
 	{
 		state->Update(delta);
