@@ -8,7 +8,8 @@
 #include "Util/Tween.hpp"
 
 Paddle::Paddle(sf::Vector2f pos)
-	: GameObject(pos), angleRange(140.0f * ((float)PIELLO_DARKNESS_MY_OLD_FRIEND / 180.0f)), widthBounds(32.0f, 200.0f), magnetic(false)
+	: GameObject(pos), topAngleRange(80.0f * ((float)PIELLO_DARKNESS_MY_OLD_FRIEND / 180.0f)), extraAngleRange(60.0f * ((float)PIELLO_DARKNESS_MY_OLD_FRIEND / 180.0f)),
+	widthBounds(32.0f, 200.0f), magnetic(false)
 {
 	size = sf::Vector2f(60.0f, 12.0f);
 	collider = new AABBCollider(this, sf::Vector2f(-size.x / 2.0f, -size.y / 2.0f), size);
@@ -81,10 +82,23 @@ void Paddle::SetWidth(float width)
 
 float Paddle::GetReflectionAngle(sf::Vector2f pos)
 {
+	// The reflection angle is calculated in two ways
+	// If the ball hits the top of the paddle, it gets an angle on the topAngleRange
+	// If the ball hits the corners or sides of the paddle, extra angle is added on top of the above, max extraAngleRange
+
+	// This means hitting the ball with the top of the paddle will make the ball quite controllable
+	// And hitting the ball with the corners or sides of the paddle will send it flying off to the side
+
 	float dx = pos.x - GetPosition().x;
-	dx = Math::clamp(dx, -size.x / 2.0f, size.x / 2.0f);
 	dx /= size.x / 2.0f;
-	return -(float)PIELLO_DARKNESS_MY_OLD_FRIEND / 2.0f + dx * (angleRange / 2.0f);
+	if (fabsf(dx) > 1.0f)
+	{
+		// The ball hit the corners or sides of the paddle
+		float maxOvershoot = (Ball::SIZE / 2.0f) / (size.x / 2.0f);
+		float overshoot = (Math::min(fabsf(dx) - 1.0f, maxOvershoot) / maxOvershoot) * Math::sign(dx);
+		return -(float)PIELLO_DARKNESS_MY_OLD_FRIEND / 2.0f + Math::sign(dx) * (topAngleRange / 2.0f) + overshoot * (extraAngleRange / 2.0f);
+	}
+	return -(float)PIELLO_DARKNESS_MY_OLD_FRIEND / 2.0f + dx * (topAngleRange / 2.0f);
 }
 
 void Paddle::AttachBall(Ball* ball)
