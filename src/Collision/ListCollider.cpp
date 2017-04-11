@@ -1,5 +1,17 @@
 #include "Collision/ListCollider.hpp"
 
+void ListCollider::Draw(sf::RenderTarget & target, sf::RenderStates states) const
+{
+	for each (Collider* collider in colliders)
+		collider->Draw(target, states);
+}
+
+void ListCollider::AddCollider(Collider* collider)
+{
+	colliders.push_back(collider);
+	CalculateBounds();
+}
+
 void ListCollider::Clear()
 {
 	colliders.clear();
@@ -17,6 +29,13 @@ void ListCollider::RemoveCollider(Collider* collider)
 			return;
 		}
 	}
+}
+
+sf::FloatRect ListCollider::GetBounds()
+{
+	bounds.left = GetGameObject()->GetPosition().x;
+	bounds.top = GetGameObject()->GetPosition().y;
+	return bounds;
 }
 
 void ListCollider::CalculateBounds()

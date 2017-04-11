@@ -24,6 +24,11 @@ public:
 	static std::map<Type, EaseFunction> easeFunctions;
 
 private:
+	/*
+	Easing functions by Robert Penner, from:
+	http://gizma.com/easing/
+	*/
+
 	static float LinearTween(float time, float start, float change, float duration)
 	{
 		return change * time / duration + start;

@@ -23,6 +23,11 @@ public:
 	void Add(GameObject* object);
 
 	void HandleEvent(sf::Event evt);
+	/// <summary>
+	/// <para>Sets a state to switch to at the end of the next update loop.</para>
+	/// <para>Doesn't switch the state immediately, as it causes all kinds of problems.</para>
+	/// </summary>
+	/// <param name="newState">State to switch to.</param>
 	void SwitchState(State* newState);
 
 	State* GetState() { return state; }

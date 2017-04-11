@@ -19,7 +19,7 @@ TreatSpawner::TreatSpawner()
 
 Treat* TreatSpawner::GetTreat(float launchAngle)
 {
-	// Check whether to spawn a powerup or just points
+	// Check whether or not to spawn a powerup
 	float pickPowerup = Random::Float(1.0f);
 	
 	// Spawn a powerup

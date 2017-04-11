@@ -110,18 +110,6 @@ void StringUtil::DiscardWhitespace(std::vector<std::string>& vec)
 	}
 }
 
-size_t StringUtil::CountLines(const std::string& str)
-{
-	size_t lineCount = 1;
-	size_t newLineIndex = str.find_first_of('\n');
-	while (std::string::npos != newLineIndex)
-	{
-		lineCount++;
-		newLineIndex = str.find_first_of('\n', newLineIndex + 1);
-	}
-	return lineCount;
-}
-
 std::string StringUtil::StripFileExtension(std::string str)
 {
 	size_t lastDotIndex = str.find_last_of('.');

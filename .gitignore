@@ -1,8 +1,10 @@
 /bin
 /Release
 /Debug
+/Barkanoid
 *.VC.db
 *.VC.opendb
 *.vcxproj
 .vs/
 /ipch
+*.zip

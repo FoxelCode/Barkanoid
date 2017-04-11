@@ -79,6 +79,7 @@ private:
 
 	float ballSpeed;
 	int ballSpeedTimer;
+	// How much faster the ball will get per second.
 	float ballSpeedIncrement;
 	sf::Vector2f ballSpeedBounds;
 	float ballSplitAngle;

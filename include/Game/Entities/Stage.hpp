@@ -24,6 +24,9 @@ private:
 	void AddBrick(Brick* brick, sf::Vector2u pos);
 	void RemoveBrick(sf::Vector2u pos);
 
+	/// <summary>
+	/// <para>Detonates a brick, destroying it and other bricks around it.</para>
+	/// </summary>
 	void Explode(Brick* brick);
 
 	std::vector<std::vector<Brick*>> bricks;

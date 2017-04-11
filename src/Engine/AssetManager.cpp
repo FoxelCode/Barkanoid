@@ -42,22 +42,24 @@ sf::Font* AssetManager::GetFont(std::string filename)
 
 std::vector<std::string> AssetManager::GetLevels()
 {
-	std::vector<std::string> folders;
+	std::vector<std::string> levelFiles;
 
 	DIR* dir = opendir("res/levels/");
 	struct dirent* entry = readdir(dir);
 	while (entry != NULL)
 	{
+		// Enumerate all the level files in the levels folder
 		if (entry->d_type == DT_REG)
 		{
 			std::string folderName = entry->d_name;
-			folders.push_back(folderName);
+			if (folderName.find("." + levelFileExtension) != std::string::npos)
+				levelFiles.push_back(folderName);
 		}
 		entry = readdir(dir);
 	}
 	closedir(dir);
 
-	return folders;
+	return levelFiles;
 }
 
 const std::string& AssetManager::GetLevel(std::string levelName)

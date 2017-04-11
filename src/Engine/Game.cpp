@@ -49,7 +49,7 @@ void Game::Update(float delta)
 {
 	allowStep = false;
 
-#ifndef _NDEBUG
+#ifndef NDEBUG
 	if (Input::JustPressed(sf::Keyboard::Num1))
 		paused = !paused;
 	if (Input::JustPressed(sf::Keyboard::Num3))

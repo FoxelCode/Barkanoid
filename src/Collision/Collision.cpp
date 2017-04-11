@@ -10,6 +10,14 @@ float Collision::delta = 1.0f;
 
 bool Collision::Collide(Collider* a, Collider* b)
 {
+	// Only b can be a ListCollider since I didn't need to collide two ListColliders together.
+	if (a->GetType() == ColliderType::List)
+	{
+		LOG_ERROR("Sorry, for now only b can be a ListCollider");
+		return false;
+	}
+
+	// Collide with each collider in b if it's a ListCollider
 	if (b->GetType() == ColliderType::List)
 	{
 		ListCollider* bList = static_cast<ListCollider*>(b);
@@ -19,7 +27,8 @@ bool Collision::Collide(Collider* a, Collider* b)
 				return true;
 		}
 	}
-
+	
+	// Collide two AABBs together
 	if (a->GetType() == ColliderType::AABB && b->GetType() == ColliderType::AABB)
 	{
 		return AABBToAABB(static_cast<AABBCollider*>(a), static_cast<AABBCollider*>(b));
@@ -78,6 +87,11 @@ sf::FloatRect Collision::GetSweepBroadphaseRect(AABBCollider* a)
 
 float Collision::SweepAABB(AABBCollider* a, AABBCollider* b, sf::Vector2f& normal)
 {
+	/*
+	AABB sweep collision detection and response algorithm from:
+	https://www.gamedev.net/resources/_/technical/game-programming/swept-aabb-collision-detection-and-response-r3084
+	*/
+
 	sf::FloatRect aBounds = a->GetBounds();
 	sf::FloatRect bBounds = b->GetBounds();
 	sf::Vector2f aVel = a->GetGameObject()->GetVelocity() * delta;

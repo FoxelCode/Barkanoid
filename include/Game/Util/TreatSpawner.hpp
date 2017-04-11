@@ -11,6 +11,7 @@ public:
 	Treat* GetTreat(float launchAngle);
 
 private:
+	// Chance for a powerup to spawn in GetTreat().
 	static const float powerupChance;
 	static const float widthDownChance;
 	static const float speedDownChance;

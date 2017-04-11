@@ -5,6 +5,10 @@
 
 #include "Util/Random.hpp"
 
+/*
+Class for picking random data with different weights from a vector.
+*/
+
 template <class T>
 class WeightedVector
 {
