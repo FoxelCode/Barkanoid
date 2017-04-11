@@ -30,6 +30,21 @@ void State::Update(float delta)
 	}
 }
 
+void State::PostUpdate()
+{
+	for (size_t i = 0; i < gameObjects.size(); )
+	{
+		if (!gameObjects[i]->IsAlive())
+		{
+			GameObject* object = gameObjects[i];
+			Remove(object);
+			delete object;
+		}
+		else
+			i++;
+	}
+}
+
 void State::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.clear(bgColour);

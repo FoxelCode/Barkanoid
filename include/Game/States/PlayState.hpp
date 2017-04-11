@@ -64,7 +64,6 @@ private:
 	Stage* stage = nullptr;
 	TreatSpawner treatSpawner;
 	std::vector<Treat*> treats;
-	std::vector<ParticleEmitter*> particleEmitters;
 	UI* ui = nullptr;
 
 	PauseScreen* pauseScreen = nullptr;

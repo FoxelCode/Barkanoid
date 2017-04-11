@@ -195,6 +195,9 @@
     <ClInclude Include="include\Game\Entities\ParticleEmitter.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Util\VectorUtil.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Collision\AABBCollider.cpp">

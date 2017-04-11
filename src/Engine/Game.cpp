@@ -68,6 +68,7 @@ void Game::Update(float delta)
 		Tween::UpdateTweens(delta);
 	}
 
+	state->PostUpdate();
 	Input::Update();
 
 	if (newState != nullptr)

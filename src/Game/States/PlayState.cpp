@@ -1,11 +1,12 @@
 #include "Game/States/PlayState.hpp"
 
-#include "Engine/Input.hpp"
 #include "Collision/Collision.hpp"
-#include "Util/Random.hpp"
+#include "Engine/Input.hpp"
 #include "Engine/G.hpp"
 #include "Game/States/LevelSelectState.hpp"
 #include "Game/Barkanoid.hpp"
+#include "Util/Random.hpp"
+#include "Util/VectorUtil.hpp"
 
 PlayState::PlayState(std::string levelName)
 	: State(), lives(2), levelName(levelName), ballSpeedIncrement(1.0f), ballSpeedBounds(300.0f, 800.0f),
@@ -91,9 +92,9 @@ void PlayState::Update(float delta)
 		{
 			if (ball->IsMoving())
 			{
-				if (Collide(ball, paddle)) continue;
-				if (Collide(ball, gameArea)) continue;
-				if (Collide(ball, stage)) continue;
+				if (Collide(ball, paddle))		continue;
+				if (Collide(ball, gameArea))	continue;
+				if (Collide(ball, stage))		continue;
 			}
 		}
 
@@ -126,19 +127,6 @@ void PlayState::Update(float delta)
 			{
 				Remove(ball);
 				delete ball;
-			}
-			else i++;
-		}
-
-		// Check for finished particle emitters
-		ParticleEmitter* particleEmitter = nullptr;
-		for (size_t i = 0; i < particleEmitters.size(); )
-		{
-			particleEmitter = particleEmitters[i];
-			if (!particleEmitter->IsAlive())
-			{
-				Remove(particleEmitter);
-				delete particleEmitter;
 			}
 			else i++;
 		}
@@ -226,8 +214,6 @@ void PlayState::Add(GameObject* object)
 		treats.push_back(reinterpret_cast<Treat*>(object));
 	if (dynamic_cast<Ball*>(object))
 		balls.push_back(reinterpret_cast<Ball*>(object));
-	if (dynamic_cast<ParticleEmitter*>(object))
-		particleEmitters.push_back(reinterpret_cast<ParticleEmitter*>(object));
 }
 
 void PlayState::Remove(GameObject* object)
@@ -241,38 +227,9 @@ void PlayState::Remove(GameObject* object)
 	State::Remove(object);
 
 	if (dynamic_cast<Treat*>(object))
-	{
-		for (auto it = treats.begin(); it != treats.end(); it++)
-		{
-			if ((*it) == reinterpret_cast<Treat*>(object))
-			{
-				treats.erase(it);
-				return;
-			}
-		}
-	}
+		VectorUtil::TryRemove(treats, reinterpret_cast<Treat*>(object));
 	if (dynamic_cast<Ball*>(object))
-	{
-		for (auto it = balls.begin(); it != balls.end(); it++)
-		{
-			if ((*it) == reinterpret_cast<Ball*>(object))
-			{
-				balls.erase(it);
-				return;
-			}
-		}
-	}
-	if (dynamic_cast<ParticleEmitter*>(object))
-	{
-		for (auto it = particleEmitters.begin(); it != particleEmitters.end(); it++)
-		{
-			if ((*it) == reinterpret_cast<ParticleEmitter*>(object))
-			{
-				particleEmitters.erase(it);
-				return;
-			}
-		}
-	}
+		VectorUtil::TryRemove(balls, reinterpret_cast<Ball*>(object));
 }
 
 void PlayState::AddPoints(int points)
