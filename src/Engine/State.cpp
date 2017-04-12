@@ -47,7 +47,6 @@ void State::PostUpdate()
 
 void State::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.clear(bgColour);
 	for each (GameObject* object in gameObjects)
 	{
 		target.draw(*object, states);

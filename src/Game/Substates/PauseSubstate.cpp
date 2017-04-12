@@ -1,11 +1,11 @@
-#include "Game/Screens/PauseScreen.hpp"
+#include "Game/Substates/PauseSubstate.hpp"
 
 #include "Engine/G.hpp"
 #include "Engine/Input.hpp"
 
-const float PauseScreen::buttonSpacing = 10.0f;
+const float PauseSubstate::buttonSpacing = 10.0f;
 
-PauseScreen::PauseScreen(sf::Vector2u size, std::function<void()> continueCallback, std::function<void()> backToSelectCallback, std::function<void()> retryLevelCallback)
+PauseSubstate::PauseSubstate(sf::Vector2u size, std::function<void()> continueCallback, std::function<void()> backToSelectCallback, std::function<void()> retryLevelCallback)
 	: continueCallback(continueCallback), backToSelectCallback(backToSelectCallback), retryLevelCallback(retryLevelCallback)
 {
 	dimmer.setSize(sf::Vector2f(size));
@@ -21,77 +21,61 @@ PauseScreen::PauseScreen(sf::Vector2u size, std::function<void()> continueCallba
 
 	float buttonYPos = size.y / 2.0f;
 
-	continueButton = new Button(sf::Vector2f(size.x / 2.0f, buttonYPos), sf::Vector2f(300.0f, 50.0f),
-		(ButtonCallback)std::bind(&PauseScreen::ContinueClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
+	Button* continueButton = new Button(sf::Vector2f(size.x / 2.0f, buttonYPos), sf::Vector2f(300.0f, 50.0f),
+		(ButtonCallback)std::bind(&PauseSubstate::ContinueClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
 	continueButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
 	continueButton->GetText()->GetFirstLine()->setFont(*font);
 	continueButton->GetText()->GetFirstLine()->setFillColor(sf::Color::Black);
 	continueButton->GetText()->GetFirstLine()->setCharacterSize(32);
 	continueButton->GetText()->SetText("Continue");
 	continueButton->UpdateLayout();
+	Add(continueButton);
 	buttonYPos += continueButton->GetSize().y + buttonSpacing;
 
-	backToSelectButton = new Button(sf::Vector2f(size.x / 2.0f, buttonYPos), sf::Vector2f(300.0f, 50.0f),
-		(ButtonCallback)std::bind(&PauseScreen::BackToSelectClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
+	Button* backToSelectButton = new Button(sf::Vector2f(size.x / 2.0f, buttonYPos), sf::Vector2f(300.0f, 50.0f),
+		(ButtonCallback)std::bind(&PauseSubstate::BackToSelectClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
 	backToSelectButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
 	backToSelectButton->GetText()->GetFirstLine()->setFont(*font);
 	backToSelectButton->GetText()->GetFirstLine()->setFillColor(sf::Color::Black);
 	backToSelectButton->GetText()->GetFirstLine()->setCharacterSize(32);
 	backToSelectButton->GetText()->SetText("Back to level select");
 	backToSelectButton->UpdateLayout();
+	Add(backToSelectButton);
 	buttonYPos += backToSelectButton->GetSize().y + buttonSpacing;
 
-	retryLevelButton = new Button(sf::Vector2f(size.x / 2.0f, buttonYPos), sf::Vector2f(300.0f, 50.0f),
-		(ButtonCallback)std::bind(&PauseScreen::RetryLevelClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
+	Button* retryLevelButton = new Button(sf::Vector2f(size.x / 2.0f, buttonYPos), sf::Vector2f(300.0f, 50.0f),
+		(ButtonCallback)std::bind(&PauseSubstate::RetryLevelClicked, this), Alignment(HorizontalAlign::Middle, VerticalAlign::Center));
 	retryLevelButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
 	retryLevelButton->GetText()->GetFirstLine()->setFont(*font);
 	retryLevelButton->GetText()->GetFirstLine()->setFillColor(sf::Color::Black);
 	retryLevelButton->GetText()->GetFirstLine()->setCharacterSize(32);
 	retryLevelButton->GetText()->SetText("Retry level");
 	retryLevelButton->UpdateLayout();
+	Add(retryLevelButton);
 }
 
-PauseScreen::~PauseScreen()
-{
-	if (continueButton != nullptr)
-	{
-		delete continueButton;
-		continueButton = nullptr;
-	}
-	if (backToSelectButton != nullptr)
-	{
-		delete backToSelectButton;
-		backToSelectButton = nullptr;
-	}
-	if (retryLevelButton != nullptr)
-	{
-		delete retryLevelButton;
-		retryLevelButton = nullptr;
-	}
-}
-
-void PauseScreen::draw(sf::RenderTarget & target, sf::RenderStates states) const
+void PauseSubstate::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(dimmer, states);
+	State::draw(target, states);
 	target.draw(banner, states);
-	target.draw(*continueButton, states);
-	target.draw(*backToSelectButton, states);
-	target.draw(*retryLevelButton, states);
 }
 
-void PauseScreen::Update(float delta)
+void PauseSubstate::Update(float delta)
 {
-	continueButton->Update(delta);
-	retryLevelButton->Update(delta);
-	backToSelectButton->Update(delta);
+	State::Update(delta);
 
-	if (continueClicked)
-		continueCallback();
-	else if (backToSelectClicked)
+	// These keypresses act the same as clicking the continue button
+	if (Input::JustPressed(sf::Keyboard::Escape) || Input::JustPressed(sf::Keyboard::P))
+		continueClicked = true;
+
+	if (backToSelectClicked)
 		backToSelectCallback();
 	else if (retryLevelClicked)
 		retryLevelCallback();
-
-	if (Input::JustPressed(sf::Keyboard::Escape) || Input::JustPressed(sf::Keyboard::P))
+	else if (continueClicked)
 		continueCallback();
+
+	if (backToSelectClicked || retryLevelClicked || continueClicked)
+		GetGame()->PopSubstate();
 }

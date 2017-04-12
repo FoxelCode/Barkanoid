@@ -10,9 +10,9 @@
 #include "Game/Entities/Treats/Treat.hpp"
 #include "Game/Entities/UI.hpp"
 #include "Game/Entities/ParticleEmitter.hpp"
-#include "Game/Screens/PauseScreen.hpp"
-#include "Game/Screens/StageCompleteScreen.hpp"
-#include "Game/Screens/GameOverScreen.hpp"
+#include "Game/Substates/PauseSubstate.hpp"
+#include "Game/Substates/StageCompleteSubstate.hpp"
+#include "Game/Substates/GameOverSubstate.hpp"
 #include "Game/Util/TreatSpawner.hpp"
 
 class PlayState : public State
@@ -37,10 +37,7 @@ public:
 	void ClearTreats();
 	void ClearBalls();
 
-	void UpdateScreens(float delta);
-	void ClearScreens();
-
-	void PauseContinueClicked();
+	void Unpaused();
 	void StageCompleteClicked();
 	void BackToLevelSelect();
 	void GameOverResetLevel();
@@ -65,11 +62,6 @@ private:
 	TreatSpawner treatSpawner;
 	std::vector<Treat*> treats;
 	UI* ui = nullptr;
-
-	PauseScreen* pauseScreen = nullptr;
-	StageCompleteScreen* stageCompleteScreen = nullptr;
-	GameOverScreen* gameOverScreen = nullptr;
-	bool waiting = false;
 
 	int lives;
 	int totalPoints;

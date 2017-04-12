@@ -23,12 +23,17 @@ public:
 	void Add(GameObject* object);
 
 	void HandleEvent(sf::Event evt);
+
 	/// <summary>
 	/// <para>Sets a state to switch to at the end of the next update loop.</para>
 	/// <para>Doesn't switch the state immediately, as it causes all kinds of problems.</para>
 	/// </summary>
 	/// <param name="newState">State to switch to.</param>
 	void SwitchState(State* newState);
+
+	void AddSubstate(State* newSubstate);
+	void PopSubstate();
+	void ClearSubstates();
 
 	State* GetState() { return state; }
 	sf::Vector2u GetSize() { return size; }
@@ -49,10 +54,11 @@ protected:
 	bool showColliders = false;
 	bool allowStep = false;
 
-private:
 	AssetManager asset;
 	AudioManager audio;
 
+private:
 	State* state = nullptr;
+	std::vector<State*> substates;
 	State* newState = nullptr;
 };

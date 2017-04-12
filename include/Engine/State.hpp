@@ -22,6 +22,8 @@ public:
 
 	void SetGame(Game* game);
 
+	sf::Color GetBGColour() { return bgColour; }
+
 protected:
 	Game* GetGame() { return game; }
 

@@ -64,7 +64,10 @@ void Game::Update(float delta)
 
 	if (!paused || allowStep)
 	{
-		state->Update(delta);
+		if (!substates.empty())
+			(*substates.rbegin())->Update(delta);
+		else
+			state->Update(delta);
 		Tween::UpdateTweens(delta);
 	}
 
@@ -89,15 +92,44 @@ void Game::SwitchState(State* newState)
 	this->newState = newState;
 }
 
+void Game::AddSubstate(State* newSubstate)
+{
+	ASSERT(newSubstate != nullptr);
+	substates.push_back(newSubstate);
+	newSubstate->SetGame(this);
+}
+
+void Game::PopSubstate()
+{
+	ASSERT(!substates.empty());
+	State* topSubstate = (*substates.rbegin());
+	if (topSubstate != nullptr)
+		delete topSubstate;
+	substates.pop_back();
+}
+
+void Game::ClearSubstates()
+{
+	for (State* substate : substates)
+		if (substate != nullptr)
+			delete substate;
+	substates.clear();
+}
+
 void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	target.clear(state->GetBGColour());
 	state->draw(target, states);
+	for (const State* substate : substates)
+		substate->draw(target, states);
 }
 
 void Game::ActuallySwitchState()
 {
 	if (state != nullptr)
 		delete state;
+	if (!substates.empty())
+		ClearSubstates();
 	Tween::StopAll();
 	state = newState;
 	newState = nullptr;

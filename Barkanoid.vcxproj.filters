@@ -30,6 +30,9 @@
     <ClInclude Include="include\Engine\AssetManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Engine\AudioManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\Engine\G.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -93,6 +96,9 @@
     <ClInclude Include="include\Game\Entities\Paddle.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Game\Entities\ParticleEmitter.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\Game\Entities\Stage.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -102,15 +108,6 @@
     <ClInclude Include="include\Game\Entities\wall.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Game\Screens\GameOverScreen.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Game\Screens\PauseScreen.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Game\Screens\StageCompleteScreen.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Game\States\LevelSelectState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -118,6 +115,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Game\States\PlayState.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\UI\LevelEntry.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Util\ScoreIO.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Util\TreatSpawner.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Barkanoid.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Graphics\Graphic.hpp">
@@ -135,13 +144,22 @@
     <ClInclude Include="include\UI\Button.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\UI\MultilineText.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\UI\TextField.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\UI\UIObject.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\UI\VerticalScrollArea.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\Util\Ease.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Util\FileIO.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Util\Log.hpp">
@@ -162,40 +180,22 @@
     <ClInclude Include="include\Util\Tween.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\UI\VerticalScrollArea.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\UI\MultilineText.hpp">
+    <ClInclude Include="include\Util\VectorUtil.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Util\WeightedVector.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Game\Util\TreatSpawner.hpp">
+    <ClInclude Include="include\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Game\UI\LevelEntry.hpp">
+    <ClInclude Include="include\Game\Substates\GameOverSubstate.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Game\Util\ScoreIO.hpp">
+    <ClInclude Include="include\Game\Substates\PauseSubstate.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Util\FileIO.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Game\Barkanoid.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Engine\AudioManager.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Game\Entities\ParticleEmitter.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Util\VectorUtil.hpp">
+    <ClInclude Include="include\Game\Substates\StageCompleteSubstate.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -213,6 +213,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\AssetManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\AudioManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\G.cpp">
@@ -272,6 +275,9 @@
     <ClCompile Include="src\Game\Entities\Paddle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Game\Entities\ParticleEmitter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\Game\Entities\Stage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -281,15 +287,6 @@
     <ClCompile Include="src\Game\Entities\Wall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\Screens\GameOverScreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\Screens\PauseScreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\Screens\StageCompleteScreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Game\States\LevelSelectState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -297,6 +294,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\States\PlayState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\UI\LevelEntry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Util\ScoreIO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Util\TreatSpawner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Barkanoid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\Main.cpp">
@@ -311,13 +320,22 @@
     <ClCompile Include="src\UI\Button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\UI\MultilineText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\UI\TextField.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\UI\UIObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\UI\VerticalScrollArea.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\Util\Ease.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Util\FileIO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Util\Log.cpp">
@@ -335,31 +353,13 @@
     <ClCompile Include="src\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\UI\VerticalScrollArea.cpp">
+    <ClCompile Include="src\Game\Substates\GameOverSubstate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\UI\MultilineText.cpp">
+    <ClCompile Include="src\Game\Substates\PauseSubstate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\UI\LevelEntry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\Util\TreatSpawner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Util\FileIO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\Util\ScoreIO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\Barkanoid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Engine\AudioManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\Entities\ParticleEmitter.cpp">
+    <ClCompile Include="src\Game\Substates\StageCompleteSubstate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

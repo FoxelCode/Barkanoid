@@ -5,16 +5,14 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
-#include "Engine/GameObject.hpp"
+#include "Engine/State.hpp"
 
-class StageCompleteScreen : public GameObject
+class StageCompleteSubstate : public State
 {
 public:
-	StageCompleteScreen(sf::Vector2u size, std::string stageName);
+	StageCompleteSubstate(sf::Vector2u size, std::string stageName, std::function<void()> completeCallback);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	void Update(float delta);
-
-	void SetCallback(std::function<void()> callback) { completeCallback = callback; }
 
 private:
 	std::function<void()> completeCallback = nullptr;

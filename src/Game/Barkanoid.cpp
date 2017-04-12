@@ -8,4 +8,6 @@ Barkanoid::Barkanoid(sf::RenderWindow& window, sf::Vector2u size, State* initial
 	// Load the high scores and also write them back, cleaning the score file up
 	scoreIO.LoadScores();
 	scoreIO.WriteScores();
+
+	audio.SetMute(true);
 }

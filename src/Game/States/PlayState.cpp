@@ -28,7 +28,6 @@ PlayState::~PlayState()
 		delete ui;
 		ui = nullptr;
 	}
-	ClearScreens();
 }
 
 void PlayState::Init()
@@ -65,139 +64,122 @@ void PlayState::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	State::draw(target, states);
 	target.draw(*ui, states);
-	
-	if (pauseScreen != nullptr)
-		target.draw(*pauseScreen, states);
-	if (stageCompleteScreen != nullptr)
-		target.draw(*stageCompleteScreen, states);
-	if (gameOverScreen != nullptr)
-		target.draw(*gameOverScreen, states);
 }
 
 void PlayState::Update(float delta)
 {
-	if (!waiting)
+	State::Update(delta);
+
+	// Update stage time
+	stageTime += sf::milliseconds((sf::Int32)(delta * 1000.0f));
+
+	/*
+		*	Collisions go here
+		*/
+
+	// Collide balls
+	for each (Ball* ball in balls)
 	{
-		State::Update(delta);
-
-		// Update stage time
-		stageTime += sf::milliseconds((sf::Int32)(delta * 1000.0f));
-
-		/*
-		 *	Collisions go here
-		 */
-
-		// Collide balls
-		for each (Ball* ball in balls)
+		if (ball->IsMoving())
 		{
-			if (ball->IsMoving())
-			{
-				if (Collide(ball, paddle))		continue;
-				if (Collide(ball, gameArea))	continue;
-				if (Collide(ball, stage))		continue;
-			}
+			if (Collide(ball, paddle))		continue;
+			if (Collide(ball, gameArea))	continue;
+			if (Collide(ball, stage))		continue;
 		}
+	}
 
-		// Collide all treats and remove ones that have gone offscreen
-		Treat* treat = nullptr;
-		for (size_t i = 0; i < treats.size();)
+	// Collide all treats and remove ones that have gone offscreen
+	Treat* treat = nullptr;
+	for (size_t i = 0; i < treats.size();)
+	{
+		treat = treats[i];
+		Collide(treat, gameArea);
+		bool hitPaddle = false;
+		if (Collide(treat, paddle))
 		{
-			treat = treats[i];
-			Collide(treat, gameArea);
-			bool hitPaddle = false;
-			if (Collide(treat, paddle))
-			{
-				treat->AddAward(this);
-				hitPaddle = true;
-			}
-			if (hitPaddle || treat->GetPosition().y - 50.0f > GetGame()->GetSize().y)
-			{
-				Remove(treat);
-				delete treat;
-			}
-			else i++;
+			treat->AddAward(this);
+			hitPaddle = true;
 		}
-
-		// Check for balls that have gone offscreen
-		Ball* ball = nullptr;
-		for (size_t i = 0; i < balls.size(); )
+		if (hitPaddle || treat->GetPosition().y - 50.0f > GetGame()->GetSize().y)
 		{
-			ball = balls[i];
-			if (ball->GetPosition().y > GetGame()->GetSize().y + ball->GetCollider()->GetBounds().height)
-			{
-				Remove(ball);
-				delete ball;
-			}
-			else i++;
+			Remove(treat);
+			delete treat;
 		}
+		else i++;
+	}
 
-		// Increase ball speed
-		int stageClockSeconds = (int)stageTime.asSeconds();
-		float speedToAdd = 0.0f;
-		while (stageClockSeconds > ballSpeedTimer)
+	// Check for balls that have gone offscreen
+	Ball* ball = nullptr;
+	for (size_t i = 0; i < balls.size(); )
+	{
+		ball = balls[i];
+		if (ball->GetPosition().y > GetGame()->GetSize().y + ball->GetCollider()->GetBounds().height)
 		{
-			ballSpeedTimer++;
-			speedToAdd += ballSpeedIncrement;
+			Remove(ball);
+			delete ball;
 		}
-		if (speedToAdd > 0.0f)
-			AddBallSpeed(speedToAdd);
+		else i++;
+	}
 
-		// Set UI timer
-		ui->SetTime(stageTime);
+	// Increase ball speed
+	int stageClockSeconds = (int)stageTime.asSeconds();
+	float speedToAdd = 0.0f;
+	while (stageClockSeconds > ballSpeedTimer)
+	{
+		ballSpeedTimer++;
+		speedToAdd += ballSpeedIncrement;
+	}
+	if (speedToAdd > 0.0f)
+		AddBallSpeed(speedToAdd);
 
-		// Remove dead GameObjects
-		stage->RemoveDead();
+	// Set UI timer
+	ui->SetTime(stageTime);
 
-		// Check if there are no balls left -> lose a life
-		if (balls.size() == 0)
+	// Remove dead GameObjects
+	stage->RemoveDead();
+
+	// Check if there are no balls left -> lose a life
+	if (balls.size() == 0)
+	{
+		lives--;
+		if (lives < 0)
 		{
-			lives--;
-			if (lives < 0)
-			{
-				gameOverScreen = new GameOverScreen(GetGame()->GetSize(),
-					std::bind(&PlayState::BackToLevelSelect, this),
-					std::bind(&PlayState::GameOverResetLevel, this));
-				waiting = true;
-				SetMouseCaptured(false);
-			}
-			else
-			{
-				G::GetAudioManager()->PlaySound("death.wav");
-				ResetLife();
-			}
-		}
-
-		// Check if the stage has been completed
-		if (stage->GetBrickCount() <= 0)
-		{
-			// Check if a new highscore for the stage was set
-			dynamic_cast<Barkanoid*>(G::GetGame())->GetScoreIO().TrySetStageScore(level->GetLevelName(), level->GetStageName(), stagePoints);
-
-			stageCompleteScreen = new StageCompleteScreen(GetGame()->GetSize(), level->GetStageName());
-			stageCompleteScreen->SetCallback(std::bind(&PlayState::StageCompleteClicked, this));
-			waiting = true;
-			SetMouseCaptured(false);
-		}
-
-		//Check for pause keypress
-		if (Input::JustPressed(sf::Keyboard::Escape) || Input::JustPressed(sf::Keyboard::P))
-		{
-			pauseScreen = new PauseScreen(GetGame()->GetSize(),
-				std::bind(&PlayState::PauseContinueClicked, this),
+			GetGame()->AddSubstate(new GameOverSubstate(GetGame()->GetSize(),
 				std::bind(&PlayState::BackToLevelSelect, this),
-				std::bind(&PlayState::GameOverResetLevel, this));
-			waiting = true;
+				std::bind(&PlayState::GameOverResetLevel, this)));
 			SetMouseCaptured(false);
 		}
+		else
+		{
+			G::GetAudioManager()->PlaySound("death.wav");
+			ResetLife();
+		}
+	}
 
-		// Check for skip stage press
-		if (Input::JustPressed(sf::Keyboard::N))
-			NextStage();
-	}
-	else
+	// Check if the stage has been completed
+	if (stage->GetBrickCount() <= 0)
 	{
-		UpdateScreens(delta);
+		// Check if a new highscore for the stage was set
+		dynamic_cast<Barkanoid*>(G::GetGame())->GetScoreIO().TrySetStageScore(level->GetLevelName(), level->GetStageName(), stagePoints);
+
+		GetGame()->AddSubstate(new StageCompleteSubstate(GetGame()->GetSize(), level->GetStageName(),
+			std::bind(&PlayState::StageCompleteClicked, this)));
+		SetMouseCaptured(false);
 	}
+
+	//Check for pause keypress
+	if (Input::JustPressed(sf::Keyboard::Escape) || Input::JustPressed(sf::Keyboard::P))
+	{
+		GetGame()->AddSubstate(new PauseSubstate(GetGame()->GetSize(),
+			std::bind(&PlayState::Unpaused, this),
+			std::bind(&PlayState::BackToLevelSelect, this),
+			std::bind(&PlayState::GameOverResetLevel, this)));
+		SetMouseCaptured(false);
+	}
+
+	// Check for skip stage press
+	if (Input::JustPressed(sf::Keyboard::N))
+		NextStage();
 }
 
 void PlayState::Add(GameObject* object)
@@ -313,11 +295,8 @@ void PlayState::ClearTreats()
 		if (treats[i] != nullptr)
 		{
 			Treat* treat = treats[i];
-			if (treat != nullptr)
-			{
-				Remove(treat);
-				delete treat;
-			}
+			Remove(treat);
+			delete treat;
 		}
 	}
 	treats.clear();
@@ -330,62 +309,20 @@ void PlayState::ClearBalls()
 		if (balls[i] != nullptr)
 		{
 			Ball* ball = balls[i];
-			if (ball != nullptr)
-			{
-				Remove(ball);
-				delete ball;
-			}
+			Remove(ball);
+			delete ball;
 		}
 	}
 	balls.clear();
 }
 
-void PlayState::UpdateScreens(float delta)
+void PlayState::Unpaused()
 {
-	if (pauseScreen != nullptr)
-	{
-		pauseScreen->Update(delta);
-	}
-	if (stageCompleteScreen != nullptr)
-	{
-		stageCompleteScreen->Update(delta);
-	}
-	if (gameOverScreen != nullptr)
-	{
-		gameOverScreen->Update(delta);
-	}
-}
-
-void PlayState::ClearScreens()
-{
-	if (pauseScreen != nullptr)
-	{
-		delete pauseScreen;
-		pauseScreen = nullptr;
-	}
-	if (stageCompleteScreen != nullptr)
-	{
-		delete stageCompleteScreen;
-		stageCompleteScreen = nullptr;
-	}
-	if (gameOverScreen != nullptr)
-	{
-		delete gameOverScreen;
-		gameOverScreen = nullptr;
-	}
-}
-
-void PlayState::PauseContinueClicked()
-{
-	ClearScreens();
-	waiting = false;
 	SetMouseCaptured(true);
 }
 
 void PlayState::StageCompleteClicked()
 {
-	ClearScreens();
-	waiting = false;
 	NextStage();
 }
 
@@ -397,8 +334,6 @@ void PlayState::BackToLevelSelect()
 
 void PlayState::GameOverResetLevel()
 {
-	ClearScreens();
-	waiting = false;
 	ResetLevel();
 }
 
@@ -406,6 +341,7 @@ void PlayState::SetMouseCaptured(bool captured)
 {
 	GetGame()->GetWindow()->setMouseCursorGrabbed(captured);
 	GetGame()->GetWindow()->setMouseCursorVisible(!captured);
+	Input::SetMouseLocked(captured);
 }
 
 void PlayState::AddBallSpeed(float amount)

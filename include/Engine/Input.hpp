@@ -18,6 +18,8 @@ public:
 	static bool MousePressed(sf::Mouse::Button button);
 	static bool MouseJustReleased(sf::Mouse::Button button);
 
+	static void SetMouseLocked(bool mouseLocked);
+
 	static sf::Vector2i GetMousePosition() { return mousePosition; }
 	static sf::Vector2i GetMouseDelta() { return mouseDelta; }
 	static float GetMouseScrollDelta() { return mouseScrollDelta; }
@@ -41,6 +43,7 @@ private:
 	static sf::Vector2i mousePosition;
 	static sf::Vector2i mouseDelta;
 	static float mouseScrollDelta;
+	static bool mouseLocked;
 	static std::set<sf::Mouse::Button> mouseJustPressed;
 	static std::set<sf::Mouse::Button> mousePressed;
 	static std::set<sf::Mouse::Button> mouseJustReleased;

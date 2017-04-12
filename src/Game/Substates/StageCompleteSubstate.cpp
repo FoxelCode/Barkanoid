@@ -1,9 +1,10 @@
-#include "Game/Screens/StageCompleteScreen.hpp"
+#include "Game/Substates/StageCompleteSubstate.hpp"
 
 #include "Engine/G.hpp"
 #include "Engine/Input.hpp"
 
-StageCompleteScreen::StageCompleteScreen(sf::Vector2u size, std::string stageName)
+StageCompleteSubstate::StageCompleteSubstate(sf::Vector2u size, std::string stageName, std::function<void()> completeCallback)
+	: completeCallback(completeCallback)
 {
 	dimmer.setSize(sf::Vector2f(size));
 	dimmer.setFillColor(sf::Color(0, 0, 0, 127));
@@ -29,16 +30,22 @@ StageCompleteScreen::StageCompleteScreen(sf::Vector2u size, std::string stageNam
 	continueInstructions.setPosition(size.x / 2.0f - continueInstructions.getGlobalBounds().width / 2.0f, size.y / 2.0f);
 }
 
-void StageCompleteScreen::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void StageCompleteSubstate::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(dimmer, states);
+	State::draw(target, states);
 	target.draw(banner, states);
 	target.draw(stageName, states);
 	target.draw(continueInstructions, states);
 }
 
-void StageCompleteScreen::Update(float delta)
+void StageCompleteSubstate::Update(float delta)
 {
+	State::Update(delta);
+
 	if (Input::MouseJustReleased(sf::Mouse::Left))
+	{
 		completeCallback();
+		GetGame()->PopSubstate();
+	}
 }

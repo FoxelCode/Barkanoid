@@ -1,6 +1,7 @@
 #include "Engine/Input.hpp"
 
 #include <SFML/Window/Mouse.hpp>
+#include <SFML/Window/Window.hpp>
 
 sf::Window* Input::window = nullptr;
 
@@ -15,6 +16,7 @@ std::string Input::textEntered;
 sf::Vector2i Input::mousePosition;
 sf::Vector2i Input::mouseDelta;
 float Input::mouseScrollDelta = 0.0f;
+bool Input::mouseLocked = false;
 
 void Input::SetWindow(sf::Window* window)
 {
@@ -35,7 +37,15 @@ void Input::Update()
 	{
 		sf::Vector2i newMousePosition = sf::Mouse::getPosition(*window);
 		mouseDelta = newMousePosition - mousePosition;
-		mousePosition = newMousePosition;
+		if (mouseLocked)
+		{
+			mousePosition = sf::Vector2i(window->getSize()) / 2;
+			sf::Mouse::setPosition(mousePosition, *window);
+		}
+		else
+		{
+			mousePosition = newMousePosition;
+		}
 	}
 }
 
@@ -145,4 +155,14 @@ bool Input::MouseJustReleased(sf::Mouse::Button button)
 	if (mouseJustReleased.find(button) != mouseJustReleased.end())
 		return true;
 	return false;
+}
+
+void Input::SetMouseLocked(bool mouseLocked)
+{
+	Input::mouseLocked = mouseLocked;
+	if (mouseLocked)
+	{
+		mousePosition = sf::Vector2i(window->getSize()) / 2;
+		sf::Mouse::setPosition(mousePosition, *window);
+	}
 }
