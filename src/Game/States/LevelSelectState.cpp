@@ -14,6 +14,11 @@ const float LevelSelectState::buttonHeight = 60.0f;
 const float LevelSelectState::buttonSpacing = 6.0f;
 const float LevelSelectState::editButtonWidth = 40.0f;
 
+LevelSelectState::LevelSelectState(bool editMode)
+	: editMode(true)
+{
+}
+
 void LevelSelectState::Init()
 {
 	// Play some nice tunes
@@ -49,7 +54,9 @@ void LevelSelectState::Init()
 	{
 		Level level = Level(G::GetAssetManager()->GetLevel((*it).second));
 
-		LevelEntry* levelEntry = new LevelEntry(level, (ButtonStringCallback)std::bind(&LevelSelectState::LevelButtonPressed, this, std::placeholders::_1), sf::Vector2f(), sf::Vector2f((float)stageSize.x, 0.0f));
+		ButtonStringCallback editCallback = (editMode) ? (ButtonStringCallback)std::bind(&LevelSelectState::EditButtonPressed, this, std::placeholders::_1) : nullptr;
+		LevelEntry* levelEntry = new LevelEntry(level, (ButtonStringCallback)std::bind(&LevelSelectState::LevelButtonPressed, this, std::placeholders::_1),
+			sf::Vector2f(), sf::Vector2f((float)stageSize.x, 0.0f), Alignment(), editCallback);
 		Add(levelEntry);
 		scrollArea->AddChild(levelEntry);
 		levelEntry->SetPosition(sf::Vector2f(-(float)stageSize.x, levelEntry->GetPosition().y));
@@ -76,4 +83,9 @@ void LevelSelectState::LevelButtonPressed(std::string buttonText)
 		return;
 	}
 	GetGame()->SwitchState(state);
+}
+
+void LevelSelectState::EditButtonPressed(std::string buttonText)
+{
+	int butt = 0;
 }

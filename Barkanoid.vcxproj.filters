@@ -198,6 +198,12 @@
     <ClInclude Include="include\Game\Substates\StageCompleteSubstate.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Game\States\StageEditState.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\States\LevelEditState.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Collision\AABBCollider.cpp">
@@ -360,6 +366,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\Substates\StageCompleteSubstate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\States\StageEditState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

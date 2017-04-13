@@ -9,8 +9,8 @@ const float LevelEntry::levelBottomSpacing = 8.0f;
 const float LevelEntry::stageScoreWidth = 140.0f;
 const float LevelEntry::stageScoreXSpacing = 16.0f;
 
-LevelEntry::LevelEntry(const Level& level, ButtonStringCallback playButtonCallback, sf::Vector2f pos, sf::Vector2f size, Alignment align)
-	: UIObject(pos, size, align), playButtonCallback(playButtonCallback)
+LevelEntry::LevelEntry(const Level& level, ButtonStringCallback playButtonCallback, sf::Vector2f pos, sf::Vector2f size, Alignment align, ButtonStringCallback editButtonCallback)
+	: UIObject(pos, size, align), playButtonCallback(playButtonCallback), editButtonCallback(editButtonCallback), editButton(nullptr)
 {
 	LoadSlicedGraphic(G::GetAssetManager()->GetTexture("button.png"));
 	graphic->SetFrameSize(sf::Vector2f(18, 18));
@@ -71,7 +71,11 @@ LevelEntry::LevelEntry(const Level& level, ButtonStringCallback playButtonCallba
 		curElementPos.y += stageName->GetSize().y;
 	}
 
-	playButton = new Button(curElementPos + GetPosition() + GetOffset(), sf::Vector2f(size.x - padding.x * 2.0f, 0.0f), (ButtonCallback)std::bind(&LevelEntry::PlayButtonPressed, this));
+	float buttonWidth = size.x - padding.x * 2.0f;
+	if (editButtonCallback != nullptr)
+		buttonWidth /= 2.0f;
+
+	playButton = new Button(curElementPos + GetPosition() + GetOffset(), sf::Vector2f(buttonWidth, 0.0f), (ButtonCallback)std::bind(&LevelEntry::PlayButtonPressed, this));
 	playButton->SetParent(this);
 	playButton->SetAutoHeight(true);
 	playButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
@@ -80,6 +84,19 @@ LevelEntry::LevelEntry(const Level& level, ButtonStringCallback playButtonCallba
 	playButton->GetText()->SetAutoHeight(true);
 	playButton->GetText()->SetText("Play");
 	playButton->UpdateLayout();
+
+	if (editButtonCallback != nullptr)
+	{
+		editButton = new Button(curElementPos + GetPosition() + GetOffset() + sf::Vector2f(buttonWidth + 1.0f, 0.0f), sf::Vector2f(buttonWidth - 1.0f, 0.0f), (ButtonCallback)std::bind(&LevelEntry::EditButtonPressed, this));
+		editButton->SetParent(this);
+		editButton->SetAutoHeight(true);
+		editButton->LoadButtonGraphic(G::GetAssetManager()->GetTexture("button.png"), sf::Vector2f(18, 18), sf::Vector2f(6, 6));
+		editButton->GetText()->GetFirstLine()->setFont(*G::GetAssetManager()->GetFont("OneTrickPony.otf"));
+		editButton->GetText()->GetFirstLine()->setFillColor(sf::Color::Black);
+		editButton->GetText()->SetAutoHeight(true);
+		editButton->GetText()->SetText("Edit");
+		editButton->UpdateLayout();
+	}
 	curElementPos.y += playButton->GetSize().y;
 
 	curElementPos.y += padding.y;
@@ -92,6 +109,11 @@ LevelEntry::~LevelEntry()
 	{
 		delete playButton;
 		playButton = nullptr;
+	}
+	if (editButton != nullptr)
+	{
+		delete editButton;
+		editButton = nullptr;
 	}
 	if (levelName != nullptr)
 	{
@@ -127,6 +149,8 @@ void LevelEntry::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	UIObject::draw(target, states);
 	target.draw(*playButton, states);
+	if (editButton != nullptr)
+		target.draw(*editButton, states);
 	target.draw(*levelName, states);
 	target.draw(*levelScore, states);
 	for (const MultilineText* stageName : stageNames)
@@ -138,9 +162,16 @@ void LevelEntry::draw(sf::RenderTarget& target, sf::RenderStates states) const
 void LevelEntry::Update(float delta)
 {
 	playButton->Update(delta);
+	if (editButton != nullptr)
+		editButton->Update(delta);
 }
 
 void LevelEntry::PlayButtonPressed()
 {
 	playButtonCallback(levelName->GetText());
+}
+
+void LevelEntry::EditButtonPressed()
+{
+	editButtonCallback(levelName->GetText());
 }

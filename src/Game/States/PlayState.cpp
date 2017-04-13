@@ -74,8 +74,8 @@ void PlayState::Update(float delta)
 	stageTime += sf::milliseconds((sf::Int32)(delta * 1000.0f));
 
 	/*
-		*	Collisions go here
-		*/
+	Collisions go here
+	*/
 
 	// Collide balls
 	for each (Ball* ball in balls)

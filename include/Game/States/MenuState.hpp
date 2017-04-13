@@ -11,7 +11,9 @@ public:
 	void Init();
 
 	void StartButtonPressed();
+	void EditButtonPressed();
 
 private:
 	Button* startButton = nullptr;
+	Button* editButton = nullptr;
 };

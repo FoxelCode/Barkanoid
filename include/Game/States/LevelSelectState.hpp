@@ -6,15 +6,17 @@
 class LevelSelectState : public State
 {
 public:
-	LevelSelectState() {}
+	LevelSelectState(bool editMode = false);
 	void Init();
 	
 private:
 	void LevelButtonPressed(std::string buttonText);
+	void EditButtonPressed(std::string buttonText);
 
 	static const float buttonHeight;
 	static const float buttonSpacing;
 	static const float editButtonWidth;
 
 	std::vector<std::pair<std::string, std::string>> levelDatas;
+	bool editMode;
 };
