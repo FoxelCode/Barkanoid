@@ -42,6 +42,7 @@ void MultilineText::SetText(std::string text)
 		return;
 	}
 	size_t charSize = lines[0]->getCharacterSize();
+	float lineSpacing = lines[0]->getFont()->getLineSpacing(charSize);
 	bool bold = (lines[0]->getStyle() & sf::Text::Style::Bold) != 0;
 	float spaceWidth = font->getGlyph(L' ', charSize, bold).advance;
 
@@ -53,6 +54,7 @@ void MultilineText::SetText(std::string text)
 	float lineLength = 0.0f;
 	size_t wordLength = 0U;
 	bool wordAddedToCurrentLine = false;
+	bool yOverflow = false;
 
 	for (std::string word : words)
 	{
@@ -89,6 +91,13 @@ void MultilineText::SetText(std::string text)
 				wordLength = word.length();
 				c = 0;
 
+				// Check for Y overflow
+				if (!autoHeight && ((lineIndex + 2) * lineSpacing) > size.y)
+				{
+					yOverflow = true;
+					break;
+				}
+
 				// Reset line specific iteration variables
 				currentLine = "";
 				prevChar = 0U;
@@ -99,6 +108,14 @@ void MultilineText::SetText(std::string text)
 			// If the line didn't go off bounds, move on to the next character
 			else
 				c++;
+		}
+
+		// If an Y overflow occurred, '...' the last line
+		if (yOverflow)
+		{
+			float dotWidth = font->getGlyph(L'.', charSize, bold).advance;
+			
+			break;
 		}
 
 		// If there's a word already on this line, add a space between it and this new one

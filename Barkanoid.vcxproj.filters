@@ -108,6 +108,9 @@
     <ClInclude Include="include\Game\Entities\wall.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Game\States\LevelEditState.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\Game\States\LevelSelectState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -115,6 +118,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Game\States\PlayState.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\States\StageEditState.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Substates\GameOverSubstate.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Substates\PauseSubstate.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Substates\StageCompleteSubstate.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Game\UI\LevelEntry.hpp">
@@ -189,19 +204,7 @@
     <ClInclude Include="include\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Game\Substates\GameOverSubstate.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Game\Substates\PauseSubstate.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Game\Substates\StageCompleteSubstate.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Game\States\StageEditState.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Game\States\LevelEditState.hpp">
+    <ClInclude Include="include\Game\UI\StageEditEntry.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -302,6 +305,18 @@
     <ClCompile Include="src\Game\States\PlayState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Game\States\StageEditState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Substates\GameOverSubstate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Substates\PauseSubstate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Substates\StageCompleteSubstate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\Game\UI\LevelEntry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -359,16 +374,10 @@
     <ClCompile Include="src\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\Substates\GameOverSubstate.cpp">
+    <ClCompile Include="src\Game\States\LevelEditState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\Substates\PauseSubstate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\Substates\StageCompleteSubstate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\States\StageEditState.cpp">
+    <ClCompile Include="src\Game\UI\StageEditEntry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -5,6 +5,7 @@ using json = nlohmann::json;
 
 #include "Engine/G.hpp"
 #include "Game/States/PlayState.hpp"
+#include "Game/States/LevelEditState.hpp"
 #include "Util/Tween.hpp"
 #include "Util/StringUtil.hpp"
 #include "UI/VerticalScrollArea.hpp"
@@ -87,5 +88,16 @@ void LevelSelectState::LevelButtonPressed(std::string buttonText)
 
 void LevelSelectState::EditButtonPressed(std::string buttonText)
 {
-	int butt = 0;
+	LevelEditState* state = nullptr;
+	for (const auto& levelData : levelDatas)
+	{
+		if (levelData.first == buttonText)
+			state = new LevelEditState(levelData.second);
+	}
+	if (state == nullptr)
+	{
+		LOG_ERROR("Couldn't find the levelData for \"" + buttonText + "\", how'd this even happen?");
+		return;
+	}
+	GetGame()->SwitchState(state);
 }

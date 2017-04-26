@@ -25,7 +25,7 @@ void VerticalScrollArea::Update(float delta)
 void VerticalScrollArea::AddChild(UIObject* child)
 {
 	children.push_back(child);
-	child->SetPosition(GetPosition().x + GetOffset().x - child->GetOffset().x, totalChildHeight);
+	child->SetPosition(GetPosition().x + GetOffset().x - child->GetOffset().x, GetPosition().y + totalChildHeight);
 	totalChildHeight += child->GetSize().y;
 
 	float scrollableHeight = totalChildHeight - size.y;
@@ -40,7 +40,7 @@ void VerticalScrollArea::SetCurrentScroll(float currentScroll)
 	float currentHeight = 0.0f;
 	for (UIObject* child : children)
 	{
-		child->SetPosition(child->GetPosition().x, -currentScroll + currentHeight);
+		child->SetPosition(child->GetPosition().x, GetPosition().y - currentScroll + currentHeight);
 		currentHeight += child->GetSize().y;
 	}
 }
